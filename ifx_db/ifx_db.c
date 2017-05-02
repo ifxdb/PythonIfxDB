@@ -6993,6 +6993,10 @@ static PyObject *ifx_db_field_display_size(PyObject *self, PyObject *args)
     }
 
     Py_BEGIN_ALLOW_THREADS;
+
+    // Sat
+    // In ODBC 3.x, the ODBC 2.0 function SQLColAttributes has been replaced by SQLColAttribute
+    // https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolattribute-function
     rc = SQLColAttributes((SQLHSTMT)stmt_res->hstmt, (SQLSMALLINT)col + 1,
                           SQL_DESC_DISPLAY_SIZE, NULL, 0, NULL, &colDataDisplaySize);
     Py_END_ALLOW_THREADS;

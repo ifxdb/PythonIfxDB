@@ -46,7 +46,7 @@
 #include "sql.h"
 #include "sqlext.h"
 #else
-#include <infxcli.h>
+#include "infxcli.h""
 #endif
 
 #ifdef _DEBUG

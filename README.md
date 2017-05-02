@@ -5,8 +5,7 @@
 ## PythonIfxDB
 Informix Native Driver for Python
 
-### Project status: 
-Internal beta
+### Project status: Internal beta
 
 
 

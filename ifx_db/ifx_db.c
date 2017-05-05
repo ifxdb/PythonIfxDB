@@ -103,15 +103,15 @@ static SQLWCHAR* getUnicodeDataAsSQLWCHAR(
 
 static PyObject* getSQLWCharAsPyUnicodeObject(
     SQLWCHAR* sqlwcharData,
-    int sqlwcharBytesLen);
+    SQLLEN sqlwcharBytesLen);
 
 
 
 // Defines a linked list structure for error messages 
 typedef struct _error_msg_node
 {
-    char err_msg[DB_MAX_ERR_MSG_LEN];
-    struct _error_msg_node *next;
+    char                    err_msg[DB_MAX_ERR_MSG_LEN];
+    struct _error_msg_node  *next;
 } error_msg_node;
 
 // Defines a linked list structure for caching param data 
@@ -199,16 +199,16 @@ static PyTypeObject conn_handleType = {
 
 typedef union
 {
-    SQLINTEGER i_val;
-    SQLDOUBLE d_val;
-    SQLFLOAT f_val;
-    SQLSMALLINT s_val;
-    SQLCHAR *str_val;
-    SQLREAL r_val;
-    SQLWCHAR *w_val;
-    TIMESTAMP_STRUCT *ts_val;
-    DATE_STRUCT *date_val;
-    TIME_STRUCT *time_val;
+    SQLINTEGER          i_val;
+    SQLDOUBLE           d_val;
+    SQLFLOAT            f_val;
+    SQLSMALLINT         s_val;
+    SQLCHAR             *str_val;
+    SQLREAL             r_val;
+    SQLWCHAR            *w_val;
+    TIMESTAMP_STRUCT    *ts_val;
+    DATE_STRUCT         *date_val;
+    TIME_STRUCT         *time_val;
 } ifx_db_row_data_type;
 
 
@@ -236,24 +236,24 @@ typedef struct _row_hash_struct
 typedef struct _stmt_handle_struct
 {
     PyObject_HEAD
-    SQLHANDLE hdbc;
-    SQLHANDLE hstmt;
-    long s_bin_mode;
-    long cursor_type;
-    long s_case_mode;
-    long s_use_wchar;
+    SQLHANDLE   hdbc;
+    SQLHANDLE   hstmt;
+    long        s_bin_mode;
+    long        cursor_type;
+    long        s_case_mode;
+    long        s_use_wchar;
     SQLSMALLINT error_recno_tracker;
     SQLSMALLINT errormsg_recno_tracker;
 
     // Parameter Caching variables 
-    param_node *head_cache_list;
-    param_node *current_node;
+    param_node  *head_cache_list;
+    param_node  *current_node;
 
-    int num_params;          // Number of Params 
-    int file_param;          // if option passed in is FILE_PARAM 
-    int num_columns;
-    ifx_db_result_set_info *column_info;
-    ifx_db_row_type *row_data;
+    int         num_params; // Number of Params 
+    int         file_param; // if option passed in is FILE_PARAM 
+    int         num_columns;
+    ifx_db_result_set_info  *column_info;
+    ifx_db_row_type         *row_data;
 } stmt_handle;
 
 static void _python_ifx_db_free_stmt_struct(stmt_handle *handle);
@@ -341,12 +341,14 @@ char *estrdup(char *data)
 {
     size_t len = strlen(data);
     char *dup = ALLOC_N(char, len + 1);
+
     if (dup == NULL)
     {
         PyErr_SetString(PyExc_Exception, "Failed to Allocate Memory");
         return NULL;
     }
     strcpy(dup, data);
+
     return dup;
 }
 
@@ -354,10 +356,12 @@ char *estrndup(char *data, int max)
 {
     size_t len = strlen(data);
     char *dup;
+
     if (len > max)
     {
         len = max;
     }
+
     dup = ALLOC_N(char, len + 1);
     if (dup == NULL)
     {
@@ -365,6 +369,7 @@ char *estrndup(char *data, int max)
         return NULL;
     }
     strcpy(dup, data);
+
     return dup;
 }
 
@@ -374,6 +379,7 @@ char *strtolower(char *data, int max)
     {
         data[max] = tolower(data[max]);
     }
+
     return data;
 }
 
@@ -383,6 +389,7 @@ char *strtoupper(char *data, int max)
     {
         data[max] = toupper(data[max]);
     }
+
     return data;
 }
 
@@ -2321,7 +2328,8 @@ static PyObject *ifx_db_bind_param(PyObject *self, PyObject *args)
         {
             stmt_res = (stmt_handle *)py_stmt_res;
         }
-        return _python_ifx_db_bind_param_helper(PyTuple_Size(args), stmt_res, param_no, var_pyvalue, param_type, data_type, precision, scale, size);
+        return _python_ifx_db_bind_param_helper( (int)PyTuple_Size(args), 
+            stmt_res, param_no, var_pyvalue, param_type, data_type, precision, scale, size);
     }
     else
     {
@@ -5063,7 +5071,7 @@ static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *
             py_stmt = PyUnicode_FromObject(py_stmt);
             if (py_stmt != NULL &&  py_stmt != Py_None)
             {
-                stmt_size = PyUnicode_GetSize(py_stmt);
+                stmt_size = (int)PyUnicode_GetSize(py_stmt);
             }
             else
             {
@@ -5449,14 +5457,14 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
                     || (curr->data_type == SQL_LONGVARBINARY)
                     || (curr->data_type == SQL_VARBINARY))
                 {
-                    if (curr->ivalue <= curr->param_size)
+                    if (curr->ivalue <= (SQLLEN)curr->param_size)
                     {
                         curr->ivalue = curr->param_size + sizeof(SQLWCHAR);
                     }
                 }
                 else
                 {
-                    if (curr->ivalue <= (curr->param_size * sizeof(SQLWCHAR)))
+                    if (curr->ivalue <= (SQLLEN)(curr->param_size * sizeof(SQLWCHAR)))
                     {
                         curr->ivalue = (curr->param_size + 1) * sizeof(SQLWCHAR);
                     }
@@ -5471,7 +5479,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
             memcpy(tmp, curr->uvalue, (param_length + sizeof(SQLWCHAR)));
             curr->uvalue = tmp;
         }
-        else if (param_length <= curr->param_size)
+        else if (param_length <= (SQLLEN)curr->param_size)
         {
             SQLWCHAR* tmp = (SQLWCHAR*)ALLOC_N(SQLWCHAR, curr->ivalue + 1);
             memcpy(tmp, curr->uvalue, (param_length + sizeof(SQLWCHAR)));
@@ -5514,7 +5522,17 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
         }
 
         Py_BEGIN_ALLOW_THREADS;
-        rc = SQLBindParameter(stmt_res->hstmt, curr->param_num, curr->param_type, valueType, curr->data_type, curr->param_size, curr->scale, paramValuePtr, curr->ivalue, &(curr->bind_indicator));
+        rc = SQLBindParameter(stmt_res->hstmt, 
+            curr->param_num, 
+            curr->param_type, 
+            valueType, 
+            curr->data_type, 
+            curr->param_size, 
+            curr->scale, 
+            paramValuePtr, 
+            curr->ivalue, 
+            &(curr->bind_indicator));
+
         Py_END_ALLOW_THREADS;
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
@@ -5567,7 +5585,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
         {
             if (curr->size == 0)
             {
-                if (curr->ivalue <= curr->param_size)
+                if (curr->ivalue <= (SQLLEN)curr->param_size)
                 {
                     curr->ivalue = curr->param_size + 1;
                 }
@@ -5869,16 +5887,13 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
     SQLPOINTER valuePtr;
     PyObject *data;
     char error[DB_MAX_ERR_MSG_LEN];
-    /* This is used to loop over the param cache */
-    param_node *prev_ptr, *curr_ptr;
-
-    // Free any cursors that might have been allocated in a previous call to SQLExecute
 
     Py_BEGIN_ALLOW_THREADS;
+    // Free any cursors that might have been allocated in a previous call to SQLExecute
     SQLFreeStmt((SQLHSTMT)stmt_res->hstmt, SQL_CLOSE);
     Py_END_ALLOW_THREADS;
 
-    /* This ensures that each call to ifx_db.execute start from scratch */
+    // This ensures that each call to ifx_db.execute start from scratch 
     stmt_res->current_node = stmt_res->head_cache_list;
 
     Py_BEGIN_ALLOW_THREADS;
@@ -5887,11 +5902,11 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 
     if (num != 0)
     {
-        /* Parameter Handling */
+        // Parameter Handling 
         if (!NIL_P(parameters_tuple))
         {
-            /* Make sure ifx_db.bind_param has been called */
-            /* If the param list is NULL -- ERROR */
+            // Make sure ifx_db.bind_param has been called 
+            // If the param list is NULL -- ERROR 
             if (stmt_res->head_cache_list == NULL)
             {
                 bind_params = 1;
@@ -5907,8 +5922,10 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 
             if (numOpts > num)
             {
-                /* More are passed in -- Warning - Use the max number present */
-                sprintf(error, "%d params bound not matching %d required",
+                // More are passed in -- Warning - Use the max number present
+                // The z portion is a length specifier which says the argument will be size_t in length
+                // https://en.wikipedia.org/wiki/Printf_format_string#printf_format_placeholders
+                sprintf(error, "%zu params bound not matching %d required",
                     numOpts, num);
                 PyErr_SetString(PyExc_Exception, error);
                 numOpts = stmt_res->num_params;
@@ -5917,7 +5934,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
             {
                 // If there are less params passed in, than are present 
                 // -- Error
-                sprintf(error, "%d params bound not matching %d required",
+                sprintf(error, "%zu params bound not matching %d required",
                     numOpts, num);
                 PyErr_SetString(PyExc_Exception, error);
                 return NULL;
@@ -5925,7 +5942,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 
             for (i = 0; i < numOpts; i++)
             {
-                /* Bind values from the parameters_tuple to params */
+                // Bind values from the parameters_tuple to params 
                 data = PyTuple_GetItem(parameters_tuple, i);
 
                 // The 0 denotes that you work only with the current node.
@@ -5944,24 +5961,24 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
         }
         else
         {
-            /* No additional params passed in. Use values already bound. */
+            // No additional params passed in. Use values already bound. 
             if (num > stmt_res->num_params)
             {
-                /* More parameters than we expected */
+                // More parameters than we expected 
                 sprintf(error, "%d params bound not matching %d required",
                     stmt_res->num_params, num);
                 PyErr_SetString(PyExc_Exception, error);
             }
             else if (num < stmt_res->num_params)
             {
-                /* Fewer parameters than we expected */
+                // Fewer parameters than we expected 
                 sprintf(error, "%d params bound not matching %d required",
                     stmt_res->num_params, num);
                 PyErr_SetString(PyExc_Exception, error);
                 return NULL;
             }
 
-            /* Param cache node list is empty -- No params bound */
+            // Param cache node list is empty -- No params bound 
             if (stmt_res->head_cache_list == NULL)
             {
                 PyErr_SetString(PyExc_Exception, "Parameters not bound");
@@ -7138,7 +7155,11 @@ static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
     {
         Py_RETURN_FALSE;
     }
+
+    Py_RETURN_FALSE;
 }
+
+
 /*!# ifx_db.field_num
 *
 * ===Description
@@ -7162,6 +7183,7 @@ static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
 * the result set. If the specified column does not exist in the result set,
 * ifx_db.field_num() returns FALSE.
 */
+
 static PyObject *ifx_db_field_num(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
@@ -7725,9 +7747,10 @@ static PyObject *ifx_db_rollback(PyObject *self, PyObject *args)
 */
 static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
 {
-    PyObject *py_stmt_res = NULL;
-    stmt_handle *handle;
-    SQLRETURN rc;
+    PyObject    *py_stmt_res = NULL;
+    stmt_handle *handle=NULL;
+    SQLRETURN   rc=0;
+
     if (!PyArg_ParseTuple(args, "O", &py_stmt_res))
         return NULL;
     if (!NIL_P(py_stmt_res))
@@ -7735,7 +7758,7 @@ static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
         if (PyObject_TypeCheck(py_stmt_res, &stmt_handleType))
         {
             handle = (stmt_handle *)py_stmt_res;
-            if (handle->hstmt != -1)
+            if (handle->hstmt != NULL)
             {
                 rc = SQLFreeHandle(SQL_HANDLE_STMT, handle->hstmt);
 
@@ -7750,7 +7773,7 @@ static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
                     Py_RETURN_FALSE;
                 }
                 _python_ifx_db_free_result_struct(handle);
-                handle->hstmt = -1;
+                handle->hstmt = NULL;
                 Py_RETURN_TRUE;
             }
         }
@@ -7814,7 +7837,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
     TIME_STRUCT *time_ptr;
     TIMESTAMP_STRUCT *ts_ptr;
     char error[DB_MAX_ERR_MSG_LEN];
-    SQLINTEGER in_length;
+    SQLULEN in_length;
     SQLLEN out_length = 0;
 
     SQLSMALLINT column_type, targetCType = SQL_C_CHAR, len_terChar = 0;
@@ -8202,7 +8225,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
     stmt_handle *stmt_res = NULL;
     SQLSMALLINT column_type;
     ifx_db_row_data_type *row_data;
-    SQLINTEGER tmp_length = 0;
+    SQLULEN tmp_length = 0;
     SQLLEN out_length = 0;
     void *out_ptr = NULL;
     SQLWCHAR *wout_ptr = NULL;
@@ -8339,13 +8362,15 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
         case CASE_LOWER:
             stmt_res->column_info[column_number].name =
                 (SQLCHAR*)strtolower((char*)stmt_res->column_info[column_number].name,
-                    strlen((char*)stmt_res->column_info[column_number].name));
+                    (int)strlen((char*)stmt_res->column_info[column_number].name));
             break;
+
         case CASE_UPPER:
             stmt_res->column_info[column_number].name =
                 (SQLCHAR*)strtoupper((char*)stmt_res->column_info[column_number].name,
-                    strlen((char*)stmt_res->column_info[column_number].name));
+                    (int)strlen((char*)stmt_res->column_info[column_number].name));
             break;
+
         case CASE_NATURAL:
         default:
             break;
@@ -9859,7 +9884,6 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
     int rc = 0;
     char buffer255[255];
     SQLSMALLINT bufferint16;
-    SQLUINTEGER bufferint32;
 
     le_client_info *return_value = PyObject_NEW(le_client_info,
         &client_infoType);
@@ -10436,7 +10460,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
                 PyErr_SetString(PyExc_Exception, "Param is not a tuple");
                 return NULL;
             }
-            numOfParam = PyTuple_Size(parameters_tuple);
+            numOfParam = (int)PyTuple_Size(parameters_tuple);
             subsql1 = StringOBJ_FromASCII("CALL ");
             subsql2 = PyUnicode_Concat(subsql1, pyprocName);
             Py_XDECREF(subsql1);
@@ -10519,7 +10543,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
                         {
                         case SQL_SMALLINT:
                         case SQL_INTEGER:
-                            if (!NIL_P(tmp_curr->ivalue))
+                            if (tmp_curr->ivalue != 0)
                             {
                                 PyTuple_SetItem(outTuple, paramCount,
                                     PyInt_FromLong(tmp_curr->ivalue));

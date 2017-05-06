@@ -10938,7 +10938,8 @@ static PyMethodDef ifx_db_Methods[] = {
     { "table_privileges", (PyCFunction)ifx_db_table_privileges, METH_VARARGS, "Returns a result set listing the tables and associated privileges in a database" },
     { "tables", (PyCFunction)ifx_db_tables, METH_VARARGS, "Returns a result set listing the tables and associated metadata in a database" },
     { "get_last_serial_value", (PyCFunction)ifx_db_get_last_serial_value, METH_VARARGS, "Returns last serial value inserted for identity column" },
-    /* An end-of-listing sentinel: */
+
+    // An end-of-listing sentinel:
     { NULL, NULL, 0, NULL }
 };
 

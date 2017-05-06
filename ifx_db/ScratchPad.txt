@@ -42,7 +42,8 @@ Unable to find vcvarsall.bat.
 http://stackoverflow.com/questions/2817869/error-unable-to-find-vcvarsall-bat
 http://stackoverflow.com/questions/3047542/building-lxml-for-python-2-7-on-windows
 
-While running setup.py for package installations, Python 2.7 searches for an installed Visual Studio 2008. You can trick Python to use a newer Visual Studio by setting the correct path in VS90COMNTOOLS environment variable before calling setup.py.
+While running setup.py for package installations, Python 2.7 searches for an installed Visual Studio 2008. 
+You can trick Python to use a newer Visual Studio by setting the correct path in VS90COMNTOOLS environment variable before calling setup.py.
 
 Execute the following command based on the version of Visual Studio installed:
 

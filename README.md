@@ -9,16 +9,16 @@ Informix Native Driver for Python
 ##### Coming soon
 * Linux build 
 * PyPI: https://pypi.python.org/pypi/ifx_db
-* More test
-* Example 
+* Tests
+* Examples 
 * Documentation 
  
 
 ## Build 
-### Linux Build 
+#### Linux Build 
 Coming soon
 
-### Windows build 
+#### Windows build 
 ##### Prerequisite:
 * Python 2.7 or above (Python 3x support will be coming soon)
 * clone the PythonIfxDB repository
@@ -33,9 +33,10 @@ SET MY_PY_DIR=C:\Dev\Python27
 ```
 
 ### Get the source code
-```
-For easiness of explanation let me assume C:\Work0 is the location when we clone the PythonIfxDB repository. (You may clone it at any location though, if so make adjustment for the instructions as well).
+For easiness of explanation let me assume C:\Work0 is the location when we clone the PythonIfxDB repository.  
+(You may clone it at any location though, if so make adjustment for the instructions as well).
 
+```
 cd C:\Work0
 git clone https://github.com/ifxdb/PythonIfxDB.git
 ```
@@ -84,10 +85,37 @@ COPY C:\Work0\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ ifx_db.pyd
 
 
 ## Example 
+
+#### Simple  connect and disconnect
 ```python
 ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
 
+# netstat -a | findstr  9088
 conn = ifx_db.connect( ConStr, "", "")
+
+# Do some work
+# -- -- -- -- --
+# -- -- -- -- --
+conn.close()
+```
+
+
+### Preliminary diagnostic tips 
+##### Cconnection problem
++ check the service port mapped to which IP etc
+- for example the port you configured is 9088 then
+- netstat -a | findstr  9088
+
+
+#### Simple Query database
+```python
+
+import ifx_db
+
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
+
+conn = ifx_db.connect( ConStr, "", "")
+
 
 SetupSqlSet = [
     "drop table t1;", 
@@ -107,16 +135,19 @@ for sql in SetupSqlSet:
 sql = "SELECT * FROM t1"
 stmt = ifx_db.exec_immediate(conn, sql)
 dictionary = ifx_db.fetch_both(stmt)
+
+rc = 0
 while dictionary != False:
-    print "c1 is : ",  dictionary["c1"]
+    rc = rc + 1;
+    print "--  Record {0} --".format(rc)
+    print "c1 is : ",  dictionary[0]
     print "c2 is : ", dictionary[1]
-    print "c3 is : ", dictionary[2]
-    print "c4 is : ", dictionary["c4"]
-    print "Going for next rec"
+    print "c3 is : ", dictionary["c3"]
+    print "c4 is : ", dictionary[3]
     print " "
     dictionary = ifx_db.fetch_both(stmt)
 
-conn.close()
+ifx_db.close(conn)
 
 print "Done"
 

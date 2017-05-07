@@ -31,15 +31,18 @@ for sql in SetupSqlSet:
 sql = "SELECT * FROM t1"
 stmt = ifx_db.exec_immediate(conn, sql)
 dictionary = ifx_db.fetch_both(stmt)
+
+rc = 0
 while dictionary != False:
-    print "c1 is : ",  dictionary["c1"]
+    rc = rc + 1;
+    print "--  Record {0} --".format(rc)
+    print "c1 is : ",  dictionary[0]
     print "c2 is : ", dictionary[1]
-    print "c3 is : ", dictionary[2]
-    print "c4 is : ", dictionary["c4"]
-    print "Going for next rec"
+    print "c3 is : ", dictionary["c3"]
+    print "c4 is : ", dictionary[3]
     print " "
     dictionary = ifx_db.fetch_both(stmt)
 
-conn.close()
+ifx_db.close(conn)
 
 print "Done"

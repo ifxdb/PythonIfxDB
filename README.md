@@ -96,7 +96,7 @@ conn = ifx_db.connect( ConStr, "", "")
 # Do some work
 # -- -- -- -- --
 # -- -- -- -- --
-conn.close()
+ifx_db.close(conn)
 ```
 
 

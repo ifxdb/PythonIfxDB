@@ -16,12 +16,15 @@ conn = ifx_db.connect( ConStr, "", "")
 SetupSqlSet = [
     "drop table t1;", 
     "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;", 
-    "insert into t1 values( 1, 'val 1', 101, 201 );",
-    "insert into t1 values( 2, 'val 2', 102, 202 );",
-    "insert into t1 values( 3, 'val 3', 103, 203 );",
-    "insert into t1 values( 4, 'val 4', 104, 204 );",
-    "insert into t1 values( 5, 'val 5', 105, 2005 );"
+    "insert into t1 values( 1, 'Sunday', 101, 201 );",
+    "insert into t1 values( 2, 'Monday', 102, 202 );",
+    "insert into t1 values( 3, 'Tuesday', 103, 203 );",
+    "insert into t1 values( 4, 'Wednesday', 104, 204 );",
+    "insert into t1 values( 5, 'Thursday', 105, 2005 );",
+    "insert into t1 values( 6, 'Friday', 106, 206 );",
+    "insert into t1 values( 7, 'Saturday', 107, 207 );"
 ]
+
 
 for sql in SetupSqlSet:
     print sql
@@ -34,7 +37,7 @@ dictionary = ifx_db.fetch_both(stmt)
 
 rc = 0
 while dictionary != False:
-    rc = rc + 1;
+    rc = rc + 1
     print "--  Record {0} --".format(rc)
     print "c1 is : ",  dictionary[0]
     print "c2 is : ", dictionary[1]

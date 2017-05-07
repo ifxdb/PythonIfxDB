@@ -86,7 +86,7 @@ COPY C:\Work0\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ ifx_db.pyd
 
 ## Example 
 
-#### Simple  connect and disconnect
+#### Connecting to Informix database
 ```python
 import ifx_db
 
@@ -109,9 +109,23 @@ ifx_db.close(conn)
 - netstat -a | findstr  9088
 
 
-#### Simple Query database
-```python
+#### Simple Query 
 
+##### FYI: ifx_db fetch functions
+* ifx_db.fetch_tuple()  
+Returns a tuple, indexed by column position, representing a row in a result set. The columns are 0-indexed.  
+
+* ifx_db.fetch_assoc()  
+Returns a dictionary, indexed by column name, representing a row in a result set.  
+
+* ifx_db.fetch_both()  
+Returns a dictionary, indexed by both column name and position, representing a row in a result set.  
+
+* ifx_db.fetch_row()  
+Sets the result set pointer to the next row or requested row. Use this function to iterate through a result set.  
+
+
+```python
 import ifx_db
 
 ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
@@ -122,11 +136,13 @@ conn = ifx_db.connect( ConStr, "", "")
 SetupSqlSet = [
     "drop table t1;", 
     "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;", 
-    "insert into t1 values( 1, 'val 1', 101, 201 );",
-    "insert into t1 values( 2, 'val 2', 102, 202 );",
-    "insert into t1 values( 3, 'val 3', 103, 203 );",
-    "insert into t1 values( 4, 'val 4', 104, 204 );",
-    "insert into t1 values( 5, 'val 5', 105, 2005 );"
+    "insert into t1 values( 1, 'Sunday', 101, 201 );",
+    "insert into t1 values( 2, 'Monday', 102, 202 );",
+    "insert into t1 values( 3, 'Tuesday', 103, 203 );",
+    "insert into t1 values( 4, 'Wednesday', 104, 204 );",
+    "insert into t1 values( 5, 'Thursday', 105, 2005 );",
+    "insert into t1 values( 6, 'Friday', 106, 206 );",
+    "insert into t1 values( 7, 'Saturday', 107, 207 );"
 ]
 
 for sql in SetupSqlSet:
@@ -140,7 +156,7 @@ dictionary = ifx_db.fetch_both(stmt)
 
 rc = 0
 while dictionary != False:
-    rc = rc + 1;
+    rc = rc + 1
     print "--  Record {0} --".format(rc)
     print "c1 is : ",  dictionary[0]
     print "c2 is : ", dictionary[1]
@@ -150,7 +166,170 @@ while dictionary != False:
     dictionary = ifx_db.fetch_both(stmt)
 
 ifx_db.close(conn)
-
 print "Done"
 
 ```
+
+### Python Database API Specification
+[Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/)  
+  
+
+### Informix Python Driver APIs
+* ifx_db.connect:  
+Connect to the database.  
+
+* ifx_db.exec_immediate:  
+Prepares and executes an SQL statement.  
+
+* ifx_db.prepare:  
+Prepares an SQL statement.    
+
+* ifx_db.bind_param:  
+Binds a Python variable to an SQL statement parameter.  
+
+* ifx_db.execute:  
+Executes an SQL statement that was prepared by * ifx_db.prepare().  
+
+* ifx_db.fetch_tuple:  
+Returns an tuple  
+
+* ifx_db.fetch_assoc:  
+Returns a dictionary  
+
+* ifx_db.fetch_both:  
+Returns a dictionary  
+
+* ifx_db.fetch_row:  
+Sets the result set pointer to the next row or requested row.  
+
+* ifx_db.result:  
+Returns a single column from a row in the result set.  
+
+* ifx_db.active:  
+Checks if the specified connection resource is active.  
+
+* ifx_db.autocommit:  
+Returns or sets the AUTOCOMMIT state for a database connection.  
+
+* ifx_db.callproc:  
+Returns a tuple containing OUT/INOUT variable value.  
+
+* ifx_db.check_function_support:  
+return true if fuction is supported otherwise return false.  
+
+* ifx_db.close:  
+Close a database connection.  
+
+* ifx_db.conn_error:  
+Returns a string containing the SQLSTATE returned by the last connection attempt.  
+
+* ifx_db.conn_errormsg:  
+Returns an error message and SQLCODE value representing the reason the last database connection attempt failed. 
+
+* ifx_db.conn_warn:  
+Returns a warning string containing the SQLSTATE returned by the last connection attempt.  
+
+* ifx_db.client_info:  
+Returns a read-only object with information about the IDS database client.  
+
+* ifx_db.column_privileges:  
+Returns a result set listing the columns and associated privileges for a table.  
+
+* ifx_db.columns:  
+Returns a result set listing the columns and associated metadata for a table.  
+
+* ifx_db.commit:  
+Commits a transaction.  
+
+* ifx_db.cursor_type:  
+Returns the cursor type used by a statement resource.  
+
+* ifx_db.field_display_size:  
+Returns the maximum number of bytes required to display a column.  
+
+* ifx_db.field_name:  
+Returns the name of the column in the result set.  
+
+* ifx_db.field_nullable:  
+Returns indicated column can contain nulls or not.  
+
+* ifx_db.field_num:  
+Returns the position of the named column in a result set.  
+
+* ifx_db.field_precision:  
+Returns the precision of the indicated column in a result set.  
+
+* ifx_db.field_scale:  
+Returns the scale of the indicated column in a result set.  
+
+* ifx_db.field_type:  
+Returns the data type of the indicated column in a result set.  
+
+* ifx_db.field_width:  
+Returns the width of the indicated column in a result set.  
+
+* ifx_db.foreign_keys:  
+Returns a result set listing the foreign keys for a table.  
+
+* ifx_db.free_result:  
+Frees resources associated with a result set.  
+
+* ifx_db.free_stmt:  
+Frees resources associated with the indicated statement resource.  
+
+* ifx_db.get_option:  
+Gets the specified option in the resource.  
+
+* ifx_db.num_fields:  
+Returns the number of fields contained in a result set.  
+
+* ifx_db.num_rows:  
+Returns the number of rows affected by an SQL statement.  
+
+* ifx_db.get_num_result:  
+Returns the number of rows in a current open non-dynamic scrollable cursor.  
+
+* ifx_db.primary_keys:  
+Returns a result set listing primary keys for a table.  
+
+* ifx_db.procedure_columns:  
+Returns a result set listing the parameters for one or more stored procedures.  
+
+* ifx_db.procedures:  
+Returns a result set listing the stored procedures registered in a database.  
+
+* ifx_db.rollback:  Rolls back a transaction.  
+
+* ifx_db.server_info:  
+Returns an object with properties that describe the IDS database server.  
+
+* ifx_db.get_db_info:  
+Returns an object with properties that describe the IDS database server according to the option passed.  
+
+* ifx_db.set_option:  
+Sets the specified option in the resource.  
+
+* ifx_db.special_columns:  
+Returns a result set listing the unique row identifier columns for a table.  
+
+* ifx_db.statistics:  
+Returns a result set listing the index and statistics for a table.  
+
+* ifx_db.stmt_error:  
+Returns a string containing the SQLSTATE returned by an SQL statement.  
+
+* ifx_db.stmt_warn:  
+Returns a warning string containing the SQLSTATE returned by last SQL statement.  
+
+* ifx_db.stmt_errormsg:  
+Returns a string containing the last SQL statement error message.  
+
+* ifx_db.table_privileges:  
+Returns a result set listing the tables and associated privileges in a database. 
+
+* ifx_db.tables:  
+Returns a result set listing the tables and associated metadata in a database.  
+
+* ifx_db.get_last_serial_value:  
+Returns last serial value inserted for identity column.
+

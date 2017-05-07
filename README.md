@@ -3,15 +3,17 @@
 ### Licensed under the Apache License, Version 2.0
 
 ## PythonIfxDB
-Informix Native Driver for Python
+Informix Native Driver for Python is implementation of Python Database API Specification v2.0 for Informix Dynamic Server. The database extension module is written in C language for better efficiency and performance.
 
-### Project status: Internal beta
+### Project status: Alpha: (Internal beta)
+Most of driver functionality is fully functional; we are in the process of adding more tests cases and examples. There is a light chance API spec may change by the time we arrive public beta.
+
 ##### Coming soon
 * Linux build 
-* PyPI: https://pypi.python.org/pypi/ifx_db
 * Tests
 * Examples 
 * Documentation 
+* PyPI: https://pypi.python.org/pypi/ifx_db
  
 
 ## Build 

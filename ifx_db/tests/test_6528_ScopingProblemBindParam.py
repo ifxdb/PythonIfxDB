@@ -22,7 +22,7 @@ class IfxDbTestCase(unittest.TestCase):
       print i
      
   def run_test_6528(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     server = ifx_db.server_info( conn )
     
     if conn:

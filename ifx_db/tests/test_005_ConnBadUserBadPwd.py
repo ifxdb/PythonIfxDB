@@ -18,7 +18,7 @@ class IfxDbTestCase(unittest.TestCase):
   def run_test_005(self):
     baduser = "non_user"
     badpass = "invalid_password"
-    dsn = "DATABASE=" + config.database + ";UID=" + baduser + ";PWD=" + badpass + ";"
+    dsn = "DATABASE=" + config.ConnStr + ";UID=" + baduser + ";PWD=" + badpass + ";"
     try:
       conn = ifx_db.connect(dsn, "", "")
       print "odd, ifx_db.connect succeeded with an invalid user / password"

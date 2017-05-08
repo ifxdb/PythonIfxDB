@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_180)
 
   def run_test_180(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     if conn:
       result = ''
       result2 = ''

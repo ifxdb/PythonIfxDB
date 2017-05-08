@@ -17,7 +17,7 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_265(self):
     # Make a connection
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     cursor_option = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_STATIC}
 

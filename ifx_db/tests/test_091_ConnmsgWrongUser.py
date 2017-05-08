@@ -17,7 +17,7 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_091(self):
     try:
-      conn = ifx_db.connect(config.database, "y", config.password)
+      conn = ifx_db.connect(config.ConnStr, "y", config.password)
       print "??? No way."
     except:
       err = ifx_db.conn_errormsg()

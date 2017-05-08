@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_155)
 
   def run_test_155(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     serverinfo = ifx_db.server_info( conn )
     
     result = ifx_db.exec_immediate(conn, "select * from employee where lastname in ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT')")

@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_130)
 
   def run_test_130(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     
     if conn:
       stmt = ifx_db.prepare(conn, "SELECT id, breed, name, weight FROM animals WHERE id = 0")

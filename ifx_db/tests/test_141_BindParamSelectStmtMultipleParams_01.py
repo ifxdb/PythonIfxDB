@@ -18,7 +18,7 @@ class IfxDbTestCase(unittest.TestCase):
   def run_test_141(self):
     sql = "SELECT id, breed, name, weight FROM animals WHERE id < ? AND weight > ?"
     
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     
     if conn:
       stmt = ifx_db.prepare(conn, sql)

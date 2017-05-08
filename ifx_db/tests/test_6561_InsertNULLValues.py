@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_6561)
 
   def run_test_6561(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     
     if conn:
       ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)

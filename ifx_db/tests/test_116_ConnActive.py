@@ -23,7 +23,7 @@ class IfxDbTestCase(unittest.TestCase):
     else:
       print "Is not active"
 
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     is_alive = ifx_db.active(conn)
     if is_alive:
       print "Is active"
@@ -41,7 +41,7 @@ class IfxDbTestCase(unittest.TestCase):
     print ifx_db.active(conn)
     print ifx_db.active(conn)
     print ifx_db.active(conn)
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     print ifx_db.active(conn)
     print ifx_db.active(conn)
     print ifx_db.active(conn)

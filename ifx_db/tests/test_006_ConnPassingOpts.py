@@ -20,7 +20,7 @@ class IfxDbTestCase(unittest.TestCase):
     options1 = {ifx_db.SQL_ATTR_CURSOR_TYPE:  ifx_db.SQL_CURSOR_KEYSET_DRIVEN}
     options2 = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_FORWARD_ONLY}
       
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
   
     if conn:
       serverinfo = ifx_db.server_info( conn )

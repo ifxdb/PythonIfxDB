@@ -17,7 +17,7 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_008(self):
     op = {ifx_db.ATTR_CASE: ifx_db.CASE_NATURAL}
-    conn = ifx_db.connect(config.database, config.user, config.password, op)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password, op)
     server = ifx_db.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'IDS'):
       result = ifx_db.columns(conn,None,None,"employee")

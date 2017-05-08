@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_018)
 
   def run_test_018(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_ON)
     if conn:
       stmt = ifx_db.prepare(conn, "SELECT * from animals WHERE weight < 10.0" )

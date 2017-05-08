@@ -18,7 +18,7 @@ class IfxDbTestCase(unittest.TestCase):
   def run_test_051(self):
     options = { ifx_db.SQL_ATTR_AUTOCOMMIT:  ifx_db.SQL_AUTOCOMMIT_OFF }
       
-    conn = ifx_db.connect(config.database, config.user, config.password, options)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password, options)
       
     ac = ifx_db.autocommit(conn)
       

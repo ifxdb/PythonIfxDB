@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_022)
 
   def run_test_022(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
       
     if conn:
       stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")

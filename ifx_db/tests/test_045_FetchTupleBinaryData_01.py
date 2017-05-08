@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_045)
     
   def run_test_045(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     fp = open("tests/pic1_out.jpg", "wb")
     result = ifx_db.exec_immediate(conn, "SELECT picture FROM animal_pics WHERE name = 'Helmut'")
     row = ifx_db.fetch_tuple(result)

@@ -17,7 +17,7 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_311(self):
     # Make a connection
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     if conn:
        ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_ON )

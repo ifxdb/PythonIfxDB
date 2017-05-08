@@ -21,7 +21,7 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_000(self):
     # Make a connection
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     # Get the server type
     server = ifx_db.server_info( conn )

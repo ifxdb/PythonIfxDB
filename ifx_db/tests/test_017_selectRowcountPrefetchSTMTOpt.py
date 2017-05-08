@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_017)
 
   def run_test_017(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     if conn:
       result = ifx_db.exec_immediate(conn,"SELECT * from animals WHERE weight < 10.0", { ifx_db.SQL_ATTR_CURSOR_TYPE : ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
       if result:

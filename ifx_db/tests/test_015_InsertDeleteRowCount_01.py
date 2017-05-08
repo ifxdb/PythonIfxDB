@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_015)
 
   def run_test_015(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     if conn:
       result = ifx_db.exec_immediate(conn,"insert into t_string values(123,1.222333,'one to one')")
       if result:

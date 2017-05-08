@@ -16,7 +16,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_125)
 
   def run_test_125(self):
-    conn = ifx_db.connect(config.database, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     server = ifx_db.server_info( conn )
 
     result = ifx_db.exec_immediate(conn, "SELECT * FROM sales")

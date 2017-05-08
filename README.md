@@ -3,10 +3,17 @@
 ### Licensed under the Apache License, Version 2.0
 
 ## PythonIfxDB
-Informix Native Driver for Python is implementation of Python Database API Specification v2.0 for Informix Dynamic Server. The database extension module is written in C language for better efficiency and performance.
+Informix Native Driver for Python is implementation of Python Database API Specification v2.0 for Informix Dynamic Server. 
 
-### Project status: Alpha: (Internal beta)
-Most of driver functionality is fully functional; we are in the process of adding more tests cases and examples. There is a light chance API spec may change by the time we arrive public beta.
+#### ifx_db
+This set of API contain advanced features defined by Informix such as calling stored procedures, metadata information etc. This database extension module is written in C language for better efficiency and performance.
+
+#### ifx_db_dbi (coming soon)
+This set of API implements Python Database API Specification v2.0. Focus on this set of API is the compatibility with the spec that comes with the cost on functionality though. Application comply with the spec may be able to switch heterogeneous databases providing similar set of spec level compliance API.
+
+
+### Project status: Alpha
+Most of ifx_db driver functionality is fully functional; we are in the process of adding documentation, tests cases and examples. There is a chance API spec might change by the time we arrive public beta.
 
 ##### Coming soon
 * Linux build 
@@ -36,7 +43,7 @@ SET MY_PY_DIR=C:\Dev\Python27
 
 ### Get the source code
 For easiness of explanation let me assume C:\Work0 is the location when we clone the PythonIfxDB repository.  
-(You may clone it at any location though, if so make adjustment for the instructions as well).
+(You may clone it at any location though; if so make adjustment for the instructions as well).
 
 ```
 cd C:\Work0
@@ -176,7 +183,7 @@ print "Done"
 [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/)  
   
 
-### Informix Python Driver APIs
+### Informix Advance Python Driver APIs
 * ifx_db.connect:  
 Connect to the database.  
 

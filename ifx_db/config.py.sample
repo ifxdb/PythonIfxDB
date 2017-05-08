@@ -1,0 +1,8 @@
+test_dir	=	'tests'		# Location of testsuite file (relative to current directory) (Don't change this.)
+
+database	=	'sample'	# The connection String
+user		=	'db2inst1'	# User ID to connect with
+password	=	'password'	# Password for given User ID
+hostname	=	'localhost'	# Hostname
+port		=	50000		# Port Number
+

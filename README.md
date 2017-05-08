@@ -3,7 +3,7 @@
 ### Licensed under the Apache License, Version 2.0
 
 ## PythonIfxDB
-Informix Python Driver is a high perfuming data access interface for Python application. This module has implementation of Python Database API Specification v2.0 for Informix Dynamic Server and also the Advance Features as extension. 
+Informix Python Driver is a high perfuming data access interface for Python applications. This module has implementation of Python Database API Specification v2.0 for Informix Dynamic Server and also advance features as extension. 
 
 #### ifx_db
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.

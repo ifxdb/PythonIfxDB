@@ -8,7 +8,7 @@ Informix Python Driver is a high perfuming data access interface for Python appl
 #### ifx_db
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.
 
-#### ifx_db_dbi (coming soon)
+#### ifx_pydb (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
 ### Project status: Alpha
@@ -21,6 +21,10 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 * Documentation 
 * PyPI: https://pypi.python.org/pypi/ifx_db
  
+##### Future Roadmap
+* Django
+* SQLAlchemy 
+
 
 ## Build 
 #### Linux Build 

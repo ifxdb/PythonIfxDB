@@ -99,7 +99,7 @@ class Error(exception):
         super(Error, self).__init__(message)
     def __str__(self):
         """Converts the message to a string."""
-        return 'ifx_db_dbi::'+str(self.__class__.__name__)+': '+str(self._message)
+        return 'ifx_pydb::'+str(self.__class__.__name__)+': '+str(self._message)
 
 
 class Warning(exception):
@@ -113,7 +113,7 @@ class Warning(exception):
         super(Warning,self).__init__(message)
     def __str__(self):
         """Converts the message to a string."""
-        return 'ifx_db_dbi::'+str(self.__class__.__name__)+': '+str(self._message)
+        return 'ifx_pydb::'+str(self.__class__.__name__)+': '+str(self._message)
 
 
 class InterfaceError(Error):
@@ -480,7 +480,7 @@ def _server_connect(dsn, user='', password='', host=''):
   
 def connect(dsn, user='', password='', host='', database='', conn_options=None):
     """This method creates a non persistent connection to the database. It returns
-        a ifx_db_dbi.Connection object.
+        a ifx_pydb.Connection object.
     """
     
     if dsn is None:

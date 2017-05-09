@@ -63,11 +63,12 @@ edit setup.py
 python setup.py build > out.txt 2>&1
 
 FYI: 
-While running setup.py for package build, Python 2.7 searches for an installed Visual Studio 2008.  
+While running setup.py for package build, Python 2.7 searches for an installed Visual Studio 2008.   
 (The installation path of VS2008 is stored in the variable VS90COMNTOOLS).  
 The general pattern for VS installation path is  
 VS<internal version number>COMNTOOLS.  
-That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS. For example:
+That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS.  
+For example:
 
 If you are using Visual Studio 2010 (VS10): 
 SET VS90COMNTOOLS=%VS100COMNTOOLS%

@@ -34,7 +34,7 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 * Informix client SDK 410xC2 or above
 * Set environment variable CSDK_HOM and MY_PY_DIR
 
-### Clone source code
+### Clone the source code
 For easiness of explanation let me assume C:\work is the location when we clone the PythonIfxDB repository.  
 (You may clone it at any location though; if so make adjustment for the instructions as well).
 
@@ -52,48 +52,57 @@ Coming soon
 
 #### Windows build 
 
+##### Build Shell Environment 
+Set CSDK_HOM and MY_PY_DIR environment variables.
+The environment CSDK_HOM points to the Informix Client SDK installation directory. 
+The environment CS MY_PY_DIR points to the Python installation directory. 
+FYI: Edit setup.py manually for the time being, it has been hardcoded in it.
+
 ```
 Open VS2008 (or latest) command windows
+
+Example:
 SET CSDK_HOM=c:\informix
 SET MY_PY_DIR=C:\Dev\Python27
+```
 
+##### Starting the build
+```
 cd C:\work\PythonIfxDB\ifx_db
-edit setup.py (based on your setting)
-
 python setup.py build > out.txt 2>&1
+```
 
 FYI: 
-While running setup.py for package build, Python 2.7 searches for an installed Visual Studio 2008.   
-(The installation path of VS2008 is stored in the variable VS90COMNTOOLS).  
-The general pattern for VS installation path is  
+While running setup.py for package build, Python 2.7 searches for an installed Visual Studio 2008. (The installation path of VS2008 is stored in the variable VS90COMNTOOLS). The general pattern for VS installation path is 
+``` 
 VS<internal version number>COMNTOOLS.  
-That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS.  
-
-For example:
-If you are using Visual Studio 2010 (VS10): 
-SET VS90COMNTOOLS=%VS100COMNTOOLS%
-
-If you are using Visual Studio 2012 (VS11): 
-SET VS90COMNTOOLS=%VS110COMNTOOLS%
-
-If you are using Visual Studio 2013 (VS12): 
-SET VS90COMNTOOLS=%VS120COMNTOOLS%
-
-If you are using Visual Studio 2015 (VS14): 
-SET VS90COMNTOOLS=%VS140COMNTOOLS%
-
-and then issue the folloing command
-python setup.py build
 ```
+That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS.  
+  
+For example:   
+If you are using Visual Studio 2010 (VS10):  
+SET VS90COMNTOOLS=%VS100COMNTOOLS%  
+  
+If you are using Visual Studio 2012 (VS11):   
+SET VS90COMNTOOLS=%VS110COMNTOOLS%  
+  
+If you are using Visual Studio 2013 (VS12):   
+SET VS90COMNTOOLS=%VS120COMNTOOLS%  
+  
+If you are using Visual Studio 2015 (VS14):   
+SET VS90COMNTOOLS=%VS140COMNTOOLS%  
+  
+and then issue the folloing command  
+python setup.py build  
+
 
 ### Install
-On successful build the Informix python package (ifx_db.pyd) should have built at 
-```
+On successful build the Informix python package (ifx_db.pyd) should have built at  
 C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7
 For the time being, you may manually copy Informix python package (ifx_db.pyd) to your Python module directory.
 
-CD MyPyModuleDir
-COPY C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
+```
+COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 ```
 
 

@@ -27,38 +27,38 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 
 
 ## Build 
+##### Prerequisite:
+* Python 2.7 or above (Python 3x support will be coming soon)
+* clone the PythonIfxDB repository
+* Visual Studio 2008 or above (Windows Only)
+* Informix client SDK 410xC2 or above
+* Set environment variable CSDK_HOM and MY_PY_DIR
+
+### Clone source code
+For easiness of explanation let me assume C:\work is the location when we clone the PythonIfxDB repository.  
+(You may clone it at any location though; if so make adjustment for the instructions as well).
+
+```
+cd C:\work
+or
+cd /work 
+
+git clone https://github.com/ifxdb/PythonIfxDB.git
+```
+
+
 #### Linux Build 
 Coming soon
 
 #### Windows build 
-##### Prerequisite:
-* Python 2.7 or above (Python 3x support will be coming soon)
-* clone the PythonIfxDB repository
-* Visual Studio 2008 or above
-* Informix client SDK 410xC2 or above
-* Set environment variable CSDK_HOM and MY_PY_DIR
 
-```
-Example: 
-SET CSDK_HOM=c:\informix
-SET MY_PY_DIR=C:\Dev\Python27
-```
-
-### Get the source code
-For easiness of explanation let me assume C:\Work0 is the location when we clone the PythonIfxDB repository.  
-(You may clone it at any location though; if so make adjustment for the instructions as well).
-
-```
-cd C:\Work0
-git clone https://github.com/ifxdb/PythonIfxDB.git
-```
-
-### Windows build 
 ```
 Open VS2008 (or latest) command windows
-cd C:\Work0\PythonIfxDB\ifx_db
-edit setup.py
+SET CSDK_HOM=c:\informix
+SET MY_PY_DIR=C:\Dev\Python27
 
+cd C:\work\PythonIfxDB\ifx_db
+edit setup.py (based on your setting)
 
 python setup.py build > out.txt 2>&1
 
@@ -68,8 +68,8 @@ While running setup.py for package build, Python 2.7 searches for an installed V
 The general pattern for VS installation path is  
 VS<internal version number>COMNTOOLS.  
 That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS.  
-For example:
 
+For example:
 If you are using Visual Studio 2010 (VS10): 
 SET VS90COMNTOOLS=%VS100COMNTOOLS%
 
@@ -89,11 +89,11 @@ python setup.py build
 ### Install
 On successful build the Informix python package (ifx_db.pyd) should have built at 
 ```
-C:\Work0\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7
+C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7
 For the time being, you may manually copy Informix python package (ifx_db.pyd) to your Python module directory.
 
 CD MyPyModuleDir
-COPY C:\Work0\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ ifx_db.pyd
+COPY C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 ```
 
 
@@ -164,8 +164,8 @@ for sql in SetupSqlSet:
 
 
 sql = "SELECT * FROM t1"
-stmt = ifx_db.exec_immediate(conn, sql)
-dictionary = ifx_db.fetch_both(stmt)
+stmt2 = ifx_db.exec_immediate(conn, sql)
+dictionary = ifx_db.fetch_both(stmt2)
 
 rc = 0
 while dictionary != False:
@@ -176,11 +176,11 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = ifx_db.fetch_both(stmt)
+    dictionary = ifx_db.fetch_both(stmt2)
 
 ifx_db.close(conn)
-print "Done"
 
+print "Done"
 ```
 
 ### Python Database API Specification

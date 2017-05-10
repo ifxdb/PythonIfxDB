@@ -32,8 +32,8 @@ for sql in SetupSqlSet:
 
 
 sql = "SELECT * FROM t1"
-stmt = ifx_db.exec_immediate(conn, sql)
-dictionary = ifx_db.fetch_both(stmt)
+stmt2 = ifx_db.exec_immediate(conn, sql)
+dictionary = ifx_db.fetch_both(stmt2)
 
 rc = 0
 while dictionary != False:
@@ -44,7 +44,7 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = ifx_db.fetch_both(stmt)
+    dictionary = ifx_db.fetch_both(stmt2)
 
 ifx_db.close(conn)
 

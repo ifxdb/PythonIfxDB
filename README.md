@@ -53,9 +53,9 @@ Coming soon
 #### Windows build 
 
 ##### Build Shell Environment 
-Set CSDK_HOM and MY_PY_DIR environment variables.
-The environment CSDK_HOM points to the Informix Client SDK installation directory. 
-The environment CS MY_PY_DIR points to the Python installation directory. 
+Set CSDK_HOM and MY_PY_DIR environment variables.  
+The environment CSDK_HOM points to the Informix Client SDK installation directory.   
+The environment CS MY_PY_DIR points to the Python installation directory.  
 FYI: Edit setup.py manually for the time being, it has been hardcoded in it.
 
 ```
@@ -265,6 +265,9 @@ Commits a transaction.
 
 * ifx_db.cursor_type:  
 Returns the cursor type used by a statement resource.  
+
+* ifx_db.execute_many:  
+Execute SQL with multiple rows.
 
 * ifx_db.field_display_size:  
 Returns the maximum number of bytes required to display a column.  

@@ -1,15 +1,12 @@
 
 import ifx_db
 
-# Fetching rows or columns from result sets
-# https://www.ibm.com/support/knowledgecenter/en/SSEPGG_9.5.0/com.ibm.db2.luw.apdv.python.doc/doc/t0054388.html
-
 # in case of connection problem check the service port mapped to which ip
 # for example the port you configured is 9088 then
 #
 # netstat -a | findstr  9088
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
-
+#ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
+ConStr = "SERVER=ids1210;DATABASE=stores7;UID=informix;PWD=ximrofni;"
 conn = ifx_db.connect( ConStr, "", "")
 
 
@@ -49,3 +46,4 @@ while dictionary != False:
 ifx_db.close(conn)
 
 print "Done"
+

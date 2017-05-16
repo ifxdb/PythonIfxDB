@@ -10,8 +10,8 @@ LICENSE = 'Apache License 2.0'
 
 machine_bits =  8 * struct.calcsize("P")
 is64Bit = True
-#csdk_home = os.environ['CSDK_HOME']
-#py_home = os.environ['MY_PY_DIR']
+csdk_home = os.environ['CSDK_HOME']
+py_home = os.environ['MY_PY_DIR']
 
 if machine_bits == 64:
     is64Bit = True
@@ -22,9 +22,9 @@ else:
 
 
 ext_modules = Extension('ifx_db',
-                   include_dirs = ['C:\\Dev\Python27\\include', 'C:\\Informix\\incl\\cli'],
+                   include_dirs = [py_home + '\\include', csdk_home + '\\incl\\cli'],
                     libraries = ['iclit09b'],
-                    library_dirs = [ 'C:\Informix\lib', 'C:\\Dev\\Python27\\libs'],
+                    library_dirs = [ py_home + '\libs', csdk_home + '\lib'],
                     sources = ['ifx_db.c'])
 
 setup (name    = PACKAGE, 

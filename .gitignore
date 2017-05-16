@@ -141,3 +141,16 @@ ENV/
 
 # mkdocs documentation
 /site
+/1.CSV
+/ifx_db/2.txt
+/22.txt
+/2.CSV
+/11.txt
+/ifx_db/ifx_db.obj
+/ifx_db/pic1.jpg
+/spook.png
+/PythonIfxDB/test.py
+/PythonIfxDB/spook.png
+/PythonIfxDB/pic1.png
+/PythonIfxDB/pic1.jpg
+/ifx_db/spook.png

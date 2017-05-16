@@ -236,8 +236,9 @@ typedef struct _row_hash_struct
 typedef struct _stmt_handle_struct
 {
     PyObject_HEAD
-        SQLHANDLE   hdbc;
+    SQLHANDLE   hdbc;
     SQLHANDLE   hstmt;
+	conn_handle	*connhandle;
     long        s_bin_mode;
     long        cursor_type;
     long        s_case_mode;
@@ -538,6 +539,7 @@ static stmt_handle *_ifx_db_new_stmt_struct(conn_handle* conn_res)
 
     // Initialize stmt resource so parsing assigns updated options if needed 
     stmt_res->hdbc = conn_res->hdbc;
+	stmt_res->connhandle = conn_res;				// JS Keep track of the connection object to check if it was already disconnected
     stmt_res->s_bin_mode = conn_res->c_bin_mode;
     stmt_res->cursor_type = conn_res->c_cursor_type;
     stmt_res->s_case_mode = conn_res->c_case_mode;
@@ -564,7 +566,7 @@ static void _python_ifx_db_free_stmt_struct(stmt_handle *handle)
 {
     static int TestingOnly = 0;
 
-    if (handle->hstmt  != -1)
+    if ( (handle->hstmt  != -1) && (handle->connhandle->handle_active == 1)) // JS don't free if there was a previous SQLDisconnect call
     {
         SQLFreeHandle(SQL_HANDLE_STMT, handle->hstmt);
         if (handle)
@@ -1388,6 +1390,13 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
         else
         {
             /* Need to check for max pconnections? */
+			// JS construct connstring with USER/PASSWORD
+			if (PyString_Size(uidObj)>0) {
+				databaseObj = PyUnicode_Concat(databaseObj, StringOBJ_FromASCII(";UID="));
+				databaseObj = PyUnicode_Concat(databaseObj, uidObj);
+				databaseObj = PyUnicode_Concat(databaseObj, StringOBJ_FromASCII(";PWD="));
+				databaseObj = PyUnicode_Concat(databaseObj, passwordObj);
+			}
         }
 
         if (conn_res == NULL)
@@ -1432,6 +1441,10 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
         rc = SQLSetConnectAttr((SQLHDBC)conn_res->hdbc, SQL_ATTR_AUTOCOMMIT,
             (SQLPOINTER)((SQLLEN)(conn_res->auto_commit)), SQL_NTS);
 
+		// LO_AUTO
+		rc = SQLSetConnectAttr((SQLHDBC)conn_res->hdbc, SQL_INFX_ATTR_LO_AUTOMATIC,	
+			(SQLPOINTER)SQL_TRUE, SQL_IS_UINTEGER);
+
         conn_res->c_bin_mode = IFX_DB_G(bin_mode);
         conn_res->c_case_mode = CASE_NATURAL;
         conn_res->c_use_wchar = WCHAR_YES;
@@ -1472,7 +1485,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
             ConnStrIn = getUnicodeDataAsSQLWCHAR(databaseObj, &isNewBuffer);
             // Connect to Informix database
             {
-                unsigned char StackBuff [512 * sizeof(SQLWCHAR)];
+                unsigned char StackBuff [512 * sizeof(SQLWCHAR)] = { 0 };  // JS zerod
                 SQLWCHAR* ConnectionString = (SQLWCHAR *)StackBuff;
                 SQLWCHAR* ConnectionStringDyna = NULL;
                 SQLWCHAR *DriverTag = NULL;

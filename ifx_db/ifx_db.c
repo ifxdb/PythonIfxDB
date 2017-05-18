@@ -408,6 +408,7 @@ static void _python_ifx_db_free_conn_struct(conn_handle *handle)
         SQLDisconnect((SQLHDBC)handle->hdbc);
         SQLFreeHandle(SQL_HANDLE_DBC, handle->hdbc);
         SQLFreeHandle(SQL_HANDLE_ENV, handle->henv);
+		handle->handle_active = 0;
     }
     Py_TYPE(handle)->tp_free((PyObject*)handle);
 }
@@ -539,7 +540,7 @@ static stmt_handle *_ifx_db_new_stmt_struct(conn_handle* conn_res)
 
     // Initialize stmt resource so parsing assigns updated options if needed 
     stmt_res->hdbc = conn_res->hdbc;
-	stmt_res->connhandle = conn_res;				// JS Keep track of the connection object to check if it was already disconnected
+	stmt_res->connhandle = conn_res;
     stmt_res->s_bin_mode = conn_res->c_bin_mode;
     stmt_res->cursor_type = conn_res->c_cursor_type;
     stmt_res->s_case_mode = conn_res->c_case_mode;
@@ -566,7 +567,7 @@ static void _python_ifx_db_free_stmt_struct(stmt_handle *handle)
 {
     static int TestingOnly = 0;
 
-    if ( (handle->hstmt  != -1) && (handle->connhandle->handle_active == 1)) // JS don't free if there was a previous SQLDisconnect call
+    if ( (handle->hstmt  != -1) && (handle->connhandle->handle_active == 1))
     {
         SQLFreeHandle(SQL_HANDLE_STMT, handle->hstmt);
         if (handle)
@@ -1485,7 +1486,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
             ConnStrIn = getUnicodeDataAsSQLWCHAR(databaseObj, &isNewBuffer);
             // Connect to Informix database
             {
-                unsigned char StackBuff [512 * sizeof(SQLWCHAR)] = { 0 };  // JS zerod
+                unsigned char StackBuff [512 * sizeof(SQLWCHAR)] = { 0 };
                 SQLWCHAR* ConnectionString = (SQLWCHAR *)StackBuff;
                 SQLWCHAR* ConnectionStringDyna = NULL;
                 SQLWCHAR *DriverTag = NULL;

@@ -33,7 +33,7 @@ import inspect
 import ifx_db
 import config
 
-class IbmDbTestFunctions(unittest.TestCase):
+class IfxDbTestFunctions(unittest.TestCase):
   prepconn = ifx_db.connect(config.database, config.user, config.password)
   server = ifx_db.server_info(prepconn)
   ifx_db.close(prepconn)
@@ -93,7 +93,7 @@ class IbmDbTestFunctions(unittest.TestCase):
           self.assertEqual(self.capture(testFuncName), self.expected_AS(callstack[1][1]))
       elif (self.server.DBMS_NAME == "DB2"):
           self.assertEqual(self.capture(testFuncName), self.expected_ZOS(callstack[1][1]))
-      elif (self.server.DBMS_NAME[0:3] == "IDS"):
+      elif (self.server.DBMS_NAME[0:3] == "Inf"):
           self.assertEqual(self.capture(testFuncName), self.expected_IDS(callstack[1][1]))
       else:
           self.assertEqual(self.capture(testFuncName), self.expected_LUW(callstack[1][1]))
@@ -110,7 +110,7 @@ class IbmDbTestFunctions(unittest.TestCase):
           pattern = self.expected_AS(callstack[1][1])
       elif (self.server.DBMS_NAME == "DB2"):
           pattern = self.expected_ZOS(callstack[1][1])
-      elif (self.server.DBMS_NAME[0:3] == "IDS"):
+      elif (self.server.DBMS_NAME[0:3] == "Inf"):
           pattern = self.expected_IDS(callstack[1][1])
       else:
           pattern = self.expected_LUW(callstack[1][1])

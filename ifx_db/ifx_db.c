@@ -10178,9 +10178,9 @@ static PyObject *ifx_db_active(PyObject *self, PyObject *args)
     PyObject *py_conn_res = NULL;
     int rc;
     conn_handle *conn_res = NULL;
-    SQLINTEGER conn_alive;
+    SQLINTEGER conn_dead;
 
-    conn_alive = 0;
+    conn_dead = 1;
 
     if (!PyArg_ParseTuple(args, "O", &py_conn_res))
         return NULL;
@@ -10196,28 +10196,20 @@ static PyObject *ifx_db_active(PyObject *self, PyObject *args)
         {
             conn_res = (conn_handle *)py_conn_res;
         }
-        rc = SQLGetConnectAttr(conn_res->hdbc, SQL_ATTR_PING_DB,
-            (SQLPOINTER)&conn_alive, 0, NULL);
+        rc = SQLGetConnectAttr(conn_res->hdbc, SQL_ATTR_CONNECTION_DEAD,
+            (SQLPOINTER)&conn_dead, 0, NULL);
         if (rc == SQL_ERROR)
         {
             _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
         }
-
+        if (conn_dead == 0)
+        {
+            Py_RETURN_TRUE;
+        }
     }
-    /*
-    * SQLGetConnectAttr with SQL_ATTR_PING_DB will return 0 on failure but will
-    * return the ping time on success.    We only want success or failure.
-    */
-    if (conn_alive == 0)
-    {
-        Py_RETURN_FALSE;
-    }
-    else
-    {
-        Py_RETURN_TRUE;
-    }
+    Py_RETURN_FALSE; 
 }
 
 /*!# ifx_db.get_option

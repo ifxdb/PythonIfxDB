@@ -23,10 +23,7 @@ class IfxDbTestCase(unittest.TestCase):
     server = ifx_db.server_info( conn )
     
     fp = open("tests/spook_out.png", "wb")
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-        result = ifx_db.exec_immediate(conn, "SELECT picture FROM animal_pics WHERE name = 'Spook'")
-    else:
-        result = ifx_db.exec_immediate(conn, "SELECT picture, LENGTH(picture) FROM animal_pics WHERE name = 'Spook'")
+    result = ifx_db.exec_immediate(conn, "SELECT picture FROM animal_pics WHERE name = 'Spook'")
     if (not result):
       print "Could not execute SELECT statement."
       return 0

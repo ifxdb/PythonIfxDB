@@ -22,7 +22,7 @@ class IfxDbTestCase(unittest.TestCase):
       print ifx_db.conn_errormsg()
     
     server = ifx_db.server_info( conn )
-    if ((server.DBMS_NAME[0:2] != "AS") and (server.DBMS_NAME != "DB2") and (server.DBMS_NAME[0:3] != "IDS")):
+    if ((server.DBMS_NAME[0:2] != "AS") and (server.DBMS_NAME != "DB2") and (server.DBMS_NAME[0:3] != "Inf")):
       result = ifx_db.exec_immediate(conn, "VALUES(1)")
       #throw :unsupported unless result
       if (not result):

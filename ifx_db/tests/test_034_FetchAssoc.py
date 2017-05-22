@@ -19,9 +19,8 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     server = ifx_db.server_info( conn )
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+    op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
+    ifx_db.set_option(conn, op, 1)
 
     result = ifx_db.exec_immediate(conn, "select * from staff")
     row = ifx_db.fetch_assoc(result)

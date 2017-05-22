@@ -49,10 +49,7 @@ class IfxDbTestCase(unittest.TestCase):
     except:
       pass
     
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-        result = ifx_db.tables(conn, None, 't')
-    else:
-        result = ifx_db.tables(conn, None, 'T')
+    result = ifx_db.tables(conn, None, 't')
     
     for i in range(0, ifx_db.num_fields(result)):
       print "%s, " % ifx_db.field_name(result, i)
@@ -75,30 +72,9 @@ class IfxDbTestCase(unittest.TestCase):
     ifx_db.exec_immediate(conn, 'DROP TABLE t.t3')
     ifx_db.exec_immediate(conn, 'DROP TABLE t.t4')
 
-#__END__
-#__LUW_EXPECTED__
-#TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS, 
-#
-#, T, T1, TABLE, , 
-#, T, T2, TABLE, , 
-#, T, T3, TABLE, , 
-#, T, T4, TABLE, , 
-#__ZOS_EXPECTED__
-#TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS, 
-#
-#, T, T1, TABLE, , 
-#, T, T2, TABLE, , 
-#, T, T3, TABLE, , 
-#, T, T4, TABLE, , 
-#__SYSTEMI_EXPECTED__
-#TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS, 
-#
-#, T, T1, TABLE, , 
-#, T, T2, TABLE, , 
-#, T, T3, TABLE, , 
-#, T, T4, TABLE, , 
+#__END__ 
 #__IDS_EXPECTED__
-#table_cat, table_schem, table_name, table_type, remarks, 
+#TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE, REMARKS, 
 #
 #, t, t1, TABLE%s, , 
 #, t, t2, TABLE%s, , 

@@ -25,17 +25,9 @@ class IfxDbTestCase(unittest.TestCase):
       while ( ifx_db.fetch_row(stmt) ):
          breed = ifx_db.result(stmt, 1)
          print "string(%d) \"%s\"" % (len(breed), breed)
-         if (server.DBMS_NAME[0:3] == 'IDS'):
-            name = ifx_db.result(stmt, "name")
-         else:
-            name = ifx_db.result(stmt, "NAME")
+         name = ifx_db.result(stmt, "name")
          print "string(%d) \"%s\"" % (len(name), name)
-    
-         # following field does not exist in result set
-         if (server.DBMS_NAME[0:3] == 'IDS'):
-           name = ifx_db.result(stmt, "passport")
-         else:
-           name = ifx_db.result(stmt, "PASSPORT")
+         name = ifx_db.result(stmt, "passport")
          print name
       ifx_db.close(conn)
       
@@ -43,18 +35,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#string(3) "cat"
-#string(16) "Pook            "
-#None
-#__ZOS_EXPECTED__
-#string(3) "cat"
-#string(16) "Pook            "
-#None
-#__SYSTEMI_EXPECTED__
-#string(3) "cat"
-#string(16) "Pook            "
-#None
 #__IDS_EXPECTED__
 #string(3) "cat"
 #string(16) "Pook            "

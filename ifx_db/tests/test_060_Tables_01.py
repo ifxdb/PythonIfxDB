@@ -50,10 +50,7 @@ class IfxDbTestCase(unittest.TestCase):
       pass
     
     if conn:
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        result = ifx_db.tables(conn, None, 't')
-      else:
-        result = ifx_db.tables(conn, None, 'T')
+      result = ifx_db.tables(conn, None, 't')
       i = 0
       row = ifx_db.fetch_both(result)
       while ( row ):

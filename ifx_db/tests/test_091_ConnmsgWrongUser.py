@@ -21,14 +21,9 @@ class IfxDbTestCase(unittest.TestCase):
       print "??? No way."
     except:
       err = ifx_db.conn_errormsg()
-      print err
+      print err[0:68]
 
 #__END__
 #__LUW_EXPECTED__
-#[IBM][CLI Driver] SQL30082N  Security processing failed with reason "24" ("USERNAME AND/OR PASSWORD INVALID").  SQLSTATE=08001 SQLCODE=-30082
-#__ZOS_EXPECTED__
-#[IBM][CLI Driver] SQL30082N  Security processing failed with reason "15" ("PROCESSING FAILURE").  SQLSTATE=08001 SQLCODE=-30082
-#__SYSTEMI_EXPECTED__
-#[IBM][CLI Driver] SQL30082N  Security processing failed with reason "24" ("USERNAME AND/OR PASSWORD INVALID").  SQLSTATE=08001 SQLCODE=-30082
 #__IDS_EXPECTED__
-#[IBM][CLI Driver] SQL30082N  Security processing failed with reason "24" ("USERNAME AND/OR PASSWORD INVALID").  SQLSTATE=08001 SQLCODE=-30082
+#[Informix][Informix ODBC Driver][Informix]Incorrect password or user

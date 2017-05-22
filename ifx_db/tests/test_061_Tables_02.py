@@ -51,14 +51,10 @@ class IfxDbTestCase(unittest.TestCase):
     
     if conn:
       server = ifx_db.server_info( conn )
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-        ifx_db.set_option(conn, op, 1)
+      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
+      ifx_db.set_option(conn, op, 1)
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        result = ifx_db.tables(conn, None, 't');
-      else:
-        result = ifx_db.tables(conn, None, 'T');    
+      result = ifx_db.tables(conn, None, 't');
       i = 0
       row = ifx_db.fetch_both(result)
       while ( row ):
@@ -78,24 +74,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "no connection: %s" % ifx_db.conn_errormsg()
 
 #__END__
-#__LUW_EXPECTED__
-#TT1TABLE
-#TT2TABLE
-#TT3TABLE
-#TT4TABLE
-#done!
-#__ZOS_EXPECTED__
-#TT1TABLE
-#TT2TABLE
-#TT3TABLE
-#TT4TABLE
-#done!
-#__SYSTEMI_EXPECTED__
-#TT1TABLE
-#TT2TABLE
-#TT3TABLE
-#TT4TABLE
-#done!
 #__IDS_EXPECTED__
 #tt1TABLE%s
 #tt2TABLE%s

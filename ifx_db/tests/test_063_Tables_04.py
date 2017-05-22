@@ -20,17 +20,11 @@ class IfxDbTestCase(unittest.TestCase):
       
     result = ifx_db.tables(conn, None, "SYSIBM", "", "VIEW")
     
-    if (type(result) == ifx_db.IBM_DBStatement):
-      print "Resource is a DB2 Statement"
+    if (type(result) == ifx_db.IFX_DBStatement):
+      print "Resource is a IFX Statement"
       
     ifx_db.free_result(result)
 
 #__END__
-#__LUW_EXPECTED__
-#Resource is a DB2 Statement
-#__ZOS_EXPECTED__
-#Resource is a DB2 Statement
-#__SYSTEMI_EXPECTED__
-#Resource is a DB2 Statement
 #__IDS_EXPECTED__
-#Resource is a DB2 Statement
+#Resource is a IFX Statement

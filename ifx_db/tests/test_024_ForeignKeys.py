@@ -51,40 +51,29 @@ class IfxDbTestCase(unittest.TestCase):
       statement = "INSERT INTO test_foreign_keys VALUES ('vince', 1)"
       result = ifx_db.exec_immediate(conn, statement)
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_primary_keys')
-      else:
-        stmt = ifx_db.foreign_keys(conn, None, None, 'TEST_PRIMARY_KEYS')
+      stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_primary_keys')
+      
       row = ifx_db.fetch_tuple(stmt)
       print row[2]
       print row[3]
       print row[6]
       print row[7]
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        stmt = ifx_db.foreign_keys(conn, None, None, None, None, config.user, 'test_keys')
-      else:
-        stmt = ifx_db.foreign_keys(conn, None, None, None, None, None, 'TEST_KEYS')
+      stmt = ifx_db.foreign_keys(conn, None, None, None, None, config.user, 'test_keys')
       row = ifx_db.fetch_tuple(stmt)
       print row[2]
       print row[3]
       print row[6]
       print row[7]
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, None, None)
-      else:
-        stmt = ifx_db.foreign_keys(conn, None, None, 'TEST_KEYS', None, None, None)
+      stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, None, None)
       row = ifx_db.fetch_tuple(stmt)
       print row[2]
       print row[3]
       print row[6]
       print row[7]
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, config.user, 'test_foreign_keys')
-      else:
-        stmt = ifx_db.foreign_keys(conn, None, None, 'TEST_KEYS', None, None, 'TEST_FOREIGN_KEYS')
+      stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, config.user, 'test_foreign_keys')
       row = ifx_db.fetch_tuple(stmt)
       print row[2]
       print row[3]
@@ -98,15 +87,16 @@ class IfxDbTestCase(unittest.TestCase):
         if (not stmt):
           print ifx_db.stmt_errormsg()
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, 'dummy_schema')
-      else:
-        stmt = ifx_db.foreign_keys(conn, None, None, 'TEST_KEYS', None, 'dummy_schema')
+
+      stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, 'dummy_schema')
       row = ifx_db.fetch_tuple(stmt)
       if(not row):
         print "No Data Found"
       else:
-        print row
+        print row[2]
+        print row[3]
+        print row[6]
+        print row[7]
       ifx_db.close(conn)
     else:
       print ifx_db.conn_errormsg()
@@ -186,5 +176,8 @@ class IfxDbTestCase(unittest.TestCase):
 #name
 #test_foreign_keys
 #namef
-#[IBM][CLI Driver] CLI0124E  Invalid argument value. SQLSTATE=HY009 SQLCODE=-99999
-#No Data Found
+#[Microsoft][ODBC Driver Manager] Invalid use of null pointer SQLCODE=0
+#test_keys
+#name
+#test_foreign_keys
+#namef

@@ -23,16 +23,10 @@ class IfxDbTestCase(unittest.TestCase):
         stmt = ifx_db.exec_immediate(conn, "SELECT id, breed, name, weight FROM animals WHERE id = 6")
         
         while (ifx_db.fetch_row(stmt)):
-          if (server.DBMS_NAME[0:3] == 'IDS'):
-            id = ifx_db.result(stmt, "id")
-            breed = ifx_db.result(stmt, "breed")
-            name = ifx_db.result(stmt, "name")
-            weight = ifx_db.result(stmt, "weight")
-          else:
-            id = ifx_db.result(stmt, "ID")
-            breed = ifx_db.result(stmt, "BREED")
-            name = ifx_db.result(stmt, "NAME")
-            weight = ifx_db.result(stmt, "WEIGHT")
+          id = ifx_db.result(stmt, "id")
+          breed = ifx_db.result(stmt, "breed")
+          name = ifx_db.result(stmt, "name")
+          weight = ifx_db.result(stmt, "weight")
           print "int(%d)" % id
           print "string(%d) \"%s\"" % (len(breed), breed)
           print "string(%d) \"%s\"" % (len(name), name)

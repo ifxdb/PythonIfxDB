@@ -27,10 +27,7 @@ class IfxDbTestCase(unittest.TestCase):
     server = ifx_db.server_info( conn )
 
     if (conn != 0):
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        stmt = ifx_db.column_privileges(conn, None, config.user, 'animals')
-      else:
-        stmt = ifx_db.column_privileges(conn, None, None, 'ANIMALS')
+      stmt = ifx_db.column_privileges(conn, None, config.user, 'animals')
       row = ifx_db.fetch_tuple(stmt)
       if row:
         print row[0]
@@ -47,31 +44,12 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed\n\n"
 
 #__END__
-#__LUW_EXPECTED__
-#%s
-#%s
-#ANIMALS
-#BREED
-#SYSIBM
-#%s
-#%s
-#YES
-#__ZOS_EXPECTED__
-#%s
-#%s
-#ANIMALS
-#BREED
-#%s
-#%s
-#%s
-#YES
-#__SYSTEMI_EXPECTED__
-#%s
-#%s
-#ANIMALS
-#BREED
-#None
-#%s
-#%s
-#YES
 #__IDS_EXPECTED__
+#stores7
+#informix
+#animals
+#breed
+#informix
+#public
+#INSERT
+#NO

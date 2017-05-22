@@ -24,11 +24,5 @@ class IfxDbTestCase(unittest.TestCase):
       print err
 
 #__END__
-#__LUW_EXPECTED__
-#08001
-#__ZOS_EXPECTED__
-#08001
-#__SYSTEMI_EXPECTED__
-#08001
 #__IDS_EXPECTED__
-#08001
+#28000

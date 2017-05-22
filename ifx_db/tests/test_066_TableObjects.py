@@ -19,105 +19,63 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     server = ifx_db.server_info( conn )
 
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      result = ifx_db.tables(conn, None, config.user.lower(), 'animals')
-    else:
-      result = ifx_db.tables(conn, None, config.user.upper(), 'ANIMALS')
+    result = ifx_db.tables(conn, None, config.user.lower(), 'animals')
       
 #    NOTE: This is a workaround
 #    function fetch_object() to be implemented...
 #    row = ifx_db.fetch_object(result)
-    
+#    JS: check .lower() functionatily  
+  
     class Row:
         pass
 
     data = ifx_db.fetch_assoc(result)
     while ( data ):
       row = Row()
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        row.table_schem = data['table_schem']
-        row.table_name = data['table_name']
-        row.table_type = data['table_type']
-        row.remarks = data['remarks']
+      row.table_schem = data['TABLE_SCHEM']
+      row.table_name = data['TABLE_NAME']
+      row.table_type = data['TABLE_TYPE']
+      row.remarks = data['REMARKS']
           
-        print "Schema:  %s" % row.table_schem
-        print "Name:    %s" % row.table_name
-        print "Type:    %s" % row.table_type
-        print "Remarks: %s\n" % row.remarks
-      else:
-        row.TABLE_SCHEM = data['TABLE_SCHEM']
-        row.TABLE_NAME = data['TABLE_NAME']
-        row.TABLE_TYPE = data['TABLE_TYPE']
-        row.REMARKS = data['REMARKS']
-          
-        print "Schema:  %s" % row.TABLE_SCHEM
-        print "Name:    %s" % row.TABLE_NAME
-        print "Type:    %s" % row.TABLE_TYPE
-        print "Remarks: %s\n" % row.REMARKS
+      print "Schema:  %s" % row.table_schem
+      print "Name:    %s" % row.table_name
+      print "Type:    %s" % row.table_type
+      print "Remarks: %s\n" % row.remarks
 #      row = ifx_db.fetch_object(result)
       data = ifx_db.fetch_assoc(result)
 
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      result = ifx_db.tables(conn, None, config.user.lower(), 'animal_pics')
-    else:
-      result = ifx_db.tables(conn, None, config.user.upper(), 'ANIMAL_PICS')
+    result = ifx_db.tables(conn, None, config.user.lower(), 'animal_pics')
     
 #    row = ifx_db.fetch_object(result)
     data = ifx_db.fetch_assoc(result)
     while (data ):
       row = Row()
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        row.table_schem = data['table_schem']
-        row.table_name = data['table_name']
-        row.table_type = data['table_type']
-        row.remarks = data['remarks']
+      row.table_schem = data['TABLE_SCHEM']
+      row.table_name = data['TABLE_NAME']
+      row.table_type = data['TABLE_TYPE']
+      row.remarks = data['REMARKS']
         
-        print "Schema:  %s" % row.table_schem
-        print "Name:    %s" % row.table_name
-        print "Type:    %s" % row.table_type
-        print "Remarks: %s\n" % row.remarks
-      else:
-        row.TABLE_SCHEM = data['TABLE_SCHEM']
-        row.TABLE_NAME = data['TABLE_NAME']
-        row.TABLE_TYPE = data['TABLE_TYPE']
-        row.REMARKS = data['REMARKS']
-        
-        print "Schema:  %s" % row.TABLE_SCHEM
-        print "Name:    %s" % row.TABLE_NAME
-        print "Type:    %s" % row.TABLE_TYPE
-        print "Remarks: %s\n" % row.REMARKS
-#      row = ifx_db.fetch_object(result)
+      print "Schema:  %s" % row.table_schem
+      print "Name:    %s" % row.table_name
+      print "Type:    %s" % row.table_type
+      print "Remarks: %s\n" % row.remarks
       data = ifx_db.fetch_assoc(result)
       
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      result = ifx_db.tables(conn, None, config.user.lower(), 'anime_cat')
-    else:
-      result = ifx_db.tables(conn, None, config.user.upper(), 'ANIME_CAT')
+    result = ifx_db.tables(conn, None, config.user.lower(), 'anime_cat')
     
 #    row = ifx_db.fetch_object(result)
     data = ifx_db.fetch_assoc(result)
     while ( data ): 
       row = Row()
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        row.table_schem = data['table_schem']
-        row.table_name = data['table_name']
-        row.table_type = data['table_type']
-        row.remarks = data['remarks']
+      row.table_schem = data['TABLE_SCHEM']
+      row.table_name = data['TABLE_NAME']
+      row.table_type = data['TABLE_TYPE']
+      row.remarks = data['REMARKS']
         
-        print "Schema:  %s" % row.table_schem
-        print "Name:    %s" % row.table_name
-        print "Type:    %s" % row.table_type
-        print "Remarks: %s\n" % row.remarks
-      else:
-        row.TABLE_SCHEM = data['TABLE_SCHEM']
-        row.TABLE_NAME = data['TABLE_NAME']
-        row.TABLE_TYPE = data['TABLE_TYPE']
-        row.REMARKS = data['REMARKS']
-        
-        print "Schema:  %s" % row.TABLE_SCHEM
-        print "Name:    %s" % row.TABLE_NAME
-        print "Type:    %s" % row.TABLE_TYPE
-        print "Remarks: %s\n" % row.REMARKS
+      print "Schema:  %s" % row.table_schem
+      print "Name:    %s" % row.table_name
+      print "Type:    %s" % row.table_type
+      print "Remarks: %s\n" % row.remarks
 #      row = ifx_db.fetch_object(result)
       data = ifx_db.fetch_assoc(result)
     

@@ -19,10 +19,7 @@ class IfxDbTestCase(unittest.TestCase):
     op = {ifx_db.ATTR_CASE: ifx_db.CASE_NATURAL}
     conn = ifx_db.connect(config.ConnStr, config.user, config.password, op)
     server = ifx_db.server_info( conn )
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      result = ifx_db.columns(conn,None,None,"employee")
-    else:
-      result = ifx_db.columns(conn,None,None,"EMPLOYEE")
+    result = ifx_db.columns(conn,None,None,"employee")
     row = ifx_db.fetch_both(result)
     value1 = None
     value2 = None
@@ -43,10 +40,7 @@ class IfxDbTestCase(unittest.TestCase):
 
     op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
     ifx_db.set_option(conn, op, 1)
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      result = ifx_db.columns(conn,None,None,"employee")
-    else:
-      result = ifx_db.columns(conn,None,None,"EMPLOYEE")
+    result = ifx_db.columns(conn,None,None,"employee")
     row = ifx_db.fetch_both(result)
     value1 = None
     value2 = None
@@ -67,10 +61,7 @@ class IfxDbTestCase(unittest.TestCase):
     
     op = {ifx_db.ATTR_CASE: ifx_db.CASE_LOWER}
     ifx_db.set_option(conn, op, 1)
-    if (server.DBMS_NAME[0:3] == 'IDS'):
-      result = ifx_db.columns(conn,None,None,"employee")
-    else:
-      result = ifx_db.columns(conn,None,None,"EMPLOYEE")
+    result = ifx_db.columns(conn,None,None,"employee")
     row = ifx_db.fetch_both(result)
     value1 = None
     value2 = None
@@ -90,50 +81,11 @@ class IfxDbTestCase(unittest.TestCase):
     print value4
 
 #__END__
-#__LUW_EXPECTED__
-#EMPLOYEE
-#EMPNO
-#None
-#None
-#EMPLOYEE
-#EMPNO
-#None
-#None
-#None
-#None
-#EMPLOYEE
-#EMPNO
-#__ZOS_EXPECTED__
-#EMPLOYEE
-#EMPNO
-#None
-#None
-#EMPLOYEE
-#EMPNO
-#None
-#None
-#None
-#None
-#EMPLOYEE
-#EMPNO
-#__SYSTEMI_EXPECTED__
-#EMPLOYEE
-#EMPNO
-#None
-#None
-#EMPLOYEE
-#EMPNO
-#None
-#None
-#None
-#None
-#EMPLOYEE
-#EMPNO
 #__IDS_EXPECTED__
-#None
-#None
 #employee
 #empno
+#None
+#None
 #employee
 #empno
 #None

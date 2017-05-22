@@ -49,6 +49,7 @@ class IfxDbTestFunctions(unittest.TestCase):
     func()
     sys.stdout = sys.__stdout__
     var = buffer.getvalue()
+    #print var # JS debug	
     var = var.replace('\n', '').replace('\r', '')
     return var
   

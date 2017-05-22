@@ -28,10 +28,7 @@ class IfxDbTestCase(unittest.TestCase):
     val = ifx_db.get_option(stmt, ifx_db.SQL_ATTR_CURSOR_TYPE, 0)
     print val
 
-    if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
-      op = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN}
-    else:
-      op = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_STATIC}
+    op = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN}
     stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals", op)
     val = ifx_db.get_option(stmt, ifx_db.SQL_ATTR_CURSOR_TYPE, 0)
     print val
@@ -42,24 +39,9 @@ class IfxDbTestCase(unittest.TestCase):
     print val
 
 #__END__
-#__LUW_EXPECTED__
-#0
-#0
-#1
-#3
-#__ZOS_EXPECTED__
-#0
-#0
-#1
-#3
-#__SYSTEMI_EXPECTED__
-#0
-#0
-#3
-#3
 #__IDS_EXPECTED__
 #0
 #0
-#3
-#3
+#0
+#0
 #

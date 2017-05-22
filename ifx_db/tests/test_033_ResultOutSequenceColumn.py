@@ -27,10 +27,7 @@ class IfxDbTestCase(unittest.TestCase):
         print "string(%d) \"%s\"" % (len(str(weight)), weight)
         breed = ifx_db.result(stmt, 1)
         print "string(%d) \"%s\"" % (len(breed), breed)
-        if (server.DBMS_NAME[0:3] == 'IDS'):
-          name = ifx_db.result(stmt, "name")
-        else:
-          name = ifx_db.result(stmt, "NAME")
+        name = ifx_db.result(stmt, "name")
         print "string(%d) \"%s\"" % (len(name), name)
       ifx_db.close(conn)
     else:

@@ -19,8 +19,8 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-      if (type(conn) == ifx_db.IBM_DBConnection):
-        print "Resource is a DB2 Connection"
+      if (type(conn) == ifx_db.IFX_DBConnection):
+        print "Resource is a Ifx Connection"
       
       rc = ifx_db.close(conn)
       
@@ -29,15 +29,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#Resource is a DB2 Connection
-#True
-#__ZOS_EXPECTED__
-#Resource is a DB2 Connection
-#True
-#__SYSTEMI_EXPECTED__
-#Resource is a DB2 Connection
-#True
 #__IDS_EXPECTED__
-#Resource is a DB2 Connection
+#Resource is a Ifx Connection
 #True

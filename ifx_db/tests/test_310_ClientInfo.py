@@ -27,8 +27,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "DRIVER_ODBC_VER: string(%d) \"%s\"" % (len(client.DRIVER_ODBC_VER), client.DRIVER_ODBC_VER)
       print "ODBC_VER: string(%d) \"%s\"" % (len(client.ODBC_VER), client.ODBC_VER)
       print "ODBC_SQL_CONFORMANCE: string(%d) \"%s\"" % (len(client.ODBC_SQL_CONFORMANCE), client.ODBC_SQL_CONFORMANCE)
-      print "APPL_CODEPAGE: int(%s)" % client.APPL_CODEPAGE
-      print "CONN_CODEPAGE: int(%s)" % client.CONN_CODEPAGE
     
       ifx_db.close(conn)
     else:
@@ -69,5 +67,3 @@ class IfxDbTestCase(unittest.TestCase):
 #DRIVER_ODBC_VER: string(%d) %s
 #ODBC_VER: string(%d) %s
 #ODBC_SQL_CONFORMANCE: string(%d) %s
-#APPL_CODEPAGE: int(%d)
-#CONN_CODEPAGE: int(%d)

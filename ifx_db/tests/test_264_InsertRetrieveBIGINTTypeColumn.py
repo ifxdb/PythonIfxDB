@@ -21,7 +21,7 @@ class IfxDbTestCase(unittest.TestCase):
 
     if conn:
        server = ifx_db.server_info( conn )
-       if (server.DBMS_NAME[0:3] == 'IDS'):
+       if (server.DBMS_NAME[0:3] == 'Inf'):
           op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
           ifx_db.set_option(conn, op, 1)
 
@@ -33,7 +33,7 @@ class IfxDbTestCase(unittest.TestCase):
        except:
          pass
        # Create the tab_bigint table
-       if (server.DBMS_NAME[0:3] == 'IDS'):
+       if (server.DBMS_NAME[0:3] == 'Inf'):
           create = "CREATE TABLE tab_bigint (col1 INT8, col2 INT8, col3 INT8, col4 INT8)"
        else:
           create = "CREATE TABLE tab_bigint (col1 BIGINT, col2 BIGINT, col3 BIGINT, col4 BIGINT)"
@@ -60,7 +60,7 @@ class IfxDbTestCase(unittest.TestCase):
        stmt1 = ifx_db.prepare(conn, "SELECT col2 FROM tab_bigint")
        ifx_db.execute(stmt1)
        ifx_db.fetch_row(stmt1, 0)
-       if (server.DBMS_NAME[0:3] != 'IDS'):
+       if (server.DBMS_NAME[0:3] != 'Inf'):
          row1 = ifx_db.result(stmt1, 'COL2')
        else:
          row1 = ifx_db.result(stmt1, 'col2')

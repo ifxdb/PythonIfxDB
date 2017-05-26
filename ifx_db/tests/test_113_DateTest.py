@@ -28,17 +28,10 @@ class IfxDbTestCase(unittest.TestCase):
       create = "CREATE TABLE datetest ( id INTEGER, mydate DATE )"
       ifx_db.exec_immediate(conn, create)
 
-      server = ifx_db.server_info( conn )
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        insert = "INSERT INTO datetest (id, mydate) VALUES (1,'1982-03-27')"
-        ifx_db.exec_immediate(conn, insert)
-        insert = "INSERT INTO datetest (id, mydate) VALUES (2,'1981-07-08')"
-        ifx_db.exec_immediate(conn, insert)
-      else:
-        insert = "INSERT INTO datetest (id, mydate) VALUES (1,'1982-03-27')"
-        ifx_db.exec_immediate(conn, insert)
-        insert = "INSERT INTO datetest (id, mydate) VALUES (2,'1981-07-08')"
-        ifx_db.exec_immediate(conn, insert)
+      insert = "INSERT INTO datetest (id, mydate) VALUES (1,'03-27-1982')"
+      ifx_db.exec_immediate(conn, insert)
+      insert = "INSERT INTO datetest (id, mydate) VALUES (2,'07-08-1981')"
+      ifx_db.exec_immediate(conn, insert)
       
       stmt = ifx_db.prepare(conn, "SELECT * FROM datetest")
       ifx_db.execute(stmt)
@@ -54,21 +47,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#1
-#1982-03-27
-#2
-#1981-07-08
-#__ZOS_EXPECTED__
-#1
-#1982-03-27
-#2
-#1981-07-08
-#__SYSTEMI_EXPECTED__
-#1
-#1982-03-27
-#2
-#1981-07-08
 #__IDS_EXPECTED__
 #1
 #1982-03-27

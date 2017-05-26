@@ -23,7 +23,7 @@ class IfxDbTestCase(unittest.TestCase):
 
     if conn:
       server = ifx_db.server_info( conn )
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
          op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
          ifx_db.set_option(conn, op, 1)
 
@@ -37,10 +37,10 @@ class IfxDbTestCase(unittest.TestCase):
       except:
         pass
 
-      if ((server.DBMS_NAME[0:3] == 'IDS') or (server.DBMS_NAME[0:2] == "AS")):
-        sql = "create table test(id integer, name VARCHAR(10), clob_col CLOB, some_var VARCHAR(100) )"
+      if ((server.DBMS_NAME[0:3] == 'Inf') or (server.DBMS_NAME[0:2] == "AS")):
+        sql = "create table test(id integer, name VARCHAR(10), text_col VARCHAR(100), some_var VARCHAR(100) )"
       else:
-        sql = "create table test(id integer, name VARCHAR(10), clob_col CLOB, some_var XML )"
+        sql = "create table test(id integer, name VARCHAR(10), text_col CLOB, some_var XML )"
 
       stmt = ifx_db.prepare(conn, sql)
       ifx_db.set_option(stmt, cursor_option, 0)
@@ -50,35 +50,35 @@ class IfxDbTestCase(unittest.TestCase):
       sql = 'select id from test'
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #ifx_db.set_option(stmt, cursor_option, 0)
       ifx_db.execute(stmt)
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)
 
       sql = "insert into test values( 1, 'some', 'here is a clob value', '<?xml version=\"1.0\" encoding=\"UTF-8\" ?><test attribute=\"value\"/>')"
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #ifx_db.set_option(stmt, cursor_option, 0)
       ifx_db.execute(stmt)
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)
 
       sql = "insert into test values(2, 'value', 'clob data', NULL)"
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #ifx_db.set_option(stmt, cursor_option, 0)
       ifx_db.execute(stmt)
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)
 
       sql = "insert into test values(2, 'in varchar', 'data2', NULL)"
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #ifx_db.set_option(stmt, cursor_option, 0)
       ifx_db.execute(stmt)
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)
 
       sql = 'select * from test'
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #ifx_db.set_option(stmt, cursor_option, 0)
       ifx_db.execute(stmt)
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)
       row = ifx_db.fetch_tuple(stmt)
@@ -89,7 +89,7 @@ class IfxDbTestCase(unittest.TestCase):
       sql = 'select id, name from test where id = ?'
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #fx_db.set_option(stmt, cursor_option, 0)
       ifx_db.execute(stmt, (2,))
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)
       row = ifx_db.fetch_tuple(stmt)
@@ -97,13 +97,13 @@ class IfxDbTestCase(unittest.TestCase):
         print "%s, %s\n" %(row[0], row[1])
         row = ifx_db.fetch_tuple(stmt)
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         sql = "select * from test"
       else:
         sql = 'select * from test fetch first 12 rows only optimize for 12 rows'
 
       stmt = ifx_db.prepare(conn, sql)
-      ifx_db.set_option(stmt, cursor_option, 0)
+      #ifx_db.set_option(stmt, cursor_option, 0)
       #ifx_db.num_fields(stmt)
       ifx_db.execute(stmt)
       print "Number of affected rows: %d" % ifx_db.get_num_result(stmt)

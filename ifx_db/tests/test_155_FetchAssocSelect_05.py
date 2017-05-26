@@ -24,7 +24,7 @@ class IfxDbTestCase(unittest.TestCase):
     row = ifx_db.fetch_assoc(result)
     while ( row ):
       i += 1
-      if (serverinfo.DBMS_NAME[0:3] == 'IDS'):
+      if (serverinfo.DBMS_NAME[0:3] == 'Inf'):
         if (row['midinit'] == None):
           row['midinit'] = ''
         print "%6s %12s %s %-15s%3s %4s %10s %-8s%4d %s%10s %12s %12s %12s" % \

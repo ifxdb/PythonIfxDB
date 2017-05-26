@@ -16,12 +16,12 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_157)
 
   def run_test_157(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = ifx_db.connect(config.ConnStr + 'ENABLESCROLLABLECURSORS=1', config.user, config.password)
     server = ifx_db.server_info( conn )
 
     if conn:
       sql = "SELECT id, name, breed, weight FROM animals ORDER BY breed"
-      if (server.DBMS_NAME[0:3] != 'IDS'):
+      if (server.DBMS_NAME[0:3] != 'Inf'):
         result = ifx_db.exec_immediate(conn, sql, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
       else:
         result = ifx_db.exec_immediate(conn, sql, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_STATIC})
@@ -29,7 +29,7 @@ class IfxDbTestCase(unittest.TestCase):
       i = 2
       row = ifx_db.fetch_assoc(result, i)
       while ( row ):
-        if (server.DBMS_NAME[0:3] == 'IDS'):
+        if (server.DBMS_NAME[0:3] == 'Inf'):
 	           print "%-5d %-16s %-32s %10s\n" % (row['id'], row['name'], row['breed'], row['weight'])
         else:
 	           print "%-5d %-16s %-32s %10s\n" % (row['ID'], row['NAME'], row['BREED'], row['WEIGHT'])

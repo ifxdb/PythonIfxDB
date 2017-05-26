@@ -16,54 +16,36 @@ class IfxDbTestCase(unittest.TestCase):
 
     def run_test_warn(self):
         conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-        
-        # Get the server type
-        serverinfo = ifx_db.server_info( conn )
-    
+            
         if conn:
 
-            drop = "DROP TABLE WITH_CLOB"
+            drop = "DROP TABLE TEST1"
             try:
                 result = ifx_db.exec_immediate(conn,drop)
             except:
                 pass
 
-            # Create the table with_clob
+            # Create the table test1
 
-            if (serverinfo.DBMS_NAME[0:3] != 'IDS'): 
-                create = "CREATE TABLE WITH_CLOB (id SMALLINT NOT NULL, clob_col CLOB(1k))"
-            else:
-                create = "CREATE TABLE WITH_CLOB (id SMALLINT NOT NULL, clob_col CLOB(smart))"
+            create = "CREATE TABLE TEST1 (COL1 CHAR(5))"
             result = ifx_db.exec_immediate(conn, create)
 
-            # Select the result from the table. This is just to verify we get appropriate warning using
+            # Insert a string longer than 5 characters to force an error 
             # ifx_db.stmt_warn() API
 
-            query = 'SELECT * FROM WITH_CLOB'
-            if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
-                stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
-            else:
-               stmt = ifx_db.prepare(conn, query)
-
-            ifx_db.execute(stmt)
-            data = ifx_db.fetch_both( stmt )
-            if data:
-                print("Success")
-            else:
-                print("No Data")
-                print(ifx_db.stmt_warn(stmt))
+            query = 'INSERT INTO TEST1 VALUES (?)'
+            stmt = ifx_db.prepare(conn, query)
+            try:
+                ifx_db.execute(stmt, ('ABCDEF',))
+            except:
+                pass
+				
+            print(ifx_db.stmt_warn(stmt))
+			
             ifx_db.close(conn)
         else:
             print ("Connection failed.")
 
 #__END__
-#__LUW_EXPECTED__
-#No Data[IBM][CLI Driver][DB2%s] SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
-#__ZOS_EXPECTED__
-#No Data[IBM][CLI Driver][DB2]
-# SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
-#__SYSTEMI_EXPECTED__
-#No Data
 #__IDS_EXPECTED__
-#No Data
-#[IBM][CLI Driver][IDS/%s] SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
+#[Informix][Informix ODBC Driver]String data right truncation. SQLCODE=-11023

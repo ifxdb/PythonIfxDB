@@ -41,11 +41,5 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#Statement Execute Failed: [IBM][CLI Driver] CLI0112E  Error in assignment. SQLSTATE=22005 SQLCODE=-99999
-#__ZOS_EXPECTED__
-#Statement Execute Failed: [IBM][CLI Driver] CLI0112E  Error in assignment. SQLSTATE=22005 SQLCODE=-99999
-#__SYSTEMI_EXPECTED__
-#Statement Execute Failed: [IBM][CLI Driver] CLI0112E  Error in assignment. SQLSTATE=22005 SQLCODE=-99999
 #__IDS_EXPECTED__
-#Statement Execute Failed: [IBM][CLI Driver] CLI0112E  Error in assignment. SQLSTATE=22005 SQLCODE=-99999
+#Statement Execute Failed: [Informix][Informix ODBC Driver]Invalid character value for cast specification. SQLCODE=-11106

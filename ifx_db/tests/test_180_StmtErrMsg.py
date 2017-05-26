@@ -54,4 +54,4 @@ class IfxDbTestCase(unittest.TestCase):
 #__SYSTEMI_EXPECTED__
 #[IBM][CLI Driver][AS] SQL0104N  An unexpected token "INT0" was found following "".  Expected tokens may include:  "INTO".  SQLSTATE=42601 SQLCODE=-104col: 0 , affected row: 0
 #__IDS_EXPECTED__
-#[IBM][CLI Driver][IDS/%s] A syntax error has occurred. SQLCODE=-201col: 0 , affected row: 0
+#[Informix][Informix ODBC Driver][Informix]A syntax error has occurred. SQLCODE=-201col: 0 , affected row: 0

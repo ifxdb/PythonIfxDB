@@ -19,7 +19,7 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     server = ifx_db.server_info( conn )
-    if (server.DBMS_NAME[0:3] == 'IDS'):
+    if (server.DBMS_NAME[0:3] == 'Inf'):
       op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
       ifx_db.set_option(conn, op, 1)
 
@@ -30,7 +30,7 @@ class IfxDbTestCase(unittest.TestCase):
         pass
     
     server = ifx_db.server_info( conn )
-    if (server.DBMS_NAME[0:3] == 'IDS'):
+    if (server.DBMS_NAME[0:3] == 'Inf'):
       statement = 'CREATE TABLE fetch_test (col1 VARCHAR(20), col2 CLOB, col3 INTEGER)'
       st0 = "INSERT INTO fetch_test VALUES ('column 0', 'Data in the clob 0', 0)"
       st1 = "INSERT INTO fetch_test VALUES ('column 1', 'Data in the clob 1', 1)"

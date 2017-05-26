@@ -20,7 +20,7 @@ class IfxDbTestCase(unittest.TestCase):
       
       if conn:
         serverinfo = ifx_db.server_info( conn )
-        if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
+        if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
           stmt = ifx_db.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
         else:
           stmt = ifx_db.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0")

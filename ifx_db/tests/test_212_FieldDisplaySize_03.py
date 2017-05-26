@@ -21,7 +21,7 @@ class IfxDbTestCase(unittest.TestCase):
 
     result = ifx_db.exec_immediate(conn, "select * from sales")
     
-    if (server.DBMS_NAME[0:3] == 'IDS'):
+    if (server.DBMS_NAME[0:3] == 'Inf'):
       i = "sales_person"
     else:
       i = "SALES_PERSON"

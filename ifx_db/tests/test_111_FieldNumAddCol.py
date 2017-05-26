@@ -18,7 +18,6 @@ class IfxDbTestCase(unittest.TestCase):
   def run_test_111(self):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     server = ifx_db.server_info( conn )
-
     if conn:
       ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
 
@@ -27,7 +26,7 @@ class IfxDbTestCase(unittest.TestCase):
       
       stmt = ifx_db.exec_immediate(conn, "SELECT breed, COUNT(breed) AS number FROM animals GROUP BY breed ORDER BY breed")
     
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         num1 = ifx_db.field_num(stmt, "id")
         num2 = ifx_db.field_num(stmt, "breed")
         num3 = ifx_db.field_num(stmt, "number")
@@ -61,33 +60,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#False
-#int(0)
-#int(1)
-#False
-#False
-#False
-#int(1)
-#False
-#__ZOS_EXPECTED__
-#False
-#int(0)
-#int(1)
-#False
-#False
-#False
-#int(1)
-#False
-#__SYSTEMI_EXPECTED__
-#False
-#int(0)
-#int(1)
-#False
-#False
-#False
-#int(1)
-#False
 #__IDS_EXPECTED__
 #False
 #int(0)

@@ -29,13 +29,13 @@ class IfxDbTestCase(unittest.TestCase):
       rc = ifx_db.exec_immediate(conn, "CREATE UNIQUE INDEX index1 ON index_test (id)")
 
       print "Test first index table:"
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         result = ifx_db.statistics(conn,None,config.user,"index_test",True)
       else:
         result = ifx_db.statistics(conn,None,None,"INDEX_TEST",True)
       row = ifx_db.fetch_tuple(result)
       ## skipping table info row. statistics returns informtation about table itself for informix ###
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         row = ifx_db.fetch_tuple(result)
       print row[2]  # TABLE_NAME
       print row[3]  # NON_UNIQUE
@@ -50,13 +50,13 @@ class IfxDbTestCase(unittest.TestCase):
       rc = ifx_db.exec_immediate(conn, "CREATE INDEX index2 ON index_test2 (data)")
 
       print "Test second index table:"
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         result = ifx_db.statistics(conn,None,config.user,"index_test2",True)
       else:
         result = ifx_db.statistics(conn,None,None,"INDEX_TEST2",True)
       row = ifx_db.fetch_tuple(result)
       ### skipping table info row. statistics returns informtation about table itself for informix ###
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         row = ifx_db.fetch_tuple(result)
       print row[2]  # TABLE_NAME
       print row[3]  # NON_UNIQUE
@@ -64,7 +64,7 @@ class IfxDbTestCase(unittest.TestCase):
       print row[8]  # COLUMN_NAME
 
       print "Test non-existent table:"
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         result = ifx_db.statistics(conn,None,config.user,"non_existent_table",True)
       else:
         result = ifx_db.statistics(conn,None,None,"NON_EXISTENT_TABLE",True)

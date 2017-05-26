@@ -19,7 +19,7 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     server = ifx_db.server_info( conn )
-    if (server.DBMS_NAME[0:3] == 'IDS'):
+    if (server.DBMS_NAME[0:3] == 'Inf'):
       op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
       ifx_db.set_option(conn, op, 1)
     
@@ -48,7 +48,7 @@ class IfxDbTestCase(unittest.TestCase):
       
       row = Row()
       ifx_db.fetch_row(stmt, 0)
-      if (server.DBMS_NAME[0:3] != 'IDS'):
+      if (server.DBMS_NAME[0:3] != 'Inf'):
         row.DATA = ifx_db.result(stmt, 'DATA')
       else:
         row.DATA = ifx_db.result(stmt, 'data')
@@ -62,7 +62,7 @@ class IfxDbTestCase(unittest.TestCase):
       
 #      row = ifx_db.fetch_object(stmt, 0)
       ifx_db.fetch_row(stmt, 0)
-      if (server.DBMS_NAME[0:3] != 'IDS'):
+      if (server.DBMS_NAME[0:3] != 'Inf'):
         row.DATA = ifx_db.result(stmt, 'DATA')
       else:
         row.DATA = ifx_db.result(stmt, 'data')

@@ -63,39 +63,12 @@ class IfxDbTestCase(unittest.TestCase):
     print "Done"
 
 #__END__
-#__LUW_EXPECTED__
-#Starting test ...
-#
-#SQLSTATE: 22001
-#Message: [IBM][CLI Driver] CLI0109E  String data right truncation. SQLSTATE=22001 SQLCODE=-99999
-#True
-#SQLSTATE: 02000
-#Message: [IBM][CLI Driver][DB2/%s] SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
-#Done
-#__ZOS_EXPECTED__
-#Starting test ...
-#
-#SQLSTATE: 22001
-#Message: [IBM][CLI Driver] CLI0109E  String data right truncation. SQLSTATE=22001 SQLCODE=-99999
-#True
-#SQLSTATE: 02000
-#Message: [IBM][CLI Driver][DB2] SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
-#Done
-#__SYSTEMI_EXPECTED__
-#Starting test ...
-#
-#SQLSTATE: 22001
-#Message: [IBM][CLI Driver] CLI0109E  String data right truncation. SQLSTATE=22001 SQLCODE=-99999
-#True
-#SQLSTATE: 02000
-#Message: [IBM][CLI Driver][AS] SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
-#Done
 #__IDS_EXPECTED__
 #Starting test ...
 #
 #SQLSTATE: 22001
-#Message: [IBM][CLI Driver][IDS%s] Value exceeds string column length. SQLCODE=-1279
+#Message: [Informix][Informix ODBC Driver]String data right truncation. SQLCODE=-11023
 #True
-#SQLSTATE: 02000
-#Message: [IBM][CLI Driver][IDS%s] SQL0100W  No row was found for FETCH, UPDATE or DELETE; or the result of a query is an empty table.  SQLSTATE=02000 SQLCODE=100
+#SQLSTATE: 
+#Message: 
 #Done

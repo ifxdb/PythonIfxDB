@@ -26,7 +26,7 @@ class IfxDbTestCase(unittest.TestCase):
     server = ifx_db.server_info( conn )
     
     if conn:
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         sql = "SELECT TRIM(TRAILING FROM name) FROM animals WHERE breed = ?"
       else:
         sql = "SELECT RTRIM(name) FROM animals WHERE breed = ?"

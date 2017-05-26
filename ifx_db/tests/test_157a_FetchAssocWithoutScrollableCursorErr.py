@@ -28,7 +28,7 @@ class IfxDbTestCase(unittest.TestCase):
           i = 2
           row = ifx_db.fetch_assoc(result, i)
           while ( row ):
-              if (server.DBMS_NAME[0:3] == 'IDS'):
+              if (server.DBMS_NAME[0:3] == 'Inf'):
                 print "%-5d %-16s %-32s %10s" % (row['id'], row['name'], row['breed'], row['weight'])
               else:
                 print "%-5d %-16s %-32s %10s" % (row['ID'], row['NAME'], row['BREED'], row['WEIGHT'])
@@ -59,5 +59,6 @@ class IfxDbTestCase(unittest.TestCase):
 #__IDS_EXPECTED__
 #Starting...
 #SQLSTATE: HY106
-#Message: [IBM][CLI Driver] CLI0145E  Fetch type out of range. SQLSTATE=HY106 SQLCODE=-99999
+#Message: [Informix][Informix ODBC Driver]Fetch type out of range. SQLCODE=-11086
 #DONE
+

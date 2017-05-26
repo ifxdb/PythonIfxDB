@@ -32,7 +32,7 @@ class IfxDbTestCase(unittest.TestCase):
     
     print "-----"
     
-    if (server.DBMS_NAME[0:3] == 'IDS'):
+    if (server.DBMS_NAME[0:3] == 'Inf'):
       print "Region:%s" % ifx_db.field_name(result, 'region')
     else:
       print "Region:%s" % ifx_db.field_name(result, 'REGION')

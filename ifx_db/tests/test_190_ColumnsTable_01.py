@@ -21,7 +21,7 @@ class IfxDbTestCase(unittest.TestCase):
     server = ifx_db.server_info( conn )
 
     if conn:
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         result = ifx_db.columns(conn,None,config.user,"employee")
       else:
         result = ifx_db.columns(conn,None,None,"EMPLOYEE")

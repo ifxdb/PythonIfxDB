@@ -23,7 +23,6 @@ class IfxDbTestCase(unittest.TestCase):
     if server:
       print "DBMS_NAME: string(%d) \"%s\"" % (len(server.DBMS_NAME), server.DBMS_NAME)
       print "DBMS_VER: string(%d) \"%s\"" % (len(server.DBMS_VER), server.DBMS_VER)
-      print "DB_CODEPAGE: int(%d)" % server.DB_CODEPAGE
       print "DB_NAME: string(%d) \"%s\"" % (len(server.DB_NAME), server.DB_NAME)
       print "INST_NAME: string(%d) \"%s\"" % (len(server.INST_NAME), server.INST_NAME)
       print "SPECIAL_CHARS: string(%d) \"%s\"" % (len(server.SPECIAL_CHARS), server.SPECIAL_CHARS)
@@ -124,7 +123,6 @@ class IfxDbTestCase(unittest.TestCase):
 #__IDS_EXPECTED__
 #DBMS_NAME: string(%d) %s
 #DBMS_VER: string(%d) %s
-#DB_CODEPAGE: int(%d)
 #DB_NAME: string(%d) %s
 #INST_NAME: string(%d) %s
 #SPECIAL_CHARS: string(%d) %s

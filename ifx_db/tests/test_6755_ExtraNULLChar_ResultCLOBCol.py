@@ -27,7 +27,7 @@ class IfxDbTestCase(unittest.TestCase):
       except:
         pass
 
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         create = 'CREATE TABLE table_6755 (col1 VARCHAR(20), col2 CLOB)'
         insert = "INSERT INTO table_6755 VALUES ('database', 'database')"
       else:

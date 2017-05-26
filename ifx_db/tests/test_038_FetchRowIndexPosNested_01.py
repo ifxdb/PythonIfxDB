@@ -19,14 +19,14 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     serverinfo = ifx_db.server_info( conn )
 
-    if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
+    if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
       result = ifx_db.exec_immediate(conn, "SELECT * FROM staff WHERE id < 101", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
     else:
       result = ifx_db.exec_immediate(conn, "SELECT * FROM staff WHERE id < 101")
 
     row = ifx_db.fetch_row(result)
     while ( row ):
-      if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
+      if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
         result2 = ifx_db.prepare(conn, "SELECT * FROM staff WHERE id < 101", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
       else:
         result2 = ifx_db.prepare(conn, "SELECT * FROM staff WHERE id < 101")

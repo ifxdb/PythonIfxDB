@@ -64,7 +64,7 @@ class IfxDbTestCase(unittest.TestCase):
 			
 			# Select the result from the table and
 			query = 'SELECT * FROM STOCKSHARE ORDER BY id'
-			if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
+			if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
 				stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
 			else:
 				stmt = ifx_db.prepare(conn, query)
@@ -105,10 +105,10 @@ class IfxDbTestCase(unittest.TestCase):
 #Requested row number must be a positive value
 #__IDS_EXPECTED__
 #10 : Megadeth : 100.00
-#20 : Zaral : 102.20
+#20 : Zaral : 102.21
 #30 : Megabyte : 98.65
 #40 : Visarsoft : 123.34
 #50 : Mailersoft : 134.22
-#60 : Kaerci : 100.97
+#60 : Kaerci : 100.98
 #70 : Nirvana : 100.12
 #Requested row number must be a positive value

@@ -32,7 +32,7 @@ class IfxDbTestCase(unittest.TestCase):
       name3 = ifx_db.field_name(stmt, 2)
       name4 = ifx_db.field_name(stmt, 3)
       
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         name5 = ifx_db.field_name(stmt, "breed")
         name6 = ifx_db.field_name(stmt, 7)
         name7 = ifx_db.field_name(stmt, '"nUMBER"')

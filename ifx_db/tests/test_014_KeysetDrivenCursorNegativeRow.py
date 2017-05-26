@@ -21,7 +21,7 @@ class IfxDbTestCase(unittest.TestCase):
 
     query = 'SELECT * FROM animals ORDER BY name'
 
-    if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
+    if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
       stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
     else:
       stmt = ifx_db.prepare(conn, query)

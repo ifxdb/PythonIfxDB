@@ -25,7 +25,7 @@ class IfxDbTestCase(unittest.TestCase):
     if conn:
       serverinfo = ifx_db.server_info( conn )
 
-      if (serverinfo.DBMS_NAME[0:3] == 'IDS'):
+      if (serverinfo.DBMS_NAME[0:3] == 'Inf'):
         options1 = options2
 
       stmt = ifx_db.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", options2)

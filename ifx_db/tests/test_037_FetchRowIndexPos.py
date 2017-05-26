@@ -23,7 +23,7 @@ class IfxDbTestCase(unittest.TestCase):
     
     row = ifx_db.fetch_row(result)
     while ( row ):
-      if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
+      if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
         result2 = ifx_db.prepare(conn, "SELECT * FROM staff WHERE id < 101", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
       else:
         result2 = ifx_db.prepare(conn, "SELECT * FROM staff WHERE id < 101")

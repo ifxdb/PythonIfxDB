@@ -34,23 +34,15 @@ class IfxDbTestCase(unittest.TestCase):
       except:
           pass
       
-      if (server == 'IDS'):
-        sql = "CREATE TABLE sptb (c1 INTEGER, c2 FLOAT, c3 VARCHAR(10), c4 INT8, c5 CLOB)"
-      else:
-        sql = "CREATE TABLE sptb (c1 INTEGER, c2 FLOAT, c3 VARCHAR(10), c4 BIGINT, c5 CLOB)"
+      sql = "CREATE TABLE sptb (c1 INTEGER, c2 FLOAT, c3 VARCHAR(10), c4 INT8, c5 VARCHAR(20))"
       
       ifx_db.exec_immediate(conn, sql)
       
-      sql = "INSERT INTO sptb (c1, c2, c3, c4, c5) VALUES (1, 5.01, 'varchar', 3271982, 'clob data clob data')"
+      sql = "INSERT INTO sptb (c1, c2, c3, c4, c5) VALUES (1, 5.01, 'varchar', 3271982, 'varchar data')"
       ifx_db.exec_immediate(conn, sql)
       
-      if (server == 'IDS'):
-        sql = """CREATE PROCEDURE sp(OUT out1 INTEGER, OUT out2 FLOAT, OUT out3 VARCHAR(10), OUT out4 INT8, OUT out5 CLOB);
+      sql = """CREATE PROCEDURE sp(OUT out1 INTEGER, OUT out2 FLOAT, OUT out3 VARCHAR(10), OUT out4 INT8, OUT out5 VARCHAR(20));
                  SELECT c1, c2, c3, c4, c5 INTO out1, out2, out3, out4, out5 FROM sptb; END PROCEDURE;"""
-      else:
-        sql = """CREATE PROCEDURE sp(OUT out1 INTEGER, OUT out2 FLOAT, OUT out3 VARCHAR(10), OUT out4 BIGINT, OUT out5 CLOB)
-                 DYNAMIC RESULT SETS 1 LANGUAGE SQL BEGIN
-                 SELECT c1, c2, c3, c4, c5 INTO out1, out2, out3, out4, out5 FROM sptb; END"""
       ifx_db.exec_immediate(conn, sql)
       #############################
 
@@ -79,39 +71,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#out 1:
-#1
-#out 2:
-#5.01
-#out 3:
-#varchar
-#out 4:
-#3271982
-#out 5:
-#clob data clob data
-#__ZOS_EXPECTED__
-#out 1:
-#1
-#out 2:
-#5.01
-#out 3:
-#varchar
-#out 4:
-#3271982
-#out 5:
-#clob data clob data
-#__SYSTEMI_EXPECTED__
-#out 1:
-#1
-#out 2:
-#5.01
-#out 3:
-#varchar
-#out 4:
-#3271982
-#out 5:
-#clob data clob data
 #__IDS_EXPECTED__
 #out 1:
 #1
@@ -122,4 +81,4 @@ class IfxDbTestCase(unittest.TestCase):
 #out 4:
 #3271982
 #out 5:
-#clob data clob data
+#varchar data

@@ -132,7 +132,7 @@ class IfxDbTestCase(unittest.TestCase):
 #-----
 #0:string
 #1:string
-#2:blob
+#2:string
 #
 #-----
 #region:string

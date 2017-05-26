@@ -26,60 +26,14 @@ class IfxDbTestCase(unittest.TestCase):
     
       print "Values of bound parameters _before_ CALL:"
       print "  1: %s 2: %s 3: %d\n" % (name, second_name, weight)
-      
+     	
       stmt, name, second_name, weight = ifx_db.callproc(conn, 'match_animal', (name, second_name, weight))
     
       if stmt is not None:
         print "Values of bound parameters _after_ CALL:"
         print "  1: %s 2: %s 3: %d\n" % (name, second_name, weight)
 
-        if (server.DBMS_NAME[0:3] != 'IDS'):
-          print "Results:"
-          row = ifx_db.fetch_tuple(stmt)
-          while ( row ): 
-            print "  %s, %s, %s" % (row[0].strip(), row[1].strip(), row[2])
-            row = ifx_db.fetch_tuple(stmt)
-
 #__END__
-#__LUW_EXPECTED__
-#Values of bound parameters _before_ CALL:
-#  1: Peaches 2: Rickety Ride 3: 0
-#
-#Values of bound parameters _after_ CALL:
-#  1: Peaches 2: TRUE 3: 12
-#
-#Results:
-#  Peaches, dog, 12.30
-#  Pook, cat, 3.20
-#  Rickety Ride, goat, 9.70
-#  Smarty, horse, 350.00
-#  Sweater, llama, 150.00
-#__ZOS_EXPECTED__
-#Values of bound parameters _before_ CALL:
-#  1: Peaches 2: Rickety Ride 3: 0
-#
-#Values of bound parameters _after_ CALL:
-#  1: Peaches 2: TRUE 3: 12
-#
-#Results:
-#  Peaches, dog, 12.30
-#  Pook, cat, 3.20
-#  Rickety Ride, goat, 9.70
-#  Smarty, horse, 350.00
-#  Sweater, llama, 150.00
-#__SYSTEMI_EXPECTED__
-#Values of bound parameters _before_ CALL:
-#  1: Peaches 2: Rickety Ride 3: 0
-#
-#Values of bound parameters _after_ CALL:
-#  1: Peaches 2: TRUE 3: 12
-#
-#Results:
-#  Peaches, dog, 12.30
-#  Pook, cat, 3.20
-#  Rickety Ride, goat, 9.70
-#  Smarty, horse, 350.00
-#  Sweater, llama, 150.00
 #__IDS_EXPECTED__
 #Values of bound parameters _before_ CALL:
 #  1: Peaches 2: Rickety Ride 3: 0

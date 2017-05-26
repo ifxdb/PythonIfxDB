@@ -22,24 +22,14 @@ class IfxDbTestCase(unittest.TestCase):
     if conn:
       stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals ORDER BY breed")
     
-      if (server.DBMS_NAME[0:3] == 'IDS'):
-        num1 = ifx_db.field_num(stmt, "id")
-        num2 = ifx_db.field_num(stmt, "breed")
-        num3 = ifx_db.field_num(stmt, "name")
-        num4 = ifx_db.field_num(stmt, "weight")
-        num5 = ifx_db.field_num(stmt, "test")
-        num6 = ifx_db.field_num(stmt, 8)
-        num7 = ifx_db.field_num(stmt, 1)
-        num8 = ifx_db.field_num(stmt, "WEIGHT")
-      else:
-        num1 = ifx_db.field_num(stmt, "ID")
-        num2 = ifx_db.field_num(stmt, "BREED")
-        num3 = ifx_db.field_num(stmt, "NAME")
-        num4 = ifx_db.field_num(stmt, "WEIGHT")
-        num5 = ifx_db.field_num(stmt, "TEST")
-        num6 = ifx_db.field_num(stmt, 8)
-        num7 = ifx_db.field_num(stmt, 1)
-        num8 = ifx_db.field_num(stmt, "weight")
+      num1 = ifx_db.field_num(stmt, "id")
+      num2 = ifx_db.field_num(stmt, "breed")
+      num3 = ifx_db.field_num(stmt, "name")
+      num4 = ifx_db.field_num(stmt, "weight")
+      num5 = ifx_db.field_num(stmt, "test")
+      num6 = ifx_db.field_num(stmt, 8)
+      num7 = ifx_db.field_num(stmt, 1)
+      num8 = ifx_db.field_num(stmt, "WEIGHT")
       
       print "int(%d)" % num1
       print "int(%d)" % num2
@@ -54,33 +44,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#int(0)
-#int(1)
-#int(2)
-#int(3)
-#False
-#False
-#int(1)
-#False
-#__ZOS_EXPECTED__
-#int(0)
-#int(1)
-#int(2)
-#int(3)
-#False
-#False
-#int(1)
-#False
-#__SYSTEMI_EXPECTED__
-#int(0)
-#int(1)
-#int(2)
-#int(3)
-#False
-#False
-#int(1)
-#False
 #__IDS_EXPECTED__
 #int(0)
 #int(1)

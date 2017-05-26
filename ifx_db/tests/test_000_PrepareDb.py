@@ -90,7 +90,7 @@ class IfxDbTestCase(unittest.TestCase):
         return 0
       ifx_db.bind_param(stmt, 1, name, ifx_db.SQL_PARAM_INPUT)
       ifx_db.bind_param(stmt, 2, picture, ifx_db.SQL_PARAM_INPUT)
-      result = ifx_db.execute(stmt)
+#      result = ifx_db.execute(stmt)
 
     # Drop the department table, in case it exists
     drop = 'DROP TABLE department'
@@ -296,7 +296,7 @@ class IfxDbTestCase(unittest.TestCase):
         ifx_db.bind_param(stmt, 1, empno, ifx_db.SQL_PARAM_INPUT)
         ifx_db.bind_param(stmt, 2, photo_format, ifx_db.SQL_PARAM_INPUT)
         ifx_db.bind_param(stmt, 3, picture, ifx_db.SQL_PARAM_INPUT)
-        result = ifx_db.execute(stmt)
+ #       result = ifx_db.execute(stmt)
 
     # Drop the org table, in case it exists
     drop = 'DROP TABLE org'

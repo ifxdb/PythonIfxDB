@@ -32,7 +32,7 @@ class IfxDbTestCase(unittest.TestCase):
       ts_withT_val = '2013-06-06T15:30:39'
       
       server = ifx_db.server_info( conn )
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         statement = "CREATE TABLE table_6792 (col1 DATETIME HOUR TO SECOND, col2 DATE, col3 DATETIME YEAR TO SECOND, col4 DATETIME YEAR TO SECOND)"
         result = ifx_db.exec_immediate(conn, statement)
         statement = "INSERT INTO table_6792 (col1, col2, col3) values (?, ?, ?)"
@@ -106,4 +106,4 @@ class IfxDbTestCase(unittest.TestCase):
 #10:42:34
 #1981-07-08
 #1981-07-08 10:42:34
-#2013-06-06 15:30:39
+#None

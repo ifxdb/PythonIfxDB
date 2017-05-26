@@ -7,6 +7,7 @@
 import unittest, sys
 import ifx_db
 import config
+import os
 from testfunctions import IfxDbTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
@@ -16,6 +17,7 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_112)
 
   def run_test_112(self):
+    os.environ['DELIMIDENT'] = 'y'
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
 
     if conn:
@@ -45,18 +47,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#int(0)
-#int(1)
-#int(2)
-#__ZOS_EXPECTED__
-#int(0)
-#int(1)
-#int(2)
-#__SYSTEMI_EXPECTED__
-#int(0)
-#int(1)
-#int(2)
 #__IDS_EXPECTED__
 #int(0)
 #int(1)

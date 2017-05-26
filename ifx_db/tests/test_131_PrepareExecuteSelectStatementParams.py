@@ -21,7 +21,7 @@ class IfxDbTestCase(unittest.TestCase):
     if conn:
       stmt = ifx_db.prepare( conn, "SELECT id, breed, name, weight FROM animals WHERE id = ?" )
     
-      if ifx_db.execute(stmt, (0,)):
+      if (ifx_db.execute(stmt, (0,))):
         row = ifx_db.fetch_tuple(stmt)
         while ( row ):
           #row.each { |child| print child }

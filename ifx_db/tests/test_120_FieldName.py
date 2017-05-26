@@ -29,7 +29,7 @@ class IfxDbTestCase(unittest.TestCase):
       name6 = ifx_db.field_name(stmt, 8)
       name7 = ifx_db.field_name(stmt, 0)
       
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         name5 = ifx_db.field_name(stmt, "id")
         name8 = ifx_db.field_name(stmt, "WEIGHT")
       else:

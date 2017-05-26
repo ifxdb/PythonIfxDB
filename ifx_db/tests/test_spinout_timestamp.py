@@ -30,14 +30,12 @@ class IfxDbTestCase(unittest.TestCase):
 
             # Create the SP with timestamp parameters
 
-            if (serverinfo.DBMS_NAME[0:3] != 'IDS'):
-                create = "CREATE PROCEDURE PROC_TIMESTAMP ( IN PAR1 TIMESTAMP, OUT PAR2 TIMESTAMP) BEGIN SET PAR2 = PAR1; END"
-            else:
-                create = "CREATE PROCEDURE PROC_TIMESTAMP ( IN PAR1 TIMESTAMP, OUT PAR2 TIMESTAMP) BEGIN SET PAR2 = PAR1; END"
+            
+            create = "CREATE PROCEDURE PROC_TIMESTAMP ( INOUT PAR1 DATETIME YEAR TO FRACTION(5), OUT PAR2 DATETIME YEAR TO FRACTION(5)) LET PAR2 = PAR1; END PROCEDURE"
             result = ifx_db.exec_immediate(conn, create)
 
             # call the SP. Expect PAR2 to contain value passed to PAR1
-            par1 = "2016-11-14-22.47.29.872688"
+            par1 = "2017-05-13 22:47:29.82688"
             par2 = ""
 
             print "Values of bound parameters _before_ CALL:"
@@ -55,17 +53,8 @@ class IfxDbTestCase(unittest.TestCase):
 #__END__
 #__LUW_EXPECTED__
 #Values of bound parameters _before_ CALL:
-#  1: 2016-11-14-22.47.29.872688 2: 
+#  1: 2017-05-13 22:47:29.82688 2: 
 #
 #Values of bound parameters _after_ CALL:
-#  1: 2016-11-14-22.47.29.872688 2: 2016-11-14 22:47:29.872688
-#__ZOS_EXPECTED__
-#Values of bound parameters _before_ CALL:
-#  1: 2016-11-14-22.47.29.872688 2: 
-#
-#Values of bound parameters _after_ CALL:
-#  1: 2016-11-14-22.47.29.872688 2: 2016-11-14 22:47:29.872688
-#__SYSTEMI_EXPECTED__
-#  This will be updated later
-#__IDS_EXPECTED__
-#  This will be updated later
+#  1: 2017-05-13 22:47:29.82688 2: 2017-05-13 22:47:29.82688
+

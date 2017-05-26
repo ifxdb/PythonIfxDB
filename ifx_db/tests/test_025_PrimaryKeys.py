@@ -40,7 +40,7 @@ class IfxDbTestCase(unittest.TestCase):
       statement = "INSERT INTO test_foreign_keys VALUES (1)"
       result = ifx_db.exec_immediate(conn, statement)
       
-      if (server.DBMS_NAME[0:3] == 'IDS'):
+      if (server.DBMS_NAME[0:3] == 'Inf'):
         stmt = ifx_db.primary_keys(conn, None, config.user, 'test_primary_keys')
       else:
         stmt = ifx_db.primary_keys(conn, None, None, 'TEST_PRIMARY_KEYS')

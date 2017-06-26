@@ -1392,7 +1392,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
         {
             /* Need to check for max pconnections? */
 			// JS construct connstring with USER/PASSWORD
-			if (PyString_Size(uidObj)>0) {
+			if (PyBytes_Size(uidObj)>0) {
 				databaseObj = PyUnicode_Concat(databaseObj, StringOBJ_FromASCII(";UID="));
 				databaseObj = PyUnicode_Concat(databaseObj, uidObj);
 				databaseObj = PyUnicode_Concat(databaseObj, StringOBJ_FromASCII(";PWD="));

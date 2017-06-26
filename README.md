@@ -3,7 +3,7 @@
 ### Licensed under the Apache License, Version 2.0
 
 ## PythonIfxDB
-Informix Python Driver is a high perfuming data access interface for Python applications. This module has implementation of Python Database API Specification v2.0 for Informix Dynamic Server and also advance features as extension. 
+Informix Python Driver is a high performing data access interface for Python applications. This module has implementation of Python Database API Specification v2.0 for Informix Dynamic Server and also advanced features as extension. 
 
 #### ifx_db
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.
@@ -32,10 +32,10 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 * clone the PythonIfxDB repository
 * Visual Studio 2008 or above (Windows Only)
 * Informix client SDK 410xC2 or above
-* Set environment variable CSDK_HOM and MY_PY_DIR
+* Set environment variable CSDK_HOME and MY_PY_DIR
 
 ### Clone the source code
-For easiness of explanation let me assume C:\work is the location when we clone the PythonIfxDB repository.  
+For easiness of explanation let's assume C:\work is the location when we clone the PythonIfxDB repository.  
 (You may clone it at any location though; if so make adjustment for the instructions as well).
 
 ```
@@ -53,8 +53,8 @@ Coming soon
 #### Windows build 
 
 ##### Build Shell Environment 
-Set CSDK_HOM and MY_PY_DIR environment variables.  
-The environment CSDK_HOM points to the Informix Client SDK installation directory.   
+Set CSDK_HOME and MY_PY_DIR environment variables.  
+The environment CSDK_HOME points to the Informix Client SDK installation directory.   
 The environment CS MY_PY_DIR points to the Python installation directory.  
 FYI: Edit setup.py manually for the time being, it has been hardcoded in it.
 
@@ -62,7 +62,7 @@ FYI: Edit setup.py manually for the time being, it has been hardcoded in it.
 Open VS2008 (or latest) command windows
 
 Example:
-SET CSDK_HOM=c:\informix
+SET CSDK_HOME=c:\informix
 SET MY_PY_DIR=C:\Dev\Python27
 ```
 

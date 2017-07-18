@@ -48,7 +48,39 @@ git clone https://github.com/ifxdb/PythonIfxDB.git
 
 
 #### Linux Build 
-Coming soon
+##### Clone the python driver code
+```
+mkdir /work/ifxdb
+cd /work/ifxdb
+
+git clone https://github.com/ifxdb/PythonIfxDB.git
+```
+
+##### Set Env for build 
+```
+Say you have installed Informix CSDK at /work/satyan/srv/sqldist.c  
+And you have installed Python 2.7 at /work/dev/Python
+
+
+export CSDK_HOME=/work/satyan/srv/sqldist.c
+export MY_PY_DIR=/work/dev/Python
+```
+
+##### Fire the build
+```
+cd /work/ifxdb/PythonIfxDB/ifx_db
+rm -rf build
+
+python setup.tmp.linux.py build > out.txt 2>&1
+
+ls -l build/lib.linux-x86_64-2.7/ifx_db.so
+```
+
+##### Copy the ifx_db python dirver  
+```
+cd to your python applicaiton dir
+cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so
+```
 
 #### Windows build 
 

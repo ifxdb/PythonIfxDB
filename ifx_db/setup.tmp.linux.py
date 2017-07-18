@@ -10,8 +10,8 @@ LICENSE = 'Apache License 2.0'
 
 machine_bits =  8 * struct.calcsize("P")
 is64Bit = True
-#csdk_home = os.environ['CSDK_HOME']
-#py_home = os.environ['MY_PY_DIR']
+csdk_home = os.environ['CSDK_HOME']
+py_home = os.environ['MY_PY_DIR']
 
 if machine_bits == 64:
     is64Bit = True
@@ -22,9 +22,9 @@ else:
 
 
 ext_modules = Extension('ifx_db',
-                   include_dirs = ['/work/dev/Python', '/work/dev/Python/Include', '/work/satyan/srv/sqldist.c/incl/cli'],
+                   include_dirs = [ py_home,  py_home + '/Include', csdk_home +'/incl/cli'],
                     libraries = ['ifdmr', 'thcli'],
-                    library_dirs = [ '/work/satyan/srv/sqldist.c/lib/cli', '/work/dev/Python/Lib'],
+                    library_dirs = [ csdk_home + '/lib/cli', py_home + '/Lib'],
                     sources = ['ifx_db.c'])
 
 setup (name    = PACKAGE, 

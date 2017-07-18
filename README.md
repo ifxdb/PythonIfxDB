@@ -136,7 +136,7 @@ ls -l build/lib.linux-x86_64-2.7/ifx_db.so
 ##### Copy the ifx_db python dirver  
 ```
 cd to your python applicaiton dir
-cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so
+cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 ```
 
 

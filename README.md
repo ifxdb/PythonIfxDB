@@ -105,6 +105,11 @@ COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 
 
 ## Linux Build 
+##### Prerequisite:
+* Python 2.7 or above (Python 3x support will be coming soon)
+* Informix client SDK 410xC2 or above
+* Set environment variable CSDK_HOME and MY_PY_DIR
+
 ##### Clone the python driver code
 ```
 mkdir /work/ifxdb

@@ -1319,11 +1319,18 @@ static void _python_ifx_db_clear_stmt_err_cache(void)
     memset(IFX_DB_G(__python_stmt_err_state), 0, SQL_SQLSTATE_SIZE + 1);
 }
 
-SQLWCHAR *GetDriverTag()
+PyObject *GetDriverTag()
 {
-    static SQLWCHAR *DriverTag = (SQLWCHAR *)((sizeof(void *) == 8) ?
-                                              L"DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};" :
-                                              L"DRIVER={IBM INFORMIX ODBC DRIVER};");
+    PyObject *DriverTag = NULL;
+    
+    // if( DriverTag == NULL)
+    {
+        char *p = ((sizeof(void *) == 8) ?
+                "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};" :
+                "DRIVER={IBM INFORMIX ODBC DRIVER};");
+    
+        DriverTag = StringOBJ_FromASCII(p);
+    }
 
     return(DriverTag);
 }
@@ -1483,50 +1490,53 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
                 return NULL;
             }
 
+            databaseObj = PyUnicode_Concat( GetDriverTag(), databaseObj);
             ConnStrIn = getUnicodeDataAsSQLWCHAR(databaseObj, &isNewBuffer);
             // Connect to Informix database
             {
-                unsigned char StackBuff [512 * sizeof(SQLWCHAR)] = { 0 };
-                SQLWCHAR* ConnectionString = (SQLWCHAR *)StackBuff;
-                SQLWCHAR* ConnectionStringDyna = NULL;
-                SQLWCHAR *DriverTag = NULL;
-                size_t  DriverTagLen = 0;
-                size_t  ConnectionLengthIn = 0;
+                // unsigned char StackBuff [512 * sizeof(SQLWCHAR)] = { 0 };
+                // SQLWCHAR* ConnectionString = (SQLWCHAR *)StackBuff;
+                // SQLWCHAR* ConnectionStringDyna = NULL;
+                // size_t  DriverTagLen = 0;
+                // size_t  ConnectionLengthIn = 0;
 
-                DriverTag = GetDriverTag();
+                // PyObject *DriverTag = GetDriverTag();
 
-                DriverTagLen = wcslen(DriverTag) * sizeof(SQLWCHAR);
-                ConnectionLengthIn = wcslen(ConnStrIn) * sizeof(SQLWCHAR);
+                // DriverTagLen = wcslen(DriverTag) * sizeof(SQLWCHAR);
+                // DriverTagLen = 0; // Satyan Testing
+                // ConnectionLengthIn = wcslen(ConnStrIn) * sizeof(SQLWCHAR);
 
-                if ((sizeof(StackBuff) - sizeof(SQLWCHAR)) < (ConnectionLengthIn + DriverTagLen))
-                {
-                    // Usage of stack memory to minimize fragmentation in case of frequent connections.
-                    ConnectionStringDyna = (SQLWCHAR *)malloc((ConnectionLengthIn + DriverTagLen));
-                    ConnectionString = ConnectionStringDyna;
-                }
+                // if ((sizeof(StackBuff) - sizeof(SQLWCHAR)) < (ConnectionLengthIn + DriverTagLen))
+                // {
+                //     // Usage of stack memory to minimize fragmentation in case of frequent connections.
+                //     ConnectionStringDyna = (SQLWCHAR *)malloc((ConnectionLengthIn + DriverTagLen));
+                //     ConnectionString = ConnectionStringDyna;
+                // }
 
-                // Memory size has already calculated in bytes.
-                memset((void*)ConnectionString, 0, (ConnectionLengthIn + DriverTagLen));
-                memcpy((void*)ConnectionString, DriverTag, (DriverTagLen));
-                memcpy((void*)((unsigned char *)ConnectionString + DriverTagLen), (void *)(ConnStrIn), ConnectionLengthIn);
+                // // Memory size has already calculated in bytes.
+                // memset((void*)ConnectionString, 0, (ConnectionLengthIn + DriverTagLen));
+                // memcpy((void*)ConnectionString, DriverTag, (DriverTagLen));
+                // memcpy((void*)((unsigned char *)ConnectionString + DriverTagLen), (void *)(ConnStrIn), ConnectionLengthIn);
 
                 // Connect to the database
+            	
                 rc = SQLDriverConnectW(
                     (SQLHDBC)conn_res->hdbc, // ConnectionHandle
                     NULL,                    // WindowHandle
-                    ConnectionString,        // InConnectionString
+                    // ConnectionString,        // InConnectionString
+					ConnStrIn,
                     SQL_NTS,                 // StringLength1 or SQL_NTS
                     NULL,                    // OutConnectionString
                     0,                       // BufferLength - in characters
                     NULL,                    // StringLength2Ptr
                     SQL_DRIVER_NOPROMPT);    // DriverCompletion
 
-                ConnectionString = NULL;
-                if (ConnectionStringDyna != NULL)
-                {
-                    free(ConnectionStringDyna);
-                    ConnectionStringDyna = NULL;
-                }
+                // ConnectionString = NULL;
+                // if (ConnectionStringDyna != NULL)
+                // {
+                //     free(ConnectionStringDyna);
+                //     ConnectionStringDyna = NULL;
+                // }
             }
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
@@ -1625,9 +1635,37 @@ static PyObject* getSQLWCharAsPyUnicodeObject(SQLWCHAR* sqlwcharData, SQLLEN sql
     return u;
 }
 
-
 // This function takes value as pyObject and convert it to SQLWCHAR and return it
 static SQLWCHAR* getUnicodeDataAsSQLWCHAR(PyObject *pyobj, int *isNewBuffer)
+{
+	SQLWCHAR* pNewBuffer = NULL;
+	Py_ssize_t nCharLen = 0;
+
+	*isNewBuffer = 0;
+	nCharLen = PyUnicode_GET_SIZE(pyobj);
+	
+	pNewBuffer = (SQLWCHAR *)ALLOC_N(SQLWCHAR, nCharLen + 1);
+	if ( pNewBuffer != NULL)
+	{
+		Py_ssize_t  NumChar = PyUnicode_AsWideChar( pyobj, pNewBuffer, nCharLen);
+		if ( NumChar > 0 )
+		{
+			*isNewBuffer = 1;
+			pNewBuffer[NumChar] = 0;
+		}
+		else
+		{
+			PyMem_Del(pNewBuffer);
+			pNewBuffer = NULL;
+		}
+	}
+	
+	return pNewBuffer;
+}
+
+
+// This function takes value as pyObject and convert it to SQLWCHAR and return it
+static SQLWCHAR* xgetUnicodeDataAsSQLWCHAR(PyObject *pyobj, int *isNewBuffer)
 {
     PyObject *sysmodule = NULL, *maxuni = NULL;
     long maxuniValue;

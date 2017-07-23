@@ -109,7 +109,36 @@ COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 * Python 2.7 or above (Python 3x support will be coming soon)
 * Informix client SDK 410xC2 or above
 * Set environment variable CSDK_HOME and MY_PY_DIR
+* Operating System Unicode encoding should match with your python interpreter encoding. 
 
+##### FYI: Unicode encoding
+The python interpreter used should match with operating system default Unicode encoding. 
+Some of the Linux flavors, python interpreter is available with UCS2/UTF16 and also UCS4/UTF32.
+If the OS default for Unicode is UTF32 then the ifxdb driver will work if the python interpreter is also using the Unicode UCS4/UTF32.  
+
+You may compile python interpreter from source by using the following flag to build UCS4/UTF32 Unicode string.
+```
+--enable-unicode=ucs4
+Eg: 
+$ cd <Your Python Src>
+$ sudo ./configure --enable-unicode=ucs4
+$ sudo make
+$ sudo altinstall
+```
+
+###### To check which Unicode encoding your python interpreter is using.
+```
+When built with --enable-unicode=ucs4:
+>>> import sys
+>>> print sys.maxunicode
+1114111
+
+When built with --enable-unicode=ucs2:
+>>> import sys
+>>> print sys.maxunicode
+65535
+```
+  
 ##### Clone the python driver code
 ```
 mkdir /work/ifxdb

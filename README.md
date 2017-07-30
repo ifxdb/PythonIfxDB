@@ -15,7 +15,6 @@ This set of API implements [Python Database API Specification v2.0](http://www.p
 Most of ifx_db driver functionality is fully functional; we are in the process of adding documentation, tests cases and examples. There is a chance API spec might change by the time we arrive public beta.
 
 ##### Coming soon
-* Linux build 
 * Tests
 * Examples 
 * Documentation 
@@ -26,7 +25,7 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 * SQLAlchemy 
 
 
-## Build 
+## Windows build
 ##### Prerequisite:
 * Python 2.7 or above (Python 3x support will be coming soon)
 * clone the PythonIfxDB repository
@@ -45,9 +44,6 @@ cd /work
 
 git clone https://github.com/ifxdb/PythonIfxDB.git
 ```
-
-
-## Windows build 
 
 ##### Build Shell Environment 
 Set CSDK_HOME and MY_PY_DIR environment variables.  
@@ -162,7 +158,7 @@ export MY_PY_DIR=/work/dev/Python
 cd /work/ifxdb/PythonIfxDB/ifx_db
 rm -rf build
 
-python setup.tmp.linux.py build > out.txt 2>&1
+python setup.py build > out.txt 2>&1
 
 ls -l build/lib.linux-x86_64-2.7/ifx_db.so
 ```

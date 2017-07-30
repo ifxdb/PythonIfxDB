@@ -20,12 +20,18 @@ else:
     is64Bit = False
     sys.stdout.write("Detected 32-bit Python\n")
 
-
-ext_modules = Extension('ifx_db',
-                   include_dirs = [py_home + '\\include', csdk_home + '\\incl\\cli'],
-                    libraries = ['iclit09b'],
-                    library_dirs = [ py_home + '\libs', csdk_home + '\lib'],
-                    sources = ['ifx_db.c'])
+if('win32' in sys.platform):
+    ext_modules = Extension('ifx_db',
+        include_dirs = [py_home + '\\include', csdk_home + '\\incl\\cli'],
+        libraries = ['iclit09b'],
+        library_dirs = [ py_home + '\libs', csdk_home + '\lib'],
+        sources = ['ifx_db.c'])
+else:
+    ext_modules = Extension('ifx_db',
+        include_dirs = [ py_home,  py_home + '/Include', csdk_home +'/incl/cli'],
+        libraries = ['ifdmr', 'thcli'],
+        library_dirs = [ csdk_home + '/lib/cli', py_home + '/Lib'],
+        sources = ['ifx_db.c'])
 
 setup (name    = PACKAGE, 
        version = VERSION,

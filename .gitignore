@@ -6,6 +6,8 @@
 
 # Visual Studio 2015 cache/options directory
 .vs/
+.vscode
+.vscode/**
 
 # Build results
 [Dd]ebug/

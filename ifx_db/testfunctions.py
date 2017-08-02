@@ -34,7 +34,8 @@ import ifx_db
 import config
 
 class IfxDbTestFunctions(unittest.TestCase):
-  prepconn = ifx_db.connect(config.database, config.user, config.password)
+  #prepconn = ifx_db.connect(config.database, config.user, config.password)
+  prepconn = ifx_db.connect(config.ConnStr, "", "")
   server = ifx_db.server_info(prepconn)
   ifx_db.close(prepconn)
   
@@ -53,27 +54,12 @@ class IfxDbTestFunctions(unittest.TestCase):
     var = var.replace('\n', '').replace('\r', '')
     return var
   
-  # This function grabs the expected output of the current test function for LUW,
-  #   located at the bottom of the current test file.
-  def expected_LUW(self, fileName):
-    fileHandle = open(fileName, 'r')
-    fileInput = fileHandle.read().split('#__LUW_EXPECTED__')[-1].split('#__ZOS_EXPECTED__')[0].replace('\n', '').replace('#', '')
-    fileHandle.close()
-    return fileInput
 
   # This function grabs the expected output of the current test function for IDS,
   #   located at the bottom of the current test file.
   def expected_IDS(self, fileName):
     fileHandle = open(fileName, 'r')
     fileInput = fileHandle.read().split('#__IDS_EXPECTED__')[-1].replace('\n', '').replace('#', '')
-    fileHandle.close()
-    return fileInput
-
-  # This function grabs the expected output of the current test function for zOS,
-  #   located at the bottom of the current test file.
-  def expected_ZOS(self, fileName):
-    fileHandle = open(fileName, 'r')
-    fileInput = fileHandle.read().split('#__ZOS_EXPECTED__')[-1].split('#__SYSTEMI_EXPECTED__')[0].replace('\n', '').replace('#', '')
     fileHandle.close()
     return fileInput
 
@@ -92,8 +78,6 @@ class IfxDbTestFunctions(unittest.TestCase):
     try:
       if (self.server.DBMS_NAME[0:2] == "AS"):
           self.assertEqual(self.capture(testFuncName), self.expected_AS(callstack[1][1]))
-      elif (self.server.DBMS_NAME == "DB2"):
-          self.assertEqual(self.capture(testFuncName), self.expected_ZOS(callstack[1][1]))
       elif (self.server.DBMS_NAME[0:3] == "Inf"):
           self.assertEqual(self.capture(testFuncName), self.expected_IDS(callstack[1][1]))
       else:
@@ -109,8 +93,6 @@ class IfxDbTestFunctions(unittest.TestCase):
     try:
       if (self.server.DBMS_NAME[0:2] == "AS"):
           pattern = self.expected_AS(callstack[1][1])
-      elif (self.server.DBMS_NAME == "DB2"):
-          pattern = self.expected_ZOS(callstack[1][1])
       elif (self.server.DBMS_NAME[0:3] == "Inf"):
           pattern = self.expected_IDS(callstack[1][1])
       else:

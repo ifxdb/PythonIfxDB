@@ -429,7 +429,7 @@ class IfxDbTestCase(unittest.TestCase):
       pass
 
     # Create the stored procedure
-    if (server.DBMS_NAME[0:3] == 'IDS'):
+    if (server.DBMS_NAME[0:3] == 'Inf'):
       result = ifx_db.exec_immediate(conn, """
       CREATE PROCEDURE match_animal(first_name VARCHAR(128), INOUT second_name VARCHAR(128), OUT animal_weight DOUBLE PRECISION )
        DEFINE match_name INT;

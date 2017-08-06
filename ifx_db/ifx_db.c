@@ -1320,22 +1320,6 @@ static void _python_ifx_db_clear_stmt_err_cache(void)
     memset(IFX_DB_G(__python_stmt_err_state), 0, SQL_SQLSTATE_SIZE + 1);
 }
 
-PyObject *GetDriverTag()
-{
-    PyObject *DriverTag = NULL;
-    
-    // if( DriverTag == NULL)
-    {
-        char *p = ((sizeof(void *) == 8) ?
-                "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};" :
-                "DRIVER={IBM INFORMIX ODBC DRIVER};");
-    
-        DriverTag = StringOBJ_FromASCII(p);
-    }
-
-    return(DriverTag);
-}
-
 
 static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, int isPersistent)
 {
@@ -1491,40 +1475,20 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
                 return NULL;
             }
 
-            databaseObj = PyUnicode_Concat( GetDriverTag(), databaseObj);
-            ConnStrIn = getUnicodeDataAsSQLWCHAR(databaseObj, &isNewBuffer);
             // Connect to Informix database
             {
-                // unsigned char StackBuff [512 * sizeof(SQLWCHAR)] = { 0 };
-                // SQLWCHAR* ConnectionString = (SQLWCHAR *)StackBuff;
-                // SQLWCHAR* ConnectionStringDyna = NULL;
-                // size_t  DriverTagLen = 0;
-                // size_t  ConnectionLengthIn = 0;
+                char *cpDTag = ((sizeof(void *) == 8) ?
+                    "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};" :
+                    "DRIVER={IBM INFORMIX ODBC DRIVER};");
+    
+                PyObject *DriverTag = StringOBJ_FromASCII(cpDTag);                
 
-                // PyObject *DriverTag = GetDriverTag();
+                databaseObj = PyUnicode_Concat( DriverTag, databaseObj);
+                ConnStrIn = getUnicodeDataAsSQLWCHAR(databaseObj, &isNewBuffer);
 
-                // DriverTagLen = wcslen(DriverTag) * sizeof(SQLWCHAR);
-                // DriverTagLen = 0; // Satyan Testing
-                // ConnectionLengthIn = wcslen(ConnStrIn) * sizeof(SQLWCHAR);
-
-                // if ((sizeof(StackBuff) - sizeof(SQLWCHAR)) < (ConnectionLengthIn + DriverTagLen))
-                // {
-                //     // Usage of stack memory to minimize fragmentation in case of frequent connections.
-                //     ConnectionStringDyna = (SQLWCHAR *)malloc((ConnectionLengthIn + DriverTagLen));
-                //     ConnectionString = ConnectionStringDyna;
-                // }
-
-                // // Memory size has already calculated in bytes.
-                // memset((void*)ConnectionString, 0, (ConnectionLengthIn + DriverTagLen));
-                // memcpy((void*)ConnectionString, DriverTag, (DriverTagLen));
-                // memcpy((void*)((unsigned char *)ConnectionString + DriverTagLen), (void *)(ConnStrIn), ConnectionLengthIn);
-
-                // Connect to the database
-            	
                 rc = SQLDriverConnectW(
                     (SQLHDBC)conn_res->hdbc, // ConnectionHandle
                     NULL,                    // WindowHandle
-                    // ConnectionString,        // InConnectionString
 					ConnStrIn,
                     SQL_NTS,                 // StringLength1 or SQL_NTS
                     NULL,                    // OutConnectionString
@@ -1532,12 +1496,29 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
                     NULL,                    // StringLength2Ptr
                     SQL_DRIVER_NOPROMPT);    // DriverCompletion
 
-                // ConnectionString = NULL;
-                // if (ConnectionStringDyna != NULL)
-                // {
-                //     free(ConnectionStringDyna);
-                //     ConnectionStringDyna = NULL;
-                // }
+                if ( ConnStrIn )
+                {
+                    PyMem_Del(ConnStrIn);
+                    ConnStrIn = NULL;
+                }
+
+                // TODO: 
+                // Revisit the usage of function returning the return value of 
+                // StringOBJ_FromASCII which is PyString_FromString().
+
+                // if you receive a Python object from the Python API, 
+                // you can use it within your own C code without INCREFing it.
+                
+                // if you want to guarantee that the Python object survives past 
+                // the end of your own C code, you must INCREF it.
+                
+                // if you received an object from Python code and it was a new reference, 
+                // but you don’t want it to survive past the end of your own C code, 
+                // you should DECREF it.
+
+                // Then Python knows that this object is not being used by 
+                // anything and can be freed
+                Py_XDECREF(DriverTag);
             }
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
@@ -1580,7 +1561,6 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
 
     if (isNewBuffer)
     {
-        PyMem_Del(ConnStrIn);
         PyMem_Del(uid);
         PyMem_Del(password);
     }

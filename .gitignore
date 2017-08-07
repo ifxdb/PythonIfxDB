@@ -150,6 +150,8 @@ ENV/
 /11.txt
 /ifx_db/ifx_db.obj
 /ifx_db/pic1.jpg
+ifx_db/tests/pic1_out.jpg
+ifx_db/tests/spook_out.png
 ifx_db/out.txt
 ifx_db/config.py
 /spook.png

@@ -16,7 +16,6 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 
 ##### Coming soon
 * Python 3x support
-* Tests
 * Examples 
 * Documentation 
 * PyPI: https://pypi.python.org/pypi/ifx_db
@@ -100,7 +99,6 @@ COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 ```
 
 
-
 ## Linux Build 
 ##### Prerequisite:
 * Python 2.7 or above (Python 3x support will be coming soon)
@@ -166,11 +164,40 @@ ls -l build/lib.linux-x86_64-2.7/ifx_db.so
 
 ##### Copy the ifx_db python dirver  
 ```
-cd to your python applicaiton dir
+Copy Informix python package (ifx_db.so) to your Python module directory
+For example:
+
+cd /work/ifxdb/try
+rm ifx_db.so
 cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+python test1.py
 ```
 
+## Tests
+### Specify connection information
+```
+cd /work/ifxdb/PythonIfxDB/ifx_db
+cp   config.py.sample   config.py
 
+Modify the connection properties specified in config.py
+```
+
+### Run all the tests
+```
+python tests.py
+```
+
+### Run a single test
+```
+Single test can be run by specifying test name in the SINGLE_PYTHON_TEST environment variable.
+
+For example:
+SET SINGLE_PYTHON_TEST=test_001_ConnDb.py
+or
+export SINGLE_PYTHON_TEST=test_001_ConnDb.py
+
+python tests.py
+```
 
 ## Example 
 

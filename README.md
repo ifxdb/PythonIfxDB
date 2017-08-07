@@ -174,7 +174,7 @@ python test1.py
 ```
 
 ## Tests
-### Specify connection information
+##### Specify connection information
 ```
 cd /work/ifxdb/PythonIfxDB/ifx_db
 cp   config.py.sample   config.py
@@ -182,12 +182,12 @@ cp   config.py.sample   config.py
 Modify the connection properties specified in config.py
 ```
 
-### Run all the tests
+##### Run all the tests
 ```
 python tests.py
 ```
 
-### Run a single test
+##### Run a single test
 ```
 Single test can be run by specifying test name in the SINGLE_PYTHON_TEST environment variable.
 
@@ -266,8 +266,8 @@ for sql in SetupSqlSet:
 
 
 sql = "SELECT * FROM t1"
-stmt2 = ifx_db.exec_immediate(conn, sql)
-dictionary = ifx_db.fetch_both(stmt2)
+stmt = ifx_db.exec_immediate(conn, sql)
+dictionary = ifx_db.fetch_both(stmt)
 
 rc = 0
 while dictionary != False:
@@ -278,7 +278,7 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = ifx_db.fetch_both(stmt2)
+    dictionary = ifx_db.fetch_both(stmt)
 
 ifx_db.close(conn)
 

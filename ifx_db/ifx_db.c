@@ -1605,13 +1605,24 @@ static PyObject* getSQLWCharAsPyUnicodeObject(SQLWCHAR* sqlwcharData, SQLLEN sql
 
     if (is_bigendian())
     {
+        // *byteorder == -1: little endian
+        // *byteorder == 0:  native order
+        // *byteorder == 1:  big endian
         int bo = 1;
-        u = PyUnicode_DecodeUTF16((char *)sqlwcharData, sqlwcharBytesLen, "strict", &bo);
+
+        if ( sizeof(SQLWCHAR) == 4)
+            u = PyUnicode_DecodeUTF32((char *)sqlwcharData, sqlwcharBytesLen, "strict", &bo);
+        else
+            u = PyUnicode_DecodeUTF16((char *)sqlwcharData, sqlwcharBytesLen, "strict", &bo);
     }
     else
     {
         int bo = -1;
-        u = PyUnicode_DecodeUTF16((char *)sqlwcharData, sqlwcharBytesLen, "strict", &bo);
+
+        if ( sizeof(SQLWCHAR) == 4)
+            u = PyUnicode_DecodeUTF32((char *)sqlwcharData, sqlwcharBytesLen, "strict", &bo);
+        else
+            u = PyUnicode_DecodeUTF16((char *)sqlwcharData, sqlwcharBytesLen, "strict", &bo);
     }
     return u;
 }

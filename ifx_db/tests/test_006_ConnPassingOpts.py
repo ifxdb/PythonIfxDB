@@ -49,36 +49,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed."
 
 #__END__
-#__LUW_EXPECTED__
-#Pook            
-#Bubbles         
-#Gizmo           
-#Rickety Ride    
-#
-#Pook            
-#Bubbles         
-#Gizmo           
-#Rickety Ride    
-#__ZOS_EXPECTED__
-#Pook            
-#Bubbles         
-#Gizmo           
-#Rickety Ride    
-#
-#Pook            
-#Bubbles         
-#Gizmo           
-#Rickety Ride    
-#__SYSTEMI_EXPECTED__
-#Pook            
-#Bubbles         
-#Gizmo           
-#Rickety Ride    
-#
-#Pook            
-#Bubbles         
-#Gizmo           
-#Rickety Ride    
 #__IDS_EXPECTED__
 #Pook            
 #Bubbles         

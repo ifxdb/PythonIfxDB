@@ -1383,13 +1383,17 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
         else
         {
             /* Need to check for max pconnections? */
-			// JS construct connstring with USER/PASSWORD
-			if (PyBytes_Size(uidObj)>0) {
+#if  PY_MAJOR_VERSION >= 3
+		if (PyUnicode_GetLength(uidObj)>0)
+#else
+		if (PyBytes_Size(uidObj)>0)       
+#endif
+		{
 				databaseObj = PyUnicode_Concat(databaseObj, StringOBJ_FromASCII(";UID="));
 				databaseObj = PyUnicode_Concat(databaseObj, uidObj);
 				databaseObj = PyUnicode_Concat(databaseObj, StringOBJ_FromASCII(";PWD="));
 				databaseObj = PyUnicode_Concat(databaseObj, passwordObj);
-			}
+		}
         }
 
         if (conn_res == NULL)
@@ -1640,16 +1644,8 @@ static SQLWCHAR* getUnicodeDataAsSQLWCHAR(PyObject *pyobj, int *isNewBuffer)
 	if ( pNewBuffer != NULL)
 	{
 		Py_ssize_t  NumChar = PyUnicode_AsWideChar( pyobj, pNewBuffer, nCharLen);
-		if ( NumChar > 0 )
-		{
-			*isNewBuffer = 1;
-			pNewBuffer[NumChar] = 0;
-		}
-		else
-		{
-			PyMem_Del(pNewBuffer);
-			pNewBuffer = NULL;
-		}
+		*isNewBuffer = 1;
+		pNewBuffer[NumChar] = 0;
 	}
 	
 	return pNewBuffer;

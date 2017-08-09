@@ -121,12 +121,12 @@ copy $(OutDir)$(TargetName).pdb $(MY_PY_DIR)\lib\site-packages\$(TargetName).pdb
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;IFX_DB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(MY_PY_DIR)\include;$(CSDK_HOM)\incl\cli</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MY_PY_DIR)\include;$(CSDK_HOME)\incl\cli</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(MY_PY_DIR)\libs;$(CSDK_HOM)\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MY_PY_DIR)\libs;$(CSDK_HOME)\lib</AdditionalLibraryDirectories>
       <AdditionalOptions>iclit09b.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@ copy $(OutDir)$(TargetName).pdb $(MY_PY_DIR)\lib\site-packages\$(TargetName).pdb
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;IFX_DB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(MY_PY_DIR)\include;$(CSDK_HOM)\incl\cli</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MY_PY_DIR)\include;$(CSDK_HOME)\incl\cli</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -150,7 +150,7 @@ copy $(OutDir)$(TargetName).pdb $(MY_PY_DIR)\lib\site-packages\$(TargetName).pdb
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(MY_PY_DIR)\libs;$(CSDK_HOM)\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MY_PY_DIR)\libs;$(CSDK_HOME)\lib</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
       <Command>
@@ -177,6 +177,7 @@ copy $(OutDir)$(TargetName).pdb $(MY_PY_DIR)\lib\site-packages\$(TargetName).pdb
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;IFX_DB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(MY_PY_DIR)\include;$(CSDK_HOME)\incl\cli</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -19,6 +19,7 @@
 #
 # Authors:
 #      Sathyanesh Krishnan
+#      Javier Sagrera
 #
 #//////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +44,7 @@
 # +--------------------------------------------------------------------------+
 
 """
-This module implements the Python DB API Specification v2.0 for DB2 database.
+This module implements the Python DB API Specification v2.0 for Informix database.
 """
 
 import types, string, time, datetime, decimal, sys
@@ -697,8 +698,8 @@ class Connection(object):
           raise _get_exception(inst)
         return tuple(server_info)
     
-    def set_case(self, server_type, str_value):
-        return str_value.upper()
+    def set_case(self, str_value):
+        return str_value.lower()
 
     # Retrieves the tables for a specified schema (and/or given table name)
     def tables(self, schema_name=None, table_name=None):
@@ -708,9 +709,9 @@ class Connection(object):
             
         result = []
         if schema_name is not None:
-            schema_name = self.set_case("DB2_LUW", schema_name)
+            schema_name = self.set_case(schema_name)
         if table_name is not None:
-            table_name = self.set_case("DB2_LUW", table_name)
+            table_name = self.set_case(table_name)
 
         try:      
           stmt = ifx_db.tables(self.conn_handler, None, schema_name, table_name)
@@ -745,9 +746,9 @@ class Connection(object):
         """
         result = []
         if schema_name is not None:
-            schema_name = self.set_case("DB2_LUW", schema_name)
+            schema_name = self.set_case(schema_name)
         if table_name is not None:
-            table_name = self.set_case("DB2_LUW", table_name)
+            table_name = self.set_case(table_name)
 
         try:
           stmt = ifx_db.statistics(self.conn_handler, None, schema_name, table_name, unique)
@@ -780,9 +781,9 @@ class Connection(object):
         """
         result = []
         if schema_name is not None:
-            schema_name = self.set_case("DB2_LUW", schema_name)
+            schema_name = self.set_case(schema_name)
         if table_name is not None:
-            table_name = self.set_case("DB2_LUW", table_name)
+            table_name = self.set_case(table_name)
 
         try:
           stmt = ifx_db.primary_keys(self.conn_handler, None, schema_name, table_name)
@@ -818,9 +819,9 @@ class Connection(object):
         """
         result = []
         if schema_name is not None:
-            schema_name = self.set_case("DB2_LUW", schema_name)
+            schema_name = self.set_case(schema_name)
         if table_name is not None:
-            table_name = self.set_case("DB2_LUW", table_name)
+            table_name = self.set_case(table_name)
 
         try:
           stmt = ifx_db.foreign_keys(self.conn_handler, None, None, None, None, schema_name, table_name)
@@ -857,9 +858,9 @@ class Connection(object):
         """
         result = []
         if schema_name is not None:
-          schema_name = self.set_case("DB2_LUW", schema_name)
+          schema_name = self.set_case(schema_name)
         if table_name is not None:
-          table_name = self.set_case("DB2_LUW", table_name)
+          table_name = self.set_case(table_name)
 
         try:
           stmt = ifx_db.columns(self.conn_handler, None, schema_name, table_name)
@@ -1185,7 +1186,7 @@ class Cursor(object):
                 self.__rowcount = counter
         return True
 
-    # Retrieves the last generated identity value from the DB2 catalog
+    # Retrieves the last generated identity value from the Informix catalog
     def _get_last_identity_val(self):
         """
         The result of the IDENTITY_VAL_LOCAL function is not affected by the following:

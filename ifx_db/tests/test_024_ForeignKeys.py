@@ -80,14 +80,6 @@ class IfxDbTestCase(unittest.TestCase):
       print row[6]
       print row[7]
 
-      try:
-        stmt = ifx_db.foreign_keys(conn, None, None, None, None, None, None)
-        row = ifx_db.fetch_tuple(stmt)
-      except:
-        if (not stmt):
-          print ifx_db.stmt_errormsg()
-
-
       stmt = ifx_db.foreign_keys(conn, None, config.user, 'test_keys', None, 'dummy_schema')
       row = ifx_db.fetch_tuple(stmt)
       if(not row):
@@ -103,62 +95,6 @@ class IfxDbTestCase(unittest.TestCase):
       print "Connection failed\n"
 
 #__END__
-#__LUW_EXPECTED__
-#TEST_PRIMARY_KEYS
-#ID
-#TEST_KEYS
-#IDF
-#TEST_PRIMARY_KEYS
-#ID
-#TEST_KEYS
-#IDF
-#TEST_KEYS
-#NAME
-#TEST_FOREIGN_KEYS
-#NAMEF
-#TEST_KEYS
-#NAME
-#TEST_FOREIGN_KEYS
-#NAMEF
-#[IBM][CLI Driver] CLI0124E  Invalid argument value. SQLSTATE=HY009 SQLCODE=-99999
-#No Data Found
-#__ZOS_EXPECTED__
-#TEST_PRIMARY_KEYS
-#ID
-#TEST_KEYS
-#IDF
-#TEST_PRIMARY_KEYS
-#ID
-#TEST_KEYS
-#IDF
-#TEST_KEYS
-#NAME
-#TEST_FOREIGN_KEYS
-#NAMEF
-#TEST_KEYS
-#NAME
-#TEST_FOREIGN_KEYS
-#NAMEF
-#[IBM][CLI Driver] CLI0124E  Invalid argument value. SQLSTATE=HY009 SQLCODE=-99999
-#No Data Found
-#__SYSTEMI_EXPECTED__
-#TEST_PRIMARY_KEYS
-#ID
-#TEST_KEYS
-#IDF
-#TEST_PRIMARY_KEYS
-#ID
-#TEST_KEYS
-#IDF
-#TEST_KEYS
-#NAME
-#TEST_FOREIGN_KEYS
-#NAMEF
-#TEST_KEYS
-#NAME
-#TEST_FOREIGN_KEYS
-#NAMEF
-#[IBM][CLI Driver] CLI0124E  Invalid argument value. SQLSTATE=HY009 SQLCODE=-99999
 #__IDS_EXPECTED__
 #test_primary_keys
 #id
@@ -176,7 +112,6 @@ class IfxDbTestCase(unittest.TestCase):
 #name
 #test_foreign_keys
 #namef
-#[Microsoft][ODBC Driver Manager] Invalid use of null pointer SQLCODE=0
 #test_keys
 #name
 #test_foreign_keys

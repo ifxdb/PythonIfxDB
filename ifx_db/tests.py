@@ -22,7 +22,11 @@
 import os
 import sys
 import unittest
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 import re
 import glob
 import config

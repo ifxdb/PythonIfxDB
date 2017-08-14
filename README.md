@@ -11,11 +11,10 @@ This set of API contains advanced features defined by Informix. This database ex
 #### ifx_pydb (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
-### Project status: Alpha
+### Project status: Beta 
 Most of ifx_db driver functionality is fully functional; we are in the process of adding documentation, tests cases and examples. There is a chance API spec might change by the time we arrive public beta.
 
 ##### Coming soon
-* Python 3x support
 * Examples 
 * Documentation 
 * PyPI: https://pypi.python.org/pypi/ifx_db
@@ -27,7 +26,8 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 
 ## Windows build
 ##### Prerequisite:
-* Python 2.7 or above (Python 3x support will be coming soon)
+* Python 2.7 or above
+* Python 3.4 or above 
 * clone the PythonIfxDB repository
 * Visual Studio 2008 or above (Windows Only)
 * Informix client SDK 410xC2 or above
@@ -101,7 +101,8 @@ COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 
 ## Linux Build 
 ##### Prerequisite:
-* Python 2.7 or above (Python 3x support will be coming soon)
+* Python 2.7 or above
+* Python 3.4 or above
 * Informix client SDK 410xC2 or above
 * Set environment variable CSDK_HOME and MY_PY_DIR
 * Operating System Unicode encoding should match with your python interpreter encoding. 
@@ -198,7 +199,14 @@ export SINGLE_PYTHON_TEST=test_001_ConnDb.py
 
 python tests.py
 ```
-
+#### Run tests with Python 3.x
+```
+The source files in the 'tests' directory were written for Python 2.
+To be able to run the tests suite with Python 3 you need to convert the files to Python 3 format.
+You can use the '2to3' Python utility in the 'ifx_db/tests' directory, for example:
+$ cd /work/ifx_db/PythonIfxDB/ifx_db/tests
+$ 2to3 -w *.py
+```
 ## Example 
 
 #### Connecting to Informix database

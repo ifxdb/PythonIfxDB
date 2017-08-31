@@ -26,8 +26,8 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 
 ## Windows build
 ##### Prerequisite:
-* Python 2.7 or above
-* Python 3.4 or above 
+* [Python 2.7 or above](https://www.python.org/downloads/)
+* [Python 3.4 or above](https://www.python.org/downloads/)
 * clone the PythonIfxDB repository
 * Visual Studio 2008 or above (Windows Only)
 * Informix client SDK 410xC2 or above
@@ -48,7 +48,7 @@ git clone https://github.com/ifxdb/PythonIfxDB.git
 ##### Build Shell Environment 
 Set CSDK_HOME and MY_PY_DIR environment variables.  
 The environment CSDK_HOME points to the Informix Client SDK installation directory.   
-The environment CS MY_PY_DIR points to the Python installation directory.  
+The environment MY_PY_DIR points to the Python installation directory.  
 FYI: Edit setup.py manually for the time being, it has been hardcoded in it.
 
 ```
@@ -101,11 +101,13 @@ COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 
 ## Linux Build 
 ##### Prerequisite:
-* Python 2.7 or above
-* Python 3.4 or above
+* [Python 2.7 or above](https://www.python.org/downloads)
+* [Python 3.4 or above](https://www.python.org/downloads)
 * Informix client SDK 410xC2 or above
 * Set environment variable CSDK_HOME and MY_PY_DIR
 * Operating System Unicode encoding should match with your python interpreter encoding. 
+
+**MY_PY_DIR** points to the Python installation directory. During the driver build it need python header files, if the current Python installation doesn’t have the header file then you may need to get Python source code.
 
 ##### FYI: Unicode encoding
 The python interpreter used should match with operating system default Unicode encoding. 

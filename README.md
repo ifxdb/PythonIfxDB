@@ -67,24 +67,27 @@ While running setup.py for package build, Python 2.7 searches for an installed V
 ```bat 
 VS<internal version number>COMNTOOLS.  
 ```
-That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS.  
-  
-For example:   
-If you are using Visual Studio 2010 (VS10):  
+That means if you are using higher version of VS then you may map **VSxxCOMNTOOLS** for that VS to **VS90COMNTOOLS**.  
+
+```bash
+#For example:   
+#If you are using Visual Studio 2010 (VS10):  
 SET VS90COMNTOOLS=%VS100COMNTOOLS%  
   
-If you are using Visual Studio 2012 (VS11):   
+#If you are using Visual Studio 2012 (VS11):   
 SET VS90COMNTOOLS=%VS110COMNTOOLS%  
   
-If you are using Visual Studio 2013 (VS12):   
+#If you are using Visual Studio 2013 (VS12):   
 SET VS90COMNTOOLS=%VS120COMNTOOLS%  
   
-If you are using Visual Studio 2015 (VS14):   
+#If you are using Visual Studio 2015 (VS14):   
 SET VS90COMNTOOLS=%VS140COMNTOOLS%  
-  
-and then issue the folloing command  
-python setup.py build  
+```
 
+And then issue the folloing command  
+```
+python setup.py build  > out.txt 2>&1
+```
 
 ### Install
 On successful build the Informix python package (ifx_db.pyd) should have built at  

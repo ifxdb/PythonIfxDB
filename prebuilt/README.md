@@ -2,20 +2,23 @@
 
 ### Information about the prebuilt driver binaries
 
+We will be getting to **pip install** soon, for the time being you may download prebuilt native driver binary from prebuilt folder. These binaries may not be built with latest source code on the repository. 
+
+
 #### Python 2.7x 
-| **Platform** | **Py Version** |          **Location**             | **MD5 hash**
-|:-------------|:---------------|:----------------------------------|:----------------------------------------
-| `Arm`        |   2.7.13       | prebuilt/27x/ARM/ifx_db.so.tar    | de66bb3c74412d45156a61854b600c5f
-| `Win64`      |                |      Coming soon                  |
-| `Linux64`    |                |      Coming soon                  |
+| **Platform** | **Py Version** |     **Location**          | **MD5 hash**
+|:-------------|:---------------|:--------------------------|:--------------------------------
+| `Arm`        |   2.7.13       |  27x/ARM/ifx_db.so.tar    | de66bb3c74412d45156a61854b600c5f
+| `Win64`      |                |      Coming soon          |
+| `Linux64`    |                |      Coming soon          |
 
 
 #### Python 3.x 
-| **Platform** | **Py Version** |          **Location**             | **MD5 hash**
-|:-------------|:---------------|:----------------------------------|:----------------------------------------
-| `Arm`        |                |     Coming soon                   | 
-| `Win64`      |                |     Coming soon                   |
-| `Linux64`    |                |     Coming soon                   |
+| **Platform** | **Py Version** |     **Location**          | **MD5 hash**
+|:-------------|:---------------|:--------------------------|:--------------------------------
+| `Arm`        |                |     Coming soon           | 
+| `Win64`      |                |     Coming soon           |
+| `Linux64`    |                |     Coming soon           |
 
 
 

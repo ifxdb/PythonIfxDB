@@ -136,6 +136,8 @@ Determine the Unicode encoding needed for your python interpreter. Most of the L
 ##### [Download and extract python source code](https://www.python.org/downloads)
 ```bash
 cd /work/dev
+# rm ./Python
+# sudo rm -rf ./Python-2.7.13
 tar zxvf Python-2.7.13.tgz
 ln -s  ./Python-2.7.13  ./Python
 
@@ -190,21 +192,26 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (ifx_db.so) to your Python module directory
 # For example:
-
+mkdir /work/ifxdb/try
 cd /work/ifxdb/try
 rm ifx_db.so
 cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+
+# if ARM
 # cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+
+# Quick Test
+cp ../PythonIfxDB/Examples/test1.py .
+#Edit test1.py to modify connection information
 python test1.py
 ```
 
-## Tests
+## Run full tests
 ##### Specify connection information
 ```bash
 cd /work/ifxdb/PythonIfxDB/ifx_db
 cp   config.py.sample   config.py
-
-#Modify the connection properties specified in config.py
+# Then Modify the connection properties specified in config.py
 ```
 
 ##### Run all the tests

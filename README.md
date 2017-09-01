@@ -37,7 +37,7 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 For easiness of explanation let's assume C:\work is the location when we clone the PythonIfxDB repository.  
 (You may clone it at any location though; if so make adjustment for the instructions as well).
 
-```
+```bat
 cd C:\work
 or
 cd /work 
@@ -47,27 +47,24 @@ git clone https://github.com/ifxdb/PythonIfxDB.git
 
 ##### Build Shell Environment 
 Set CSDK_HOME and MY_PY_DIR environment variables.  
-The environment CSDK_HOME points to the Informix Client SDK installation directory.   
-The environment MY_PY_DIR points to the Python installation directory.  
-FYI: Edit setup.py manually for the time being, it has been hardcoded in it.
+The environment CSDK_HOME points to the Informix Client SDK or Server installation directory.   
+The environment MY_PY_DIR points to the Python installation directory (along with header files).  
 
-```
-Open VS2008 (or latest) command windows
-
-Example:
+```bat
+REM Open VS2008 (or latest) command windows
 SET CSDK_HOME=c:\informix
 SET MY_PY_DIR=C:\Dev\Python27
 ```
 
 ##### Starting the build
-```
+```bash
 cd C:\work\PythonIfxDB\ifx_db
 python setup.py build > out.txt 2>&1
 ```
 
 FYI: 
 While running setup.py for package build, Python 2.7 searches for an installed Visual Studio 2008. (The installation path of VS2008 is stored in the variable VS90COMNTOOLS). The general pattern for VS installation path is 
-``` 
+```bat 
 VS<internal version number>COMNTOOLS.  
 ```
 That means if you are using higher version of VS then you may map VSxxCOMNTOOLS for that VS to VS90COMNTOOLS.  
@@ -94,7 +91,7 @@ On successful build the Informix python package (ifx_db.pyd) should have built a
 C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7
 For the time being, you may manually copy Informix python package (ifx_db.pyd) to your Python module directory.
 
-```
+```bat
 COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 ```
 
@@ -114,75 +111,97 @@ The python interpreter used should match with operating system default Unicode e
 Some of the Linux flavors, python interpreter is available with UCS2/UTF16 and also UCS4/UTF32.
 If the OS default for Unicode is UTF32 then the ifxdb driver will work if the python interpreter is also using the Unicode UCS4/UTF32.  
 
-You may compile python interpreter from source by using the following flag to build UCS4/UTF32 Unicode string.
-```
---enable-unicode=ucs4
-Eg: 
-$ cd <Your Python Src>
-$ sudo ./configure --enable-unicode=ucs4
-$ sudo make
-$ sudo altinstall
-```
 
 ###### To check which Unicode encoding your python interpreter is using.
-```
-When built with --enable-unicode=ucs4:
+```Python
+# When built with --enable-unicode=ucs4:
 >>> import sys
 >>> print sys.maxunicode
 1114111
 
-When built with --enable-unicode=ucs2:
+# When built with --enable-unicode=ucs2:
 >>> import sys
 >>> print sys.maxunicode
 65535
 ```
-  
-##### Clone the python driver code
+
+#### Build Python from its source code
+By any chance if you don’t have the right python interpreter or you don’t have the development environment for building native library then you may have to build python from its source. Python can be built from it source by using the following steps.  
+
+Determine the Unicode encoding needed for your python interpreter. Most of the Linux platforms are by default UCS4/UTF32, the following step is to build python for UCS4/UTF32 Unicode encoded string.
+
+##### [Download and extract python source code](https://www.python.org/downloads)
+```bash
+cd /work/dev
+tar zxvf Python-2.7.13.tgz
+ln -s  ./Python-2.7.13  ./Python
+
+cd /work/dev/Python
+sudo ./configure --enable-unicode=ucs4
 ```
+###### Fire the Python build
+```bash
+$ cd /work/dev/Python
+$ sudo ./configure --enable-unicode=ucs4
+$ sudo make
+
+# install is not needed for driver build thouhg 
+# $ sudo altinstall
+```
+
+##### Clone the informix python driver source code
+```bash
 mkdir /work/ifxdb
 cd /work/ifxdb
 
 git clone https://github.com/ifxdb/PythonIfxDB.git
 ```
 
-##### Set Env for build 
-```
-Say you have installed Informix CSDK at /work/sqldist.c  
-And you have installed Python 2.7 at /work/dev/Python
+##### Set Env for driver build 
+```bash
+# Say you have installed Informix CSDK or IDS server at /work/informix
+# You have installed or unzip Python 2.7 at /work/dev/Python
 
-
-export CSDK_HOME=/work/sqldist.c
+export CSDK_HOME=/work/informix
 export MY_PY_DIR=/work/dev/Python
 ```
 
-##### Fire the build
-```
+#### Fire the driver build
+```bash
 cd /work/ifxdb/PythonIfxDB/ifx_db
 rm -rf build
 
 python setup.py build > out.txt 2>&1
 
+# if all go well, then Informix native python driver will be at
+# if x86 Linux with 64bit build then
 ls -l build/lib.linux-x86_64-2.7/ifx_db.so
+
+# Similarly if ARM then 
+ls -l build/lib.linux-armv7l-2.7/ifx_db.so
 ```
 
-##### Copy the ifx_db python dirver  
-```
-Copy Informix python package (ifx_db.so) to your Python module directory
-For example:
+##### Copy the dirver native lib
+The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **ifx_pydb.py**
+
+```bash
+# Copy Informix python package (ifx_db.so) to your Python module directory
+# For example:
 
 cd /work/ifxdb/try
 rm ifx_db.so
 cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+# cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 python test1.py
 ```
 
 ## Tests
 ##### Specify connection information
-```
+```bash
 cd /work/ifxdb/PythonIfxDB/ifx_db
 cp   config.py.sample   config.py
 
-Modify the connection properties specified in config.py
+#Modify the connection properties specified in config.py
 ```
 
 ##### Run all the tests
@@ -191,12 +210,12 @@ python tests.py
 ```
 
 ##### Run a single test
-```
-Single test can be run by specifying test name in the SINGLE_PYTHON_TEST environment variable.
+```bash
+# Single test can be run by specifying test name in the SINGLE_PYTHON_TEST environment variable.
 
-For example:
-SET SINGLE_PYTHON_TEST=test_001_ConnDb.py
-or
+# For example:
+SET    SINGLE_PYTHON_TEST=test_001_ConnDb.py
+# or
 export SINGLE_PYTHON_TEST=test_001_ConnDb.py
 
 python tests.py

@@ -12,7 +12,7 @@ This set of API contains advanced features defined by Informix. This database ex
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
 ### Project status: Beta 
-Most of ifx_db driver functionality is fully functional; we are in the process of adding documentation, tests cases and examples. There is a chance API spec might change by the time we arrive public beta.
+Most of ifx_db driver functionality is fully functional; we are in the process of adding documentation, tests cases and examples. There is a chance API spec might change by the time we arrive RC.
 
 ##### Coming soon
 * Examples 
@@ -31,10 +31,10 @@ Most of ifx_db driver functionality is fully functional; we are in the process o
 * clone the PythonIfxDB repository
 * Visual Studio 2008 or above (Windows Only)
 * Informix client SDK 410xC2 or above
-* Set environment variable CSDK_HOME and MY_PY_DIR
+* Set environment variable **CSDK_HOME** and **MY_PY_DIR**
 
 ### Clone the source code
-For easiness of explanation let's assume C:\work is the location when we clone the PythonIfxDB repository.  
+Let's assume **C:\work** is the location when we clone the PythonIfxDB repository.  
 (You may clone it at any location though; if so make adjustment for the instructions as well).
 
 ```bat
@@ -46,9 +46,9 @@ git clone https://github.com/ifxdb/PythonIfxDB.git
 ```
 
 ##### Build Shell Environment 
-Set CSDK_HOME and MY_PY_DIR environment variables.  
-The environment CSDK_HOME points to the Informix Client SDK or Server installation directory.   
-The environment MY_PY_DIR points to the Python installation directory (along with header files).  
+Set **CSDK_HOME** and **MY_PY_DIR** environment variables.  
+The environment **CSDK_HOME** points to the **Informix Client SDK**.   
+The environment **MY_PY_DIR** points to the Python source code installation.  
 
 ```bat
 REM Open VS2008 (or latest) command windows
@@ -90,7 +90,7 @@ python setup.py build  > out.txt 2>&1
 ```
 
 ### Install
-On successful build the Informix python package (ifx_db.pyd) should have built at  
+On successful build the Informix python package (**ifx_db.pyd**) should have built at  
 C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7
 For the time being, you may manually copy Informix python package (ifx_db.pyd) to your Python module directory.
 
@@ -192,19 +192,30 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (ifx_db.so) to your Python module directory
 # For example:
-mkdir /work/ifxdb/try
-cd /work/ifxdb/try
-rm ifx_db.so
 cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 
 # if ARM
 # cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+```
 
-# Quick Test
-cp ../PythonIfxDB/Examples/test1.py .
-#Edit test1.py to modify connection information
+####  Quick Try
+```bash
+mkdir /work/ifxdb/try/
+cd /work/ifxdb/try/
+cp /work/ifxdb/PythonIfxDB/Examples/test1.py .
+
+rm ifx_db.so
+cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+# if ARM then
+# cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+
+# Edit test1.py to modify connection information
+# You also need the following CSDK setup for driver runtime
+# export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli:${INFORMIXDIR}/lib:/usr/lib
+# export PATH=$INFORMIXDIR/bin:$PATH
 python test1.py
 ```
+
 
 ## Run full tests
 ##### Specify connection information

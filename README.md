@@ -214,6 +214,8 @@ cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # You also need the following CSDK setup for driver runtime
 # export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli:${INFORMIXDIR}/lib:/usr/lib
 # export PATH=$INFORMIXDIR/bin:$PATH
+```
+```
 python test1.py
 ```
 
@@ -228,6 +230,10 @@ cp   config.py.sample   config.py
 
 ##### Run all the tests
 ```
+cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+# if ARM then
+# cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+
 python tests.py
 ```
 

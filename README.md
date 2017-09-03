@@ -216,8 +216,8 @@ cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
 # cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 ```
-* Edit the sample application to modify connection information
-* SET Client SDK Runtime Environment
+* Edit connection string
+* Set Informix Client SDK Runtime Environment
 
 ```
 python test1.py

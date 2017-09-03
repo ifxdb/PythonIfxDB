@@ -3,23 +3,23 @@
 ### Licensed under the Apache License, Version 2.0
 
 ## PythonIfxDB
-Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise or IoT solutions working with Informix database. The **Advanced native extension module** is the heart of Informix native Python driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with python code by focusing on better application compatibility.  
+Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise or IoT solutions that works with Informix database. The **Advanced native extension module** is the heart piece of driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with Python code by focusing on application API level compatibility.  
 
-The driver has been well tested across all major platforms such as **ARM**, **Linux**, and **Windows**; and it has been certified to work with **Raspberry Pi too**.  
+The driver has been well tested across all major platforms such as **ARM**, **Linux**, and **Windows**; and it has been certified to work with **Raspberry Pi** too.  
 
-The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. http://stackoverflow.com/questions/tagged/informix
+The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
+**FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. These binaries may not be built with latest source code on the repository.  
+* [prebuilt](https://github.com/ifxdb/PythonIfxDB/tree/master/prebuilt)
 
 #### ifx_db (Advanced native extension module)
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
-FYI: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. These binaries may not be built with latest source code on the repository.  
-* [prebuilt](https://github.com/ifxdb/PythonIfxDB/tree/master/prebuilt)
 
 #### ifx_pydb (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
 ### Project status: Beta 
-Most of ifx_db driver functionality is fully functional; we are in the process of adding documentation, tests cases and examples. There is a chance API spec might change by the time we arrive RC.
+Most of ifx_db driver (Advanced native extension module) functionality is fully functional; we are in the process of adding documentation, examples and pip install. We will get to RC soon.
 
 ##### Coming soon
 * Examples 

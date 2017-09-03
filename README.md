@@ -1,4 +1,4 @@
-### Copyright 2017 ifxdb and Informix
+##### Copyright 2017 ifxdb and Informix
 
 ### Licensed under the Apache License, Version 2.0
 

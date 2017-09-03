@@ -215,27 +215,40 @@ rm ifx_db.so
 cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
 # cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
-
-# Edit test1.py to modify connection information
-# You also need the following CSDK setup for driver runtime
-# export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli:${INFORMIXDIR}/lib:/usr/lib
-# export PATH=$INFORMIXDIR/bin:$PATH
 ```
+* Edit the sample application to modify connection information
+* SET Client SDK Runtime Environment
+
 ```
 python test1.py
 ```
+## Set Informix Client SDK Runtime Environment 
+----------------------------------------------
+**FYI**: Make sure to set Informix Client SDK Runtime Environment before running applications
+
+#### Linux
+```bash
+export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
+export PATH=$INFORMIXDIR/bin:$PATH
+```
+
+#### Windows
+```bat
+# say you have installed CSDK at C:\informix then
+SET PATH=C:\informix\bin;%PATH%
+```
 
 
-## Run full tests
+## Run tests
 ##### Specify connection information
 ```bash
 cd /work/ifxdb/PythonIfxDB/ifx_db
 cp   config.py.sample   config.py
-# Then Modify the connection properties specified in config.py
 ```
+Then Modify the connection properties specified in config.py
 
-##### Run all the tests
-```
+##### Run all tests
+```bash
 cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
 # cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
@@ -244,9 +257,8 @@ python tests.py
 ```
 
 ##### Run a single test
+A single test can be run by specifying test name in the **SINGLE_PYTHON_TEST** environment variable.
 ```bash
-# Single test can be run by specifying test name in the SINGLE_PYTHON_TEST environment variable.
-
 # For example:
 SET    SINGLE_PYTHON_TEST=test_001_ConnDb.py
 # or
@@ -254,6 +266,8 @@ export SINGLE_PYTHON_TEST=test_001_ConnDb.py
 
 python tests.py
 ```
+
+
 #### Run tests with Python 3.x
 ```
 The source files in the 'tests' directory were written for Python 2.
@@ -262,13 +276,17 @@ You can use the '2to3' Python utility in the 'ifx_db/tests' directory, for examp
 $ cd /work/ifx_db/PythonIfxDB/ifx_db/tests
 $ 2to3 -w *.py
 ```
+
+
+
 ## Example 
 
 #### Connecting to Informix database
+**FYI**: Make sure to set Informix Client SDK Runtime Environment before running the application
 ```python
 import ifx_db
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
 
 # netstat -a | findstr  9088
 conn = ifx_db.connect( ConStr, "", "")

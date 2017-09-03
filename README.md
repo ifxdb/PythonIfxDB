@@ -3,10 +3,16 @@
 ### Licensed under the Apache License, Version 2.0
 
 ## PythonIfxDB
-Informix Python Driver is a high performing data access interface for Python applications. This module has implementation of Python Database API Specification v2.0 for Informix Dynamic Server and also advanced features as extension. 
+Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise or IoT solutions working with Informix database. The **Advanced native extension module** is the heart of Informix native Python driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with python code by focusing on better application compatibility.  
 
-#### ifx_db
-This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support. We will be getting to **pip install** soon, for the time being you may download prebuilt native driver binary from prebuilt folder. These binaries may not be built with latest source code on the repository.  
+The driver has been well tested across all major platforms such as **ARM**, **Linux**, and **Windows**; and it has been certified to work with **Raspberry Pi too**.  
+
+The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. http://stackoverflow.com/questions/tagged/informix
+
+
+#### ifx_db (Advanced native extension module)
+This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
+FYI: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. These binaries may not be built with latest source code on the repository.  
 * [prebuilt](https://github.com/ifxdb/PythonIfxDB/tree/master/prebuilt)
 
 #### ifx_pydb (coming soon)

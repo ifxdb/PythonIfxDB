@@ -58,16 +58,14 @@ The environment **CSDK_HOME** points to the **Informix Client SDK**.
 The environment **MY_PY_DIR** points to the Python source code installation.  
 
 ```bat
-REM Open VS2008 (or latest) command windows
+# Open VS2008 (or latest) command windows
+# set VS90COMNTOOLS if you are using latest vs, for eg, vs2015 then
+SET VS90COMNTOOLS=%VS140COMNTOOLS% 
+
 SET CSDK_HOME=c:\informix
 SET MY_PY_DIR=C:\Dev\Python27
 ```
 
-##### Starting the build
-```bash
-cd C:\work\PythonIfxDB\ifx_db
-python setup.py build > out.txt 2>&1
-```
 
 FYI: 
 While running setup.py for package build, Python 2.7 searches for an installed Visual Studio 2008. (The installation path of VS2008 is stored in the variable VS90COMNTOOLS). The general pattern for VS installation path is 
@@ -91,9 +89,10 @@ SET VS90COMNTOOLS=%VS120COMNTOOLS%
 SET VS90COMNTOOLS=%VS140COMNTOOLS%  
 ```
 
-And then issue the folloing command  
-```
-python setup.py build  > out.txt 2>&1
+##### Starting the build
+```bash
+cd C:\work\PythonIfxDB\ifx_db
+python setup.py build > out.txt 2>&1
 ```
 
 ### Install
@@ -103,6 +102,14 @@ For the time being, you may manually copy Informix python package (ifx_db.pyd) t
 
 ```bat
 COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
+```
+
+Try a sample
+```bash
+copy C:\work\PythonIfxDB\Examples\test1.py
+# edit connection information
+set PATH=C:\Informix\bin;%PATH%
+python test1.py
 ```
 
 

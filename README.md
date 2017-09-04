@@ -19,7 +19,9 @@ This set of API contains advanced features defined by Informix. This database ex
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
 ### Project status: Beta 
-Most of ifx_db driver (Advanced native extension module) functionality is fully functional; we are in the process of adding documentation, examples and pip install. We will get to RC soon.
+Most of ifx_db driver (Advanced native extension module) functionality is fully functional; we are in the process of adding documentation, examples and pip install. There might be breaking changes by the time we arrive on RC, We will get to RC soon.  
+
+**Known Problems**: Large Object Support, Stored Procedures.
 
 ##### Coming soon
 * Examples 

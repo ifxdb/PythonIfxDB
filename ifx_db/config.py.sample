@@ -1,8 +1,8 @@
-test_dir	=	'tests'		# Location of testsuite file (relative to current directory) (Don't change this.)
+test_dir = 'tests'		# Location of testsuite file (relative to current directory) (Don't change this.)
 
-ConnStr		=	"SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
-user		=	'db2inst1'	# User ID to connect with
-password	=	'password'	# Password for given User ID
-hostname	=	'localhost'	# Hostname
-port		=	50000		# Port Number
+ConnStr	 = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
+user	 = 'informix'	# User ID to connect with
+password = 'xxxx'	# Password for given User ID
+hostname = 'localhost'	# Hostname
+port	 =  9088		# Port Number
 

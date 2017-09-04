@@ -10880,7 +10880,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
                 return NULL;
             }
             numOfParam = (int)PyTuple_Size(parameters_tuple);
-            subsql1 = StringOBJ_FromASCII("{ CALL ");
+            subsql1 = StringOBJ_FromASCII("CALL ");
            
             subsql2 = PyUnicode_Concat(subsql1, pyprocName);
             Py_XDECREF(subsql1);
@@ -10903,7 +10903,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
                     strcat(strsubsql, ", ?");
                 }
             }
-            strcat(strsubsql, " ) }");
+            strcat(strsubsql, " ) ");
             subsql1 = StringOBJ_FromASCII(strsubsql);
             sql = PyUnicode_Concat(subsql2, subsql1);
             Py_XDECREF(subsql1);

@@ -333,13 +333,12 @@ Sets the result set pointer to the next row or requested row. Use this function 
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=usr1;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
 
+# netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")
 
-
 SetupSqlSet = [
-    "drop table t1;", 
     "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;", 
     "insert into t1 values( 1, 'Sunday', 101, 201 );",
     "insert into t1 values( 2, 'Monday', 102, 202 );",
@@ -350,6 +349,14 @@ SetupSqlSet = [
     "insert into t1 values( 7, 'Saturday', 107, 207 );"
 ]
 
+try:
+    sql = "drop table t1;"
+    print sql
+    stmt = IfxPy.exec_immediate(conn, sql)
+except:
+    print 'FYI: drop table failed'
+
+	
 for sql in SetupSqlSet:
     print sql
     stmt = IfxPy.exec_immediate(conn, sql)
@@ -373,6 +380,7 @@ while dictionary != False:
 IfxPy.close(conn)
 
 print "Done"
+
 ```
 
 ### Python Database API Specification

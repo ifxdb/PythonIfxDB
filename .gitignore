@@ -144,19 +144,19 @@ ENV/
 # mkdocs documentation
 /site
 /1.CSV
-/ifx_db/2.txt
+/IfxPy/2.txt
 /22.txt
 /2.CSV
 /11.txt
-/ifx_db/ifx_db.obj
-/ifx_db/pic1.jpg
-ifx_db/tests/pic1_out.jpg
-ifx_db/tests/spook_out.png
-ifx_db/out.txt
-ifx_db/config.py
+/IfxPy/IfxPy.obj
+/IfxPy/pic1.jpg
+IfxPy/tests/pic1_out.jpg
+IfxPy/tests/spook_out.png
+IfxPy/out.txt
+IfxPy/config.py
 /spook.png
 /IfxPy/test.py
 /IfxPy/spook.png
 /IfxPy/pic1.png
 /IfxPy/pic1.jpg
-/ifx_db/spook.png
+/IfxPy/spook.png

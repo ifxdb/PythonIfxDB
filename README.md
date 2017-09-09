@@ -62,7 +62,7 @@ The environment **MY_PY_DIR** points to the Python source code installation.
 ```bat
 # Open VS2008 (or latest) command windows
 # set VS90COMNTOOLS if you are using latest vs, for eg, vs2015 then
-SET VS90COMNTOOLS=%VS140COMNTOOLS% 
+SET VS90COMNTOOLS=%VS140COMNTOOLS%
 
 SET CSDK_HOME=c:\informix
 SET MY_PY_DIR=C:\Dev\Python27

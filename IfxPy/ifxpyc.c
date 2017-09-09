@@ -11354,7 +11354,7 @@ static PyMethodDef ifx_db_Methods[] = {
 #define PyMODINIT_FUNC void
 #endif
 
-static const char DriverModuleName[] = "ifx_db";
+static const char DriverModuleName[] = "IfxPy";
 static const char DriverModuleDescription[] = "Informix Native Driver for Python.";
 
 #if PY_MAJOR_VERSION >= 3

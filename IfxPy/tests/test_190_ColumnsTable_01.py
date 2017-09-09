@@ -10,7 +10,7 @@ import IfxPy
 import config
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_190_ColumnsTable_01(self):
     obj = IfxPyTestFunctions()

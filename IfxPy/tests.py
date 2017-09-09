@@ -71,7 +71,7 @@ class IfxDbTest(unittest.TestCase):
     for i in range(0, len(filelist)):
       exec("import %s" % filelist[i])
       testFuncName = filelist[i].replace(config.test_dir + self.slash, '')
-      exec("suite.addTest(%s.IfxDbTestCase(testFuncName))" % filelist[i])
+      exec("suite.addTest(%s.IfxPyTestCase(testFuncName))" % filelist[i])
       
     unittest.TextTestRunner(verbosity=2).run(suite) 
 

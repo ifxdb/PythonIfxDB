@@ -14,7 +14,7 @@ class Wrapper(str):
   def __del__(self):
     print("Wrapper(" + self + ") being deleted")
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_312_CacheBoundParameters(self):
     obj = IfxPyTestFunctions()

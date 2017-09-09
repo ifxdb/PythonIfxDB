@@ -9,7 +9,7 @@ import IfxPy
 import config
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_035_FetchRow_01(self):
     obj = IfxPyTestFunctions()

@@ -13,7 +13,7 @@ from testfunctions import IfxPyTestFunctions
 name = 'name'
 picture = 'picture'
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_000_PrepareDb(self):
     obj = IfxPyTestFunctions()

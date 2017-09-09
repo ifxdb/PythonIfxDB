@@ -9,7 +9,7 @@ import IfxPy
 import config
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_152_FetchAssocSelect_03(self):
     obj = IfxPyTestFunctions()

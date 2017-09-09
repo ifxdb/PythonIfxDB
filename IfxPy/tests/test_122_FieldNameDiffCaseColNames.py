@@ -10,7 +10,7 @@ import config
 import os
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_122_FieldNameDiffCaseColNames(self):
     obj = IfxPyTestFunctions()

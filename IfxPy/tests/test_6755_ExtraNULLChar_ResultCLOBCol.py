@@ -9,7 +9,7 @@ import IfxPy
 import config
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_6755_ExtraNULLChar_ResultCLOBCol(self):
     obj = IfxPyTestFunctions()

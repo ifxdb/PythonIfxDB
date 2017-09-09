@@ -10,7 +10,7 @@ import IfxPy
 import config
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 	def test_decimal(self):
 		obj = IfxPyTestFunctions()
 		obj.assert_expect(self.run_test_decimal)

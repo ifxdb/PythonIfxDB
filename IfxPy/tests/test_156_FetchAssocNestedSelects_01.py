@@ -13,7 +13,7 @@ import IfxPy
 import config
 from testfunctions import IfxPyTestFunctions
 
-class IfxDbTestCase(unittest.TestCase):
+class IfxPyTestCase(unittest.TestCase):
 
   def test_156_FetchAssocNestedSelects_01(self):
     obj = IfxPyTestFunctions()

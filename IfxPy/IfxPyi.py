@@ -688,7 +688,7 @@ class Connection(object):
 
     # Retrieves the tables for a specified schema (and/or given table name)
     def tables(self, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFX_DBConnection object
+        """Input: connection - ifx_db.IFXConnection object
            Return: sequence of table metadata dicts for the specified schema
         """
             
@@ -714,7 +714,7 @@ class Connection(object):
 
     # Retrieves metadata pertaining to index for specified schema (and/or table name)
     def indexes(self, unique=True, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFX_DBConnection object
+        """Input: connection - ifx_db.IFXConnection object
            Return: sequence of index metadata dicts for the specified table
         Example:
            Index metadata retrieved from schema 'PYTHONIC.TEST_TABLE' table
@@ -752,7 +752,7 @@ class Connection(object):
 
     # Retrieves metadata pertaining to primary keys for specified schema (and/or table name)
     def primary_keys(self, unique=True, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFX_DBConnection object
+        """Input: connection - ifx_db.IFXConnection object
            Return: sequence of PK metadata dicts for the specified table
         Example:
            PK metadata retrieved from 'PYTHONIC.ORDERS' table
@@ -786,7 +786,7 @@ class Connection(object):
 
     # Retrieves metadata pertaining to foreign keys for specified schema (and/or table name)
     def foreign_keys(self, unique=True, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFX_DBConnection object
+        """Input: connection - ifx_db.IFXConnection object
            Return: sequence of FK metadata dicts for the specified table
         Example:
            FK metadata retrieved from 'PYTHONIC.ENGINE_EMAIL_ADDRESSES' table
@@ -824,7 +824,7 @@ class Connection(object):
     
     # Retrieves the columns for a specified schema (and/or table name and column name)
     def columns(self, schema_name=None, table_name=None, column_names=None):
-        """Input: connection - ifx_db.IFX_DBConnection object
+        """Input: connection - ifx_db.IFXConnection object
            Return: sequence of column metadata dicts for the specified schema
         Example:
            Column metadata retrieved from schema 'PYTHONIC.FOO' table, column 'A'

@@ -20,7 +20,7 @@ class IfxDbTestCase(unittest.TestCase):
       
     result = ifx_db.tables(conn, None, "SYSIBM", "", "VIEW")
     
-    if (type(result) == ifx_db.IFX_DBStatement):
+    if (type(result) == ifx_db.IFXStatement):
       print "Resource is a IFX Statement"
       
     ifx_db.free_result(result)

@@ -208,7 +208,7 @@ static PyMemberDef le_client_info_members[] = {
 
 static PyTypeObject client_infoType = {
         PyVarObject_HEAD_INIT(NULL, 0)
-        "IfxPy.IFX_DBClientInfo",              // tp_name           
+        "IfxPy.IFXClientInfo",              // tp_name           
         sizeof(le_client_info),                 // tp_basicsize      
         0,                                      // tp_itemsize       
         0,                                      // tp_dealloc        
@@ -301,7 +301,7 @@ static PyMemberDef le_server_info_members[] = {
 
 static PyTypeObject server_infoType = {
         PyVarObject_HEAD_INIT(NULL, 0)
-        "IfxPy.IFX_DBServerInfo",              // tp_name           
+        "IfxPy.IFXServerInfo",              // tp_name           
         sizeof(le_server_info),                 // tp_basicsize      
         0,                                      // tp_itemsize       
         0,                                      // tp_dealloc        
@@ -341,7 +341,7 @@ static PyTypeObject server_infoType = {
 
 
 
-#define IFX_DB_G(v) (IfxPy_globals->v)
+#define IFX_G(v) (IfxPy_globals->v)
 
 static void _python_IfxPy_clear_stmt_err_cache(void);
 static void _python_IfxPy_clear_conn_err_cache(void);

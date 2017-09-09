@@ -145,7 +145,7 @@ static void _python_IfxPy_free_conn_struct(conn_handle *handle);
 
 static PyTypeObject conn_handleType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "IfxPy.IFX_DBConnection",              // tp_name
+    "IfxPy.IFXConnection",              // tp_name
     sizeof(conn_handle),                    // tp_basicsize
     0,                                      // tp_itemsize
     (destructor)_python_IfxPy_free_conn_struct, // tp_dealloc
@@ -248,7 +248,7 @@ static void _python_IfxPy_free_stmt_struct(stmt_handle *handle);
 
 static PyTypeObject stmt_handleType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "IfxPy.IFX_DBStatement",   // tp_name             
+    "IfxPy.IFXStatement",   // tp_name             
     sizeof(stmt_handle),        // tp_basicsize             
     0,                          // tp_itemsize        
     (destructor)_python_IfxPy_free_stmt_struct, // tp_dealloc    
@@ -607,16 +607,16 @@ static void _python_IfxPy_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType, 
                 switch (hType)
                 {
                 case SQL_HANDLE_DBC:
-                    strncpy(IFX_DB_G(__python_conn_err_state),
+                    strncpy(IFX_G(__python_conn_err_state),
                         (char*)sqlstate, SQL_SQLSTATE_SIZE + 1);
-                    strncpy(IFX_DB_G(__python_conn_err_msg),
+                    strncpy(IFX_G(__python_conn_err_msg),
                         (char*)errMsg, DB_MAX_ERR_MSG_LEN);
                     break;
 
                 case SQL_HANDLE_STMT:
-                    strncpy(IFX_DB_G(__python_stmt_err_state),
+                    strncpy(IFX_G(__python_stmt_err_state),
                         (char*)sqlstate, SQL_SQLSTATE_SIZE + 1);
-                    strncpy(IFX_DB_G(__python_stmt_err_msg),
+                    strncpy(IFX_G(__python_stmt_err_msg),
                         (char*)errMsg, DB_MAX_ERR_MSG_LEN);
                     break;
                 }
@@ -649,16 +649,16 @@ static void _python_IfxPy_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType, 
                 switch (hType)
                 {
                 case SQL_HANDLE_DBC:
-                    strncpy(IFX_DB_G(__python_conn_warn_state),
+                    strncpy(IFX_G(__python_conn_warn_state),
                         (char*)sqlstate, SQL_SQLSTATE_SIZE + 1);
-                    strncpy(IFX_DB_G(__python_conn_warn_msg),
+                    strncpy(IFX_G(__python_conn_warn_msg),
                         (char*)errMsg, DB_MAX_ERR_MSG_LEN);
                     break;
 
                 case SQL_HANDLE_STMT:
-                    strncpy(IFX_DB_G(__python_stmt_warn_state),
+                    strncpy(IFX_G(__python_stmt_warn_state),
                         (char*)sqlstate, SQL_SQLSTATE_SIZE + 1);
-                    strncpy(IFX_DB_G(__python_stmt_warn_msg),
+                    strncpy(IFX_G(__python_stmt_warn_msg),
                         (char*)errMsg, DB_MAX_ERR_MSG_LEN);
                     break;
                 }
@@ -1302,8 +1302,8 @@ static int _python_IfxPy_bind_column_helper(stmt_handle *stmt_res)
 /*    static void _python_IfxPy_clear_stmt_err_cache () */
 static void _python_IfxPy_clear_stmt_err_cache(void)
 {
-    memset(IFX_DB_G(__python_stmt_err_msg), 0, DB_MAX_ERR_MSG_LEN);
-    memset(IFX_DB_G(__python_stmt_err_state), 0, SQL_SQLSTATE_SIZE + 1);
+    memset(IFX_G(__python_stmt_err_msg), 0, DB_MAX_ERR_MSG_LEN);
+    memset(IFX_G(__python_stmt_err_state), 0, SQL_SQLSTATE_SIZE + 1);
 }
 
 
@@ -1428,7 +1428,7 @@ static PyObject *_python_IfxPy_connect_helper(PyObject *self, PyObject *args, in
 		rc = SQLSetConnectAttr((SQLHDBC)conn_res->hdbc, SQL_INFX_ATTR_LO_AUTOMATIC,	
 			(SQLPOINTER)SQL_TRUE, SQL_IS_UINTEGER);
 
-        conn_res->c_bin_mode = IFX_DB_G(bin_mode);
+        conn_res->c_bin_mode = IFX_G(bin_mode);
         conn_res->c_case_mode = CASE_NATURAL;
         conn_res->c_use_wchar = WCHAR_YES;
         conn_res->c_cursor_type = SQL_SCROLL_FORWARD_ONLY;
@@ -1680,8 +1680,8 @@ static SQLWCHAR* xgetUnicodeDataAsSQLWCHAR(PyObject *pyobj, int *isNewBuffer)
 static void _python_IfxPy_clear_conn_err_cache(void)
 {
     /* Clear out the cached conn messages */
-    memset(IFX_DB_G(__python_conn_err_msg), 0, DB_MAX_ERR_MSG_LEN);
-    memset(IFX_DB_G(__python_conn_err_state), 0, SQL_SQLSTATE_SIZE + 1);
+    memset(IFX_G(__python_conn_err_msg), 0, DB_MAX_ERR_MSG_LEN);
+    memset(IFX_G(__python_conn_err_state), 0, SQL_SQLSTATE_SIZE + 1);
 }
 
 /*!#
@@ -1742,7 +1742,7 @@ static void _python_IfxPy_clear_conn_err_cache(void)
 * ===Description
 *
 *  --    Returns a connection to a database
-* IFX_DBConnection IfxPy.connect (dsn=<..>, user=<..>, password=<..>,
+* IFXConnection IfxPy.connect (dsn=<..>, user=<..>, password=<..>,
 *                                  host=<..>, database=<..>, options=<..>)
 *
 * Creates a new connection to an Informix Database,
@@ -1817,7 +1817,7 @@ static void _python_IfxPy_clear_conn_err_cache(void)
 * ===Return Values
 *
 *
-* Returns a IFX_DBConnection connection object if the connection attempt is
+* Returns a IFXConnection connection object if the connection attempt is
 * successful.
 * If the connection attempt fails, IfxPy.connect() returns None.
 *
@@ -2087,7 +2087,7 @@ static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res
         if (rc == SQL_ERROR)
         {
             sprintf(error, "Describe Param Failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -2114,7 +2114,7 @@ static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res
         if (rc == SQL_ERROR)
         {
             sprintf(error, "Describe Param Failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -2141,7 +2141,7 @@ static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res
         if (rc == SQL_ERROR)
         {
             sprintf(error, "Describe Param Failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -2169,7 +2169,7 @@ static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res
         if (rc == SQL_ERROR)
         {
             sprintf(error, "Describe Param Failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -2224,7 +2224,7 @@ static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res
 *                                    [, int data-type [, int precision
 *                                    [, int scale [, int size[]]]]]] )
 *
-* Binds a Python variable to an SQL statement parameter in a IFX_DBStatement
+* Binds a Python variable to an SQL statement parameter in a IFXStatement
 * resource returned by IfxPy.prepare().
 * This function gives you more control over the parameter type, data type,
 * precision, and scale for the parameter than simply passing the variable as
@@ -4831,7 +4831,7 @@ static int _python_IfxPy_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_siz
 /*!# IfxPy.exec
 *
 * ===Description
-* stmt_handle IfxPy.exec ( IFX_DBConnection connection, string statement
+* stmt_handle IfxPy.exec ( IFXConnection connection, string statement
 *                                [, array options] )
 *
 * Prepares and executes an SQL statement.
@@ -5135,7 +5135,7 @@ static PyObject *_python_IfxPy_prepare_helper(conn_handle *conn_res, PyObject *p
 
     if (rc < SQL_SUCCESS)
     {
-        sprintf(error, "Statement Prepare Failed: %s", IFX_DB_G(__python_stmt_err_msg));
+        sprintf(error, "Statement Prepare Failed: %s", IFX_G(__python_stmt_err_msg));
         Py_XDECREF(py_stmt);
         return NULL;
     }
@@ -5146,7 +5146,7 @@ static PyObject *_python_IfxPy_prepare_helper(conn_handle *conn_res, PyObject *p
 /*!# IfxPy.prepare
 *
 * ===Description
-* IBMDB_Statement IfxPy.prepare ( IFX_DBConnection connection,
+* IBMDB_Statement IfxPy.prepare ( IFXConnection connection,
 *                                  string statement [, array options] )
 *
 * IfxPy.prepare() creates a prepared SQL statement which can include 0 or
@@ -5201,7 +5201,7 @@ static PyObject *_python_IfxPy_prepare_helper(conn_handle *conn_res, PyObject *p
 *             forward-only cursors.
 *
 * ===Return Values
-* Returns a IFX_DBStatement object if the SQL statement was successfully
+* Returns a IFXStatement object if the SQL statement was successfully
 * parsed and prepared by the database server. Returns FALSE if the database
 * server returned an error. You can determine which error was returned by
 * calling IfxPy.stmt_error() or IfxPy.stmt_errormsg().
@@ -5831,7 +5831,7 @@ static int _python_IfxPy_execute_helper2(stmt_handle *stmt_res, PyObject *data, 
             if (rc == SQL_ERROR)
             {
                 sprintf(error, "Binding Error 1: %s",
-                        IFX_DB_G(__python_stmt_err_msg));
+                        IFX_G(__python_stmt_err_msg));
                 PyErr_SetString(PyExc_Exception, error);
                 return rc;
             }
@@ -5867,7 +5867,7 @@ static int _python_IfxPy_execute_helper2(stmt_handle *stmt_res, PyObject *data, 
                 if (rc == SQL_ERROR)
                 {
                     sprintf(error, "Describe Param Failed: %s",
-                            IFX_DB_G(__python_stmt_err_msg));
+                            IFX_G(__python_stmt_err_msg));
                     PyErr_SetString(PyExc_Exception, error);
                     return rc;
                 }
@@ -5877,7 +5877,7 @@ static int _python_IfxPy_execute_helper2(stmt_handle *stmt_res, PyObject *data, 
                 if (rc == SQL_ERROR)
                 {
                     sprintf(error, "Binding Error 2: %s",
-                            IFX_DB_G(__python_stmt_err_msg));
+                            IFX_G(__python_stmt_err_msg));
                     PyErr_SetString(PyExc_Exception, error);
                     return rc;
                 }
@@ -5894,7 +5894,7 @@ static int _python_IfxPy_execute_helper2(stmt_handle *stmt_res, PyObject *data, 
                     if (rc == SQL_ERROR)
                     {
                         sprintf(error, "Binding Error 2: %s",
-                                IFX_DB_G(__python_stmt_err_msg));
+                                IFX_G(__python_stmt_err_msg));
                         PyErr_SetString(PyExc_Exception, error);
                         return rc;
                     }
@@ -5981,7 +5981,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
                 rc = _python_IfxPy_execute_helper2(stmt_res, data, 0, bind_params);
                 if (rc == SQL_ERROR)
                 {
-                    sprintf(error, "Binding Error: %s", IFX_DB_G(__python_stmt_err_msg));
+                    sprintf(error, "Binding Error: %s", IFX_G(__python_stmt_err_msg));
                     PyErr_SetString(PyExc_Exception, error);
                     return NULL;
                 }
@@ -6020,7 +6020,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
                 rc = _python_IfxPy_execute_helper2(stmt_res, NULL, 1, 0);
                 if (rc == SQL_ERROR)
                 {
-                    sprintf(error, "Binding Error 3: %s", IFX_DB_G(__python_stmt_err_msg));
+                    sprintf(error, "Binding Error 3: %s", IFX_G(__python_stmt_err_msg));
                     PyErr_SetString(PyExc_Exception, error);
                     return NULL;
                 }
@@ -6044,7 +6044,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
         }
         if (rc == SQL_ERROR)
         {
-            sprintf(error, "Statement Execute Failed: %s", IFX_DB_G(__python_stmt_err_msg));
+            sprintf(error, "Statement Execute Failed: %s", IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -6063,7 +6063,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
     }
     if (rc == SQL_ERROR)
     {
-        sprintf(error, "Statement Execute Failed: %s", IFX_DB_G(__python_stmt_err_msg));
+        sprintf(error, "Statement Execute Failed: %s", IFX_G(__python_stmt_err_msg));
         PyErr_SetString(PyExc_Exception, error);
         return NULL;
     }
@@ -6094,7 +6094,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
             if (rc == SQL_ERROR)
             {
                 sprintf(error, "Sending data failed: %s",
-                        IFX_DB_G(__python_stmt_err_msg));
+                        IFX_G(__python_stmt_err_msg));
                 PyErr_SetString(PyExc_Exception, error);
                 return NULL;
             }
@@ -6110,7 +6110,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
         if (rc == SQL_ERROR)
         {
             sprintf(error, "Sending data failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -6133,7 +6133,7 @@ static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *
 /*!# IfxPy.execute
 *
 * ===Description
-* Py_True/Py_False IfxPy.execute ( IFX_DBStatement stmt [, tuple parameters] )
+* Py_True/Py_False IfxPy.execute ( IFXStatement stmt [, tuple parameters] )
 *
 * IfxPy.execute() executes an SQL statement that was prepared by
 * IfxPy.prepare().
@@ -6267,7 +6267,7 @@ static PyObject *IfxPy_conn_errormsg(PyObject *self, PyObject *args)
     }
     else
     {
-        return StringOBJ_FromASCII(IFX_DB_G(__python_conn_err_msg));
+        return StringOBJ_FromASCII(IFX_G(__python_conn_err_msg));
     }
 }
 /*!# IfxPy_conn_warn
@@ -6340,7 +6340,7 @@ static PyObject *IfxPy_conn_warn(PyObject *self, PyObject *args)
     }
     else
     {
-        return StringOBJ_FromASCII(IFX_DB_G(__python_conn_warn_msg));
+        return StringOBJ_FromASCII(IFX_G(__python_conn_warn_msg));
     }
 }
 
@@ -6409,7 +6409,7 @@ static PyObject *IfxPy_stmt_warn(PyObject *self, PyObject *args)
     }
     else
     {
-        return StringOBJ_FromASCII(IFX_DB_G(__python_stmt_warn_msg));
+        return StringOBJ_FromASCII(IFX_G(__python_stmt_warn_msg));
     }
 }
 
@@ -6478,7 +6478,7 @@ static PyObject *IfxPy_stmt_errormsg(PyObject *self, PyObject *args)
     }
     else
     {
-        return StringOBJ_FromASCII(IFX_DB_G(__python_stmt_err_msg));
+        return StringOBJ_FromASCII(IFX_G(__python_stmt_err_msg));
     }
 }
 
@@ -6556,7 +6556,7 @@ static PyObject *IfxPy_conn_error(PyObject *self, PyObject *args)
     }
     else
     {
-        return StringOBJ_FromASCII(IFX_DB_G(__python_conn_err_state));
+        return StringOBJ_FromASCII(IFX_G(__python_conn_err_state));
     }
 }
 
@@ -6631,7 +6631,7 @@ static PyObject *IfxPy_stmt_error(PyObject *self, PyObject *args)
     }
     else
     {
-        return StringOBJ_FromASCII(IFX_DB_G(__python_stmt_err_state));
+        return StringOBJ_FromASCII(IFX_G(__python_stmt_err_state));
     }
 }
 
@@ -6692,7 +6692,7 @@ static PyObject *IfxPy_num_fields(PyObject *self, PyObject *args)
         if (rc == SQL_ERROR)
         {
             sprintf(error, "SQLNumResultCols failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -6773,7 +6773,7 @@ static PyObject *IfxPy_num_rows(PyObject *self, PyObject *args)
             _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             sprintf(error, "SQLRowCount failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -6842,7 +6842,7 @@ static PyObject *IfxPy_get_num_result(PyObject *self, PyObject *args)
         if (rc == SQL_ERROR)
         {
             sprintf(error, "SQLGetDiagField failed: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -7923,8 +7923,8 @@ static PyObject *IfxPy_result(PyObject *self, PyObject *args)
             if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
             {
                 sprintf(error, "Column information cannot be retrieved: %s",
-                        IFX_DB_G(__python_stmt_err_msg));
-                strcpy(IFX_DB_G(__python_stmt_err_msg), error);
+                        IFX_G(__python_stmt_err_msg));
+                strcpy(IFX_G(__python_stmt_err_msg), error);
                 PyErr_Clear();
                 Py_RETURN_FALSE;
             }
@@ -7932,7 +7932,7 @@ static PyObject *IfxPy_result(PyObject *self, PyObject *args)
 
         if (col_num < 0 || col_num >= stmt_res->num_columns)
         {
-            strcpy(IFX_DB_G(__python_stmt_err_msg), "Column ordinal out of range");
+            strcpy(IFX_G(__python_stmt_err_msg), "Column ordinal out of range");
             PyErr_Clear();
             Py_RETURN_NONE;
         }
@@ -8299,7 +8299,7 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
         if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
         {
             sprintf(error, "Column information cannot be retrieved: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -8311,7 +8311,7 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
         if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
         {
             sprintf(error, "Column binding cannot be done: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -8360,7 +8360,7 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
     {
         _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
-        sprintf(error, "Fetch Failure: %s", IFX_DB_G(__python_stmt_err_msg));
+        sprintf(error, "Fetch Failure: %s", IFX_G(__python_stmt_err_msg));
         PyErr_SetString(PyExc_Exception, error);
         return NULL;
     }
@@ -8623,7 +8623,7 @@ static PyObject *IfxPy_fetch_row(PyObject *self, PyObject *args)
         if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
         {
             sprintf(error, "Column information cannot be retrieved: %s",
-                    IFX_DB_G(__python_stmt_err_msg));
+                    IFX_G(__python_stmt_err_msg));
             PyErr_SetString(PyExc_Exception, error);
             return NULL;
         }
@@ -10416,7 +10416,7 @@ static void _build_client_err_list(error_msg_node *head_error_list, char *err_ms
 
 //IfxPy.execute_many -- can be used to execute an SQL with multiple values of parameter marker.
 //===Description
-//int IfxPy.execute_many(IFX_DBStatement, Parameters[, Options])
+//int IfxPy.execute_many(IFXStatement, Parameters[, Options])
 //Returns number of inserted/updated/deleted rows if batch executed successfully.
 //return NULL if batch fully or partialy fails  (All the rows executed except for which error occurs).
 
@@ -10501,7 +10501,7 @@ static PyObject* IfxPy_execute_many(PyObject *self, PyObject *args)
                 }
                 if (rc == SQL_ERROR)
                 {
-                    PyErr_SetString(PyExc_Exception, IFX_DB_G(__python_stmt_err_msg));
+                    PyErr_SetString(PyExc_Exception, IFX_G(__python_stmt_err_msg));
                     return NULL;
                 }
                 build_list(stmt_res, i + 1, data_type [i], precision,
@@ -10692,7 +10692,7 @@ static PyObject* IfxPy_execute_many(PyObject *self, PyObject *args)
                     if (rc != SQL_SUCCESS)
                     {
                         sprintf(error, "Binding Error 1: %s",
-                                IFX_DB_G(__python_stmt_err_msg));
+                                IFX_G(__python_stmt_err_msg));
                         _build_client_err_list(head_error_list, error);
                         err_count++;
                         break;
@@ -10740,7 +10740,7 @@ static PyObject* IfxPy_execute_many(PyObject *self, PyObject *args)
                             if (rc == SQL_ERROR)
                             {
                                 _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
-                                sprintf(error, "Sending data failed: %s", IFX_DB_G(__python_stmt_err_msg));
+                                sprintf(error, "Sending data failed: %s", IFX_G(__python_stmt_err_msg));
                                 _build_client_err_list(head_error_list, error);
                                 err_count++;
                                 break;
@@ -10788,7 +10788,7 @@ static PyObject* IfxPy_execute_many(PyObject *self, PyObject *args)
     if ((rc == SQL_ERROR) && (stmt_res != NULL))
     {
         _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
-        sprintf(error, "SQLRowCount failed: %s", IFX_DB_G(__python_stmt_err_msg));
+        sprintf(error, "SQLRowCount failed: %s", IFX_G(__python_stmt_err_msg));
         PyErr_SetString(PyExc_Exception, error);
         return NULL;
     }
@@ -11405,7 +11405,7 @@ INIT_IfxPy(void)
 #endif
 
     Py_INCREF(&conn_handleType);
-    PyModule_AddObject(m, "IFX_DBConnection", (PyObject *)&conn_handleType);
+    PyModule_AddObject(m, "IFXConnection", (PyObject *)&conn_handleType);
 
     PyModule_AddIntConstant(m, "SQL_AUTOCOMMIT_ON", SQL_AUTOCOMMIT_ON);
     PyModule_AddIntConstant(m, "SQL_AUTOCOMMIT_OFF", SQL_AUTOCOMMIT_OFF);
@@ -11462,13 +11462,13 @@ INIT_IfxPy(void)
     PyModule_AddStringConstant(m, "__version__", MODULE_RELEASE);
 
     Py_INCREF(&stmt_handleType);
-    PyModule_AddObject(m, "IFX_DBStatement", (PyObject *)&stmt_handleType);
+    PyModule_AddObject(m, "IFXStatement", (PyObject *)&stmt_handleType);
 
     Py_INCREF(&client_infoType);
-    PyModule_AddObject(m, "IFX_DBClientInfo", (PyObject *)&client_infoType);
+    PyModule_AddObject(m, "IFXClientInfo", (PyObject *)&client_infoType);
 
     Py_INCREF(&server_infoType);
-    PyModule_AddObject(m, "IFX_DBServerInfo", (PyObject *)&server_infoType);
+    PyModule_AddObject(m, "IFXServerInfo", (PyObject *)&server_infoType);
     PyModule_AddIntConstant(m, "SQL_ATTR_QUERY_TIMEOUT", SQL_ATTR_QUERY_TIMEOUT);
     return MOD_RETURN_VAL(m);
 }

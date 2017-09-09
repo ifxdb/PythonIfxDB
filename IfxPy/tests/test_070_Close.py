@@ -19,7 +19,7 @@ class IfxDbTestCase(unittest.TestCase):
     conn = ifx_db.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-      if (type(conn) == ifx_db.IFX_DBConnection):
+      if (type(conn) == ifx_db.IFXConnection):
         print "Resource is a Ifx Connection"
       
       rc = ifx_db.close(conn)

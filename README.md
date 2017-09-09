@@ -108,12 +108,13 @@ COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 
 Try a sample
 ```bash
-cd C:\work\try
+md C:\work\IfxPy\try
+cd C:\work\IfxPy\try
 copy  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
-copy C:\work\IfxPy\Examples\test1.py
+copy C:\work\IfxPy\Examples\Sample1.py
 # edit connection information
 set PATH=C:\Informix\bin;%PATH%
-python test1.py
+python Sample1.py
 ```
 
 
@@ -220,7 +221,7 @@ cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 ```bash
 mkdir /work/OpenIfx/try/
 cd /work/OpenIfx/try/
-cp /work/OpenIfx/IfxPy/Examples/test1.py .
+cp /work/OpenIfx/IfxPy/Examples/Sample1.py .
 
 rm IfxPy.so
 cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
@@ -231,7 +232,7 @@ cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 * Set Informix Client SDK Runtime Environment
 
 ```
-python test1.py
+python Sample1.py
 ```
 ## Set Informix Client SDK Runtime Environment 
 ----------------------------------------------
@@ -299,7 +300,7 @@ $ 2to3 -w *.py
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=usr1;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")

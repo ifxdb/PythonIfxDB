@@ -5,13 +5,13 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1319e487-5397-4e0d-82b0-385994d2a464</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>IfxPy.py</StartupFile>
+    <StartupFile>Sample27.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>IfxPy</Name>
-    <RootNamespace>IfxPy</RootNamespace>
+    <Name>PyVsProj</Name>
+    <RootNamespace>PyVsProj</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
@@ -24,12 +24,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IfxPy.3x.py" />
-    <Compile Include="IfxPy.py" />
+    <Compile Include="Sample3x.py" />
+    <Compile Include="Sample27.py" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IfxPy\IfxPy.vcxproj">
-      <Name>IfxPy</Name>
+    <ProjectReference Include="..\PyVsProj\PyVsProj.pyproj">
+      <Name>PyVsProj</Name>
       <Project>{e44b2e88-c3d7-4595-bf9e-6f06ab4d001f}</Project>
       <Private>True</Private>
     </ProjectReference>

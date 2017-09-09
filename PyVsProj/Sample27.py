@@ -1,17 +1,12 @@
 
 import IfxPy
 
-# in case of connection problem check the service port mapped to which ip
-# for example the port you configured is 9088 then
-#
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
+
 # netstat -a | findstr  9088
-#ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
-ConStr = "SERVER=ids1210;DATABASE=stores7;UID=informix;PWD=ximrofni;"
 conn = IfxPy.connect( ConStr, "", "")
 
-
 SetupSqlSet = [
-    "drop table t1;", 
     "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;", 
     "insert into t1 values( 1, 'Sunday', 101, 201 );",
     "insert into t1 values( 2, 'Monday', 102, 202 );",
@@ -22,15 +17,21 @@ SetupSqlSet = [
     "insert into t1 values( 7, 'Saturday', 107, 207 );"
 ]
 
-
+try:
+    sql = "drop table t1;"
+    print sql
+    stmt = IfxPy.exec_immediate(conn, sql)
+except:
+    print 'FYI: drop table failed'
+	
 for sql in SetupSqlSet:
     print sql
     stmt = IfxPy.exec_immediate(conn, sql)
 
 
 sql = "SELECT * FROM t1"
-stmt2 = IfxPy.exec_immediate(conn, sql)
-dictionary = IfxPy.fetch_both(stmt2)
+stmt = IfxPy.exec_immediate(conn, sql)
+dictionary = IfxPy.fetch_both(stmt)
 
 rc = 0
 while dictionary != False:
@@ -41,9 +42,8 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = IfxPy.fetch_both(stmt2)
+    dictionary = IfxPy.fetch_both(stmt)
 
 IfxPy.close(conn)
 
 print "Done"
-

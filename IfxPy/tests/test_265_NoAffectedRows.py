@@ -1,8 +1,3 @@
-#
-#  Licensed Materials - Property of IBM
-#
-#  (c) Copyright IBM Corp. 2007-2013
-#
 
 import unittest, sys
 import IfxPy

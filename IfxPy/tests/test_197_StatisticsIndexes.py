@@ -1,7 +1,7 @@
 # 
-#  Licensed Materials - Property of IBM
+
 #
-#  (c) Copyright IBM Corp. 2007-2008
+
 #
 # NOTE: IDS requires that you pass the schema name (cannot pass None)
 

@@ -1,8 +1,3 @@
-#
-#  Licensed Materials - Property of IBM
-#
-#  (c) Copyright IBM Corp. 2016
-#
 
 from __future__ import print_function
 import unittest, sys

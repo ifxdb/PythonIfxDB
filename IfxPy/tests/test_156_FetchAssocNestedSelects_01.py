@@ -1,7 +1,7 @@
 # 
-#  Licensed Materials - Property of IBM
+
 #
-#  (c) Copyright IBM Corp. 2007-2008
+
 #
 
 # This test will use a lot of the heap size allocated

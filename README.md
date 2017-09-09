@@ -108,6 +108,8 @@ COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 
 Try a sample
 ```bash
+cd C:\work\try
+copy  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 copy C:\work\IfxPy\Examples\test1.py
 # edit connection information
 set PATH=C:\Informix\bin;%PATH%
@@ -203,7 +205,7 @@ ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 ```
 
 ##### Copy the dirver native lib
-The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **ifx_pydb.py**
+The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **IfxPyi.py**
 
 ```bash
 # Copy Informix python package (IfxPy.so) to your Python module directory
@@ -251,6 +253,7 @@ SET PATH=C:\informix\bin;%PATH%
 ## Run tests
 ##### Specify connection information
 ```bash
+# cd C:\work\IfxPy\IfxPy
 cd /work/OpenIfx/IfxPy/IfxPy
 cp   config.py.sample   config.py
 ```
@@ -258,6 +261,7 @@ Then Modify the connection properties specified in config.py
 
 ##### Run all tests
 ```bash
+# copy C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
 # cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .

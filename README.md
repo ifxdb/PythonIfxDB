@@ -10,23 +10,23 @@ The driver has been well tested across all major platforms such as **ARM**, **Li
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 **FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. You may build the drive from its source code on your environment to pick latest changes.  
-* [prebuilt](https://github.com/OpenIfx/IfxPy/tree/master/prebuilt)
+* [prebuilt](https://github.com/OpenIfx/IfxPy/)
 
-#### ifx_db (Advanced native extension module)
+#### IfxPy (Advanced native extension module)
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
 
-#### ifx_pydb (coming soon)
+#### IfxPyi (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
 ### Project status: Beta 
-Most of ifx_db driver (Advanced native extension module) functionality is fully functional; we are in the process of adding documentation, examples and pip install. There might be breaking changes by the time we arrive on RC, We will get to RC soon.  
+Most of IfxPy driver (Advanced native extension module) functionality is fully functional; we are in the process of adding documentation, examples and pip install. There might be breaking changes by the time we arrive on RC, We will get to RC soon.  
 
 **Known Problems**: Large Object Support, Stored Procedures.
 
 ##### Coming soon
 * Examples 
 * Documentation 
-* PyPI: https://pypi.python.org/pypi/ifx_db
+* PyPI (pit install)
  
 ##### Future Roadmap
 * Django
@@ -93,17 +93,17 @@ SET VS90COMNTOOLS=%VS140COMNTOOLS%
 
 ##### Starting the build
 ```bash
-cd C:\work\IfxPy\ifx_db
+cd C:\work\IfxPy\IfxPy
 python setup.py build > out.txt 2>&1
 ```
 
 ### Install
-On successful build the Informix python package (**ifx_db.pyd**) should have built at  
-C:\work\IfxPy\ifx_db\build\lib.win-amd64-2.7
-For the time being, you may manually copy Informix python package (ifx_db.pyd) to your Python module directory.
+On successful build the Informix python package (**IfxPy.pyd**) should have built at  
+C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7
+For the time being, you may manually copy Informix python package (IfxPy.pyd) to your Python module directory.
 
 ```bat
-COPY  C:\work\IfxPy\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
+COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 ```
 
 Try a sample
@@ -189,29 +189,29 @@ export MY_PY_DIR=/work/dev/Python
 
 #### Fire the driver build
 ```bash
-cd /work/OpenIfx/IfxPy/ifx_db
+cd /work/OpenIfx/IfxPy/IfxPy
 rm -rf build
 
 python setup.py build > out.txt 2>&1
 
 # if all go well, then Informix native python driver will be at
 # if x86 Linux with 64bit build then
-ls -l build/lib.linux-x86_64-2.7/ifx_db.so
+ls -l build/lib.linux-x86_64-2.7/IfxPy.so
 
 # Similarly if ARM then 
-ls -l build/lib.linux-armv7l-2.7/ifx_db.so
+ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 ```
 
 ##### Copy the dirver native lib
 The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **ifx_pydb.py**
 
 ```bash
-# Copy Informix python package (ifx_db.so) to your Python module directory
+# Copy Informix python package (IfxPy.so) to your Python module directory
 # For example:
-cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 
 # if ARM
-# cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 ```
 
 ####  Quick Try
@@ -220,10 +220,10 @@ mkdir /work/OpenIfx/try/
 cd /work/OpenIfx/try/
 cp /work/OpenIfx/IfxPy/Examples/test1.py .
 
-rm ifx_db.so
-cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+rm IfxPy.so
+cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
-# cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 ```
 * Edit connection string
 * Set Informix Client SDK Runtime Environment
@@ -251,16 +251,16 @@ SET PATH=C:\informix\bin;%PATH%
 ## Run tests
 ##### Specify connection information
 ```bash
-cd /work/OpenIfx/IfxPy/ifx_db
+cd /work/OpenIfx/IfxPy/IfxPy
 cp   config.py.sample   config.py
 ```
 Then Modify the connection properties specified in config.py
 
 ##### Run all tests
 ```bash
-cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
-# cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 
 python tests.py
 ```
@@ -281,8 +281,8 @@ python tests.py
 ```
 The source files in the 'tests' directory were written for Python 2.
 To be able to run the tests suite with Python 3 you need to convert the files to Python 3 format.
-You can use the '2to3' Python utility in the 'ifx_db/tests' directory, for example:
-$ cd /work/ifx_db/IfxPy/ifx_db/tests
+You can use the '2to3' Python utility in the 'IfxPy/tests' directory, for example:
+$ cd /work/IfxPy/IfxPy/IfxPy/tests
 $ 2to3 -w *.py
 ```
 
@@ -293,17 +293,17 @@ $ 2to3 -w *.py
 #### Connecting to Informix database
 **FYI**: Make sure to set Informix Client SDK Runtime Environment before running the application
 ```python
-import ifx_db
+import IfxPy
 
 ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
 
 # netstat -a | findstr  9088
-conn = ifx_db.connect( ConStr, "", "")
+conn = IfxPy.connect( ConStr, "", "")
 
 # Do some work
 # -- -- -- -- --
 # -- -- -- -- --
-ifx_db.close(conn)
+IfxPy.close(conn)
 ```
 
 
@@ -316,26 +316,26 @@ ifx_db.close(conn)
 
 #### Simple Query 
 
-##### FYI: ifx_db fetch functions
-* ifx_db.fetch_tuple()  
+##### FYI: IfxPy fetch functions
+* IfxPy.fetch_tuple()  
 Returns a tuple, indexed by column position, representing a row in a result set. The columns are 0-indexed.  
 
-* ifx_db.fetch_assoc()  
+* IfxPy.fetch_assoc()  
 Returns a dictionary, indexed by column name, representing a row in a result set.  
 
-* ifx_db.fetch_both()  
+* IfxPy.fetch_both()  
 Returns a dictionary, indexed by both column name and position, representing a row in a result set.  
 
-* ifx_db.fetch_row()  
+* IfxPy.fetch_row()  
 Sets the result set pointer to the next row or requested row. Use this function to iterate through a result set.  
 
 
 ```python
-import ifx_db
+import IfxPy
 
 ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
 
-conn = ifx_db.connect( ConStr, "", "")
+conn = IfxPy.connect( ConStr, "", "")
 
 
 SetupSqlSet = [
@@ -352,12 +352,12 @@ SetupSqlSet = [
 
 for sql in SetupSqlSet:
     print sql
-    stmt = ifx_db.exec_immediate(conn, sql)
+    stmt = IfxPy.exec_immediate(conn, sql)
 
 
 sql = "SELECT * FROM t1"
-stmt = ifx_db.exec_immediate(conn, sql)
-dictionary = ifx_db.fetch_both(stmt)
+stmt = IfxPy.exec_immediate(conn, sql)
+dictionary = IfxPy.fetch_both(stmt)
 
 rc = 0
 while dictionary != False:
@@ -368,9 +368,9 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = ifx_db.fetch_both(stmt)
+    dictionary = IfxPy.fetch_both(stmt)
 
-ifx_db.close(conn)
+IfxPy.close(conn)
 
 print "Done"
 ```
@@ -380,164 +380,164 @@ print "Done"
   
 
 ### Informix Advance Python Driver APIs
-* ifx_db.connect:  
+* IfxPy.connect:  
 Connect to the database.  
 
-* ifx_db.exec_immediate:  
+* IfxPy.exec_immediate:  
 Prepares and executes an SQL statement.  
 
-* ifx_db.prepare:  
+* IfxPy.prepare:  
 Prepares an SQL statement.    
 
-* ifx_db.bind_param:  
+* IfxPy.bind_param:  
 Binds a Python variable to an SQL statement parameter.  
 
-* ifx_db.execute:  
-Executes an SQL statement that was prepared by * ifx_db.prepare().  
+* IfxPy.execute:  
+Executes an SQL statement that was prepared by * IfxPy.prepare().  
 
-* ifx_db.fetch_tuple:  
+* IfxPy.fetch_tuple:  
 Returns an tuple  
 
-* ifx_db.fetch_assoc:  
+* IfxPy.fetch_assoc:  
 Returns a dictionary  
 
-* ifx_db.fetch_both:  
+* IfxPy.fetch_both:  
 Returns a dictionary  
 
-* ifx_db.fetch_row:  
+* IfxPy.fetch_row:  
 Sets the result set pointer to the next row or requested row.  
 
-* ifx_db.result:  
+* IfxPy.result:  
 Returns a single column from a row in the result set.  
 
-* ifx_db.active:  
+* IfxPy.active:  
 Checks if the specified connection resource is active.  
 
-* ifx_db.autocommit:  
+* IfxPy.autocommit:  
 Returns or sets the AUTOCOMMIT state for a database connection.  
 
-* ifx_db.callproc:  
+* IfxPy.callproc:  
 Returns a tuple containing OUT/INOUT variable value.  
 
-* ifx_db.check_function_support:  
+* IfxPy.check_function_support:  
 return true if fuction is supported otherwise return false.  
 
-* ifx_db.close:  
+* IfxPy.close:  
 Close a database connection.  
 
-* ifx_db.conn_error:  
+* IfxPy.conn_error:  
 Returns a string containing the SQLSTATE returned by the last connection attempt.  
 
-* ifx_db.conn_errormsg:  
+* IfxPy.conn_errormsg:  
 Returns an error message and SQLCODE value representing the reason the last database connection attempt failed. 
 
-* ifx_db.conn_warn:  
+* IfxPy.conn_warn:  
 Returns a warning string containing the SQLSTATE returned by the last connection attempt.  
 
-* ifx_db.client_info:  
+* IfxPy.client_info:  
 Returns a read-only object with information about the IDS database client.  
 
-* ifx_db.column_privileges:  
+* IfxPy.column_privileges:  
 Returns a result set listing the columns and associated privileges for a table.  
 
-* ifx_db.columns:  
+* IfxPy.columns:  
 Returns a result set listing the columns and associated metadata for a table.  
 
-* ifx_db.commit:  
+* IfxPy.commit:  
 Commits a transaction.  
 
-* ifx_db.cursor_type:  
+* IfxPy.cursor_type:  
 Returns the cursor type used by a statement resource.  
 
-* ifx_db.execute_many:  
+* IfxPy.execute_many:  
 Execute SQL with multiple rows.
 
-* ifx_db.field_display_size:  
+* IfxPy.field_display_size:  
 Returns the maximum number of bytes required to display a column.  
 
-* ifx_db.field_name:  
+* IfxPy.field_name:  
 Returns the name of the column in the result set.  
 
-* ifx_db.field_nullable:  
+* IfxPy.field_nullable:  
 Returns indicated column can contain nulls or not.  
 
-* ifx_db.field_num:  
+* IfxPy.field_num:  
 Returns the position of the named column in a result set.  
 
-* ifx_db.field_precision:  
+* IfxPy.field_precision:  
 Returns the precision of the indicated column in a result set.  
 
-* ifx_db.field_scale:  
+* IfxPy.field_scale:  
 Returns the scale of the indicated column in a result set.  
 
-* ifx_db.field_type:  
+* IfxPy.field_type:  
 Returns the data type of the indicated column in a result set.  
 
-* ifx_db.field_width:  
+* IfxPy.field_width:  
 Returns the width of the indicated column in a result set.  
 
-* ifx_db.foreign_keys:  
+* IfxPy.foreign_keys:  
 Returns a result set listing the foreign keys for a table.  
 
-* ifx_db.free_result:  
+* IfxPy.free_result:  
 Frees resources associated with a result set.  
 
-* ifx_db.free_stmt:  
+* IfxPy.free_stmt:  
 Frees resources associated with the indicated statement resource.  
 
-* ifx_db.get_option:  
+* IfxPy.get_option:  
 Gets the specified option in the resource.  
 
-* ifx_db.num_fields:  
+* IfxPy.num_fields:  
 Returns the number of fields contained in a result set.  
 
-* ifx_db.num_rows:  
+* IfxPy.num_rows:  
 Returns the number of rows affected by an SQL statement.  
 
-* ifx_db.get_num_result:  
+* IfxPy.get_num_result:  
 Returns the number of rows in a current open non-dynamic scrollable cursor.  
 
-* ifx_db.primary_keys:  
+* IfxPy.primary_keys:  
 Returns a result set listing primary keys for a table.  
 
-* ifx_db.procedure_columns:  
+* IfxPy.procedure_columns:  
 Returns a result set listing the parameters for one or more stored procedures.  
 
-* ifx_db.procedures:  
+* IfxPy.procedures:  
 Returns a result set listing the stored procedures registered in a database.  
 
-* ifx_db.rollback:  Rolls back a transaction.  
+* IfxPy.rollback:  Rolls back a transaction.  
 
-* ifx_db.server_info:  
+* IfxPy.server_info:  
 Returns an object with properties that describe the IDS database server.  
 
-* ifx_db.get_db_info:  
+* IfxPy.get_db_info:  
 Returns an object with properties that describe the IDS database server according to the option passed.  
 
-* ifx_db.set_option:  
+* IfxPy.set_option:  
 Sets the specified option in the resource.  
 
-* ifx_db.special_columns:  
+* IfxPy.special_columns:  
 Returns a result set listing the unique row identifier columns for a table.  
 
-* ifx_db.statistics:  
+* IfxPy.statistics:  
 Returns a result set listing the index and statistics for a table.  
 
-* ifx_db.stmt_error:  
+* IfxPy.stmt_error:  
 Returns a string containing the SQLSTATE returned by an SQL statement.  
 
-* ifx_db.stmt_warn:  
+* IfxPy.stmt_warn:  
 Returns a warning string containing the SQLSTATE returned by last SQL statement.  
 
-* ifx_db.stmt_errormsg:  
+* IfxPy.stmt_errormsg:  
 Returns a string containing the last SQL statement error message.  
 
-* ifx_db.table_privileges:  
+* IfxPy.table_privileges:  
 Returns a result set listing the tables and associated privileges in a database. 
 
-* ifx_db.tables:  
+* IfxPy.tables:  
 Returns a result set listing the tables and associated metadata in a database.  
 
-* ifx_db.get_last_serial_value:  
+* IfxPy.get_last_serial_value:  
 Returns last serial value inserted for identity column.
 

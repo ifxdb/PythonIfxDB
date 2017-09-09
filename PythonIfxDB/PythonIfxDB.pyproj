@@ -5,13 +5,13 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1319e487-5397-4e0d-82b0-385994d2a464</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>PythonIfxDB.py</StartupFile>
+    <StartupFile>IfxPy.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>PythonIfxDB</Name>
-    <RootNamespace>PythonIfxDB</RootNamespace>
+    <Name>IfxPy</Name>
+    <RootNamespace>IfxPy</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
@@ -24,8 +24,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PythonIfxDB.3x.py" />
-    <Compile Include="PythonIfxDB.py" />
+    <Compile Include="IfxPy.3x.py" />
+    <Compile Include="IfxPy.py" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ifx_db\ifx_db.vcxproj">

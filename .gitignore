@@ -155,8 +155,8 @@ ifx_db/tests/spook_out.png
 ifx_db/out.txt
 ifx_db/config.py
 /spook.png
-/PythonIfxDB/test.py
-/PythonIfxDB/spook.png
-/PythonIfxDB/pic1.png
-/PythonIfxDB/pic1.jpg
+/IfxPy/test.py
+/IfxPy/spook.png
+/IfxPy/pic1.png
+/IfxPy/pic1.jpg
 /ifx_db/spook.png

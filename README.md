@@ -2,7 +2,7 @@
 
 ### Licensed under the Apache License, Version 2.0
 
-## PythonIfxDB
+## IfxPy
 Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database. The **Advanced native extension module** is the heart piece of driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with Python code by focusing on application API level compatibility.  
 
 The driver has been well tested across all major platforms such as **ARM**, **Linux**, and **Windows**; and it has been certified to work with **Raspberry Pi** too.  
@@ -10,7 +10,7 @@ The driver has been well tested across all major platforms such as **ARM**, **Li
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 **FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. You may build the drive from its source code on your environment to pick latest changes.  
-* [prebuilt](https://github.com/ifxdb/PythonIfxDB/tree/master/prebuilt)
+* [prebuilt](https://github.com/ifxdb/IfxPy/tree/master/prebuilt)
 
 #### ifx_db (Advanced native extension module)
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
@@ -37,13 +37,13 @@ Most of ifx_db driver (Advanced native extension module) functionality is fully 
 ##### Prerequisite:
 * [Python 2.7 or above](https://www.python.org/downloads/)
 * [Python 3.4 or above](https://www.python.org/downloads/)
-* clone the PythonIfxDB repository
+* clone the IfxPy repository
 * Visual Studio 2008 or above (Windows Only)
 * Informix client SDK 410xC2 or above
 * Set environment variable **CSDK_HOME** and **MY_PY_DIR**
 
 ### Clone the source code
-Let's assume **C:\work** is the location when we clone the PythonIfxDB repository.  
+Let's assume **C:\work** is the location when we clone the IfxPy repository.  
 (You may clone it at any location though; if so make adjustment for the instructions as well).
 
 ```bat
@@ -51,7 +51,7 @@ cd C:\work
 or
 cd /work 
 
-git clone https://github.com/ifxdb/PythonIfxDB.git
+git clone https://github.com/ifxdb/IfxPy.git
 ```
 
 ##### Build Shell Environment 
@@ -93,22 +93,22 @@ SET VS90COMNTOOLS=%VS140COMNTOOLS%
 
 ##### Starting the build
 ```bash
-cd C:\work\PythonIfxDB\ifx_db
+cd C:\work\IfxPy\ifx_db
 python setup.py build > out.txt 2>&1
 ```
 
 ### Install
 On successful build the Informix python package (**ifx_db.pyd**) should have built at  
-C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7
+C:\work\IfxPy\ifx_db\build\lib.win-amd64-2.7
 For the time being, you may manually copy Informix python package (ifx_db.pyd) to your Python module directory.
 
 ```bat
-COPY  C:\work\PythonIfxDB\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
+COPY  C:\work\IfxPy\ifx_db\build\lib.win-amd64-2.7\ifx_db.pyd
 ```
 
 Try a sample
 ```bash
-copy C:\work\PythonIfxDB\Examples\test1.py
+copy C:\work\IfxPy\Examples\test1.py
 # edit connection information
 set PATH=C:\Informix\bin;%PATH%
 python test1.py
@@ -175,7 +175,7 @@ $ sudo make
 mkdir /work/ifxdb
 cd /work/ifxdb
 
-git clone https://github.com/ifxdb/PythonIfxDB.git
+git clone https://github.com/ifxdb/IfxPy.git
 ```
 
 ##### Set Env for driver build 
@@ -189,7 +189,7 @@ export MY_PY_DIR=/work/dev/Python
 
 #### Fire the driver build
 ```bash
-cd /work/ifxdb/PythonIfxDB/ifx_db
+cd /work/ifxdb/IfxPy/ifx_db
 rm -rf build
 
 python setup.py build > out.txt 2>&1
@@ -208,22 +208,22 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (ifx_db.so) to your Python module directory
 # For example:
-cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 
 # if ARM
-# cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 ```
 
 ####  Quick Try
 ```bash
 mkdir /work/ifxdb/try/
 cd /work/ifxdb/try/
-cp /work/ifxdb/PythonIfxDB/Examples/test1.py .
+cp /work/ifxdb/IfxPy/Examples/test1.py .
 
 rm ifx_db.so
-cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
-# cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 ```
 * Edit connection string
 * Set Informix Client SDK Runtime Environment
@@ -251,16 +251,16 @@ SET PATH=C:\informix\bin;%PATH%
 ## Run tests
 ##### Specify connection information
 ```bash
-cd /work/ifxdb/PythonIfxDB/ifx_db
+cd /work/ifxdb/IfxPy/ifx_db
 cp   config.py.sample   config.py
 ```
 Then Modify the connection properties specified in config.py
 
 ##### Run all tests
 ```bash
-cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
-# cp /work/ifxdb/PythonIfxDB/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 
 python tests.py
 ```
@@ -282,7 +282,7 @@ python tests.py
 The source files in the 'tests' directory were written for Python 2.
 To be able to run the tests suite with Python 3 you need to convert the files to Python 3 format.
 You can use the '2to3' Python utility in the 'ifx_db/tests' directory, for example:
-$ cd /work/ifx_db/PythonIfxDB/ifx_db/tests
+$ cd /work/ifx_db/IfxPy/ifx_db/tests
 $ 2to3 -w *.py
 ```
 

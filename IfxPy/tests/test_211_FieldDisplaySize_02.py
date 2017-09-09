@@ -7,12 +7,12 @@
 import unittest, sys
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
 
   def test_211_FieldDisplaySize_02(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_211)
 
   def run_test_211(self):

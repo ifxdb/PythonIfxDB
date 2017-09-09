@@ -7,12 +7,12 @@
 import unittest, sys, datetime
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
 
   def test_InsertRetrieveDateTimeTypeColumn(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expectf(self.run_test_InsertRetrieveDateTimeTypeColumn)
 
   def run_test_InsertRetrieveDateTimeTypeColumn(self):

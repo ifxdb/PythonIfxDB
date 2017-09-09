@@ -7,12 +7,12 @@
 import unittest, sys
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
 
   def test_124_FieldNamePos_02(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_124)
 
   def run_test_124(self):

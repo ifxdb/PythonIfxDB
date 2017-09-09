@@ -7,12 +7,12 @@
 import unittest, sys, os
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
 
   def test_144_BindParamInsertStmtPARAM_FILE(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_144)
 
   def run_test_144(self):

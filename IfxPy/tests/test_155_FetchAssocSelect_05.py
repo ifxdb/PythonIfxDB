@@ -7,12 +7,12 @@
 import unittest, sys
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
 
   def test_155_FetchAssocSelect_05(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_155)
 
   def run_test_155(self):

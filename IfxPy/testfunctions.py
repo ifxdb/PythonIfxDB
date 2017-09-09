@@ -33,7 +33,7 @@ import inspect
 import IfxPy
 import config
 
-class IfxDbTestFunctions(unittest.TestCase):
+class IfxPyTestFunctions(unittest.TestCase):
   #prepconn = IfxPy.connect(config.database, config.user, config.password)
   prepconn = IfxPy.connect(config.ConnStr, "", "")
   server = IfxPy.server_info(prepconn)

@@ -8,12 +8,12 @@ import unittest, sys
 import IfxPy
 import config
 import os
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
 
   def test_112_FieldNumDiffCaseColNames(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_112)
 
   def run_test_112(self):

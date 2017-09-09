@@ -14,12 +14,12 @@
 import unittest, sys
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class IfxDbTestCase(unittest.TestCase):
   
   def test_023_ColumnPrivileges(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expectf(self.run_test_023)
 
   def run_test_023(self):

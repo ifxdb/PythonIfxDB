@@ -8,7 +8,7 @@ from __future__ import print_function
 import unittest, sys
 import IfxPy
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 class Wrapper(str):
   def __del__(self):
@@ -17,7 +17,7 @@ class Wrapper(str):
 class IfxDbTestCase(unittest.TestCase):
 
   def test_312_CacheBoundParameters(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_312)
   
   def run_test_312(self):

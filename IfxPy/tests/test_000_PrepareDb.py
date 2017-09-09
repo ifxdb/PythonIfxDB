@@ -8,7 +8,7 @@ import unittest, sys, os
 import IfxPy
 #need to add this line below to each file to make the connect parameters available to all the test files
 import config
-from testfunctions import IfxDbTestFunctions
+from testfunctions import IfxPyTestFunctions
 
 name = 'name'
 picture = 'picture'
@@ -16,7 +16,7 @@ picture = 'picture'
 class IfxDbTestCase(unittest.TestCase):
 
   def test_000_PrepareDb(self):
-    obj = IfxDbTestFunctions()
+    obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_000)
 
   def run_test_000(self):

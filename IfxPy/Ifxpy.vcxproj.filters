@@ -18,12 +18,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ifx_db.c">
+    <ClCompile Include="ifxpyc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ifx_db.h">
+    <ClInclude Include="ifxpyc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

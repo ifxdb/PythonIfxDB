@@ -67,9 +67,9 @@ static PyObject *persistent_list;
 
 
 // True global resources - no need for thread safety here 
-static struct _ifx_db_globals *ifx_db_globals;
+static struct _IfxPy_globals *IfxPy_globals;
 
-static void _python_ifx_db_check_sql_errors(
+static void _python_IfxPy_check_sql_errors(
     SQLHANDLE handle,
     SQLSMALLINT hType,
     int rc,
@@ -78,7 +78,7 @@ static void _python_ifx_db_check_sql_errors(
     int API,
     SQLSMALLINT recno);
 
-static int _python_ifx_db_assign_options(
+static int _python_IfxPy_assign_options(
     void* handle,
     int type,
     long opt_key,
@@ -141,14 +141,14 @@ typedef struct _conn_handle_struct
     int         flag_pconnect; // Indicates that this connection is persistent 
 } conn_handle;
 
-static void _python_ifx_db_free_conn_struct(conn_handle *handle);
+static void _python_IfxPy_free_conn_struct(conn_handle *handle);
 
 static PyTypeObject conn_handleType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ifx_db.IFX_DBConnection",              // tp_name
+    "IfxPy.IFX_DBConnection",              // tp_name
     sizeof(conn_handle),                    // tp_basicsize
     0,                                      // tp_itemsize
-    (destructor)_python_ifx_db_free_conn_struct, // tp_dealloc
+    (destructor)_python_IfxPy_free_conn_struct, // tp_dealloc
     0,                                      // tp_print
     0,                                      // tp_getattr
     0,                                      // tp_setattr
@@ -196,16 +196,16 @@ typedef union
     TIMESTAMP_STRUCT    *ts_val;
     DATE_STRUCT         *date_val;
     TIME_STRUCT         *time_val;
-} ifx_db_row_data_type;
+} IfxPy_row_data_type;
 
 
 typedef struct
 {
     SQLLEN               out_length;
-    ifx_db_row_data_type data;
-} ifx_db_row_type;
+    IfxPy_row_data_type data;
+} IfxPy_row_type;
 
-typedef struct _ifx_db_result_set_info_struct
+typedef struct _IfxPy_result_set_info_struct
 {
     SQLCHAR       *name;
     SQLSMALLINT   type;
@@ -213,7 +213,7 @@ typedef struct _ifx_db_result_set_info_struct
     SQLSMALLINT   scale;
     SQLSMALLINT   nullable;
     unsigned char *mem_alloc;  // Mem free
-} ifx_db_result_set_info;
+} IfxPy_result_set_info;
 
 typedef struct _row_hash_struct
 {
@@ -240,18 +240,18 @@ typedef struct _stmt_handle_struct
     int         num_params; // Number of Params 
     int         file_param; // if option passed in is FILE_PARAM 
     int         num_columns;
-    ifx_db_result_set_info  *column_info;
-    ifx_db_row_type         *row_data;
+    IfxPy_result_set_info  *column_info;
+    IfxPy_row_type         *row_data;
 } stmt_handle;
 
-static void _python_ifx_db_free_stmt_struct(stmt_handle *handle);
+static void _python_IfxPy_free_stmt_struct(stmt_handle *handle);
 
 static PyTypeObject stmt_handleType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ifx_db.IFX_DBStatement",   // tp_name             
+    "IfxPy.IFX_DBStatement",   // tp_name             
     sizeof(stmt_handle),        // tp_basicsize             
     0,                          // tp_itemsize        
-    (destructor)_python_ifx_db_free_stmt_struct, // tp_dealloc    
+    (destructor)_python_IfxPy_free_stmt_struct, // tp_dealloc    
     0,                          // tp_print            
     0,                          // tp_getattr         
     0,                          // tp_setattr         
@@ -312,15 +312,15 @@ SQLRETURN SQLBindFileToParam(
 ////////////////////////////////////////////////////////////
 
 
-static void python_ifx_db_init_globals(struct _ifx_db_globals *ifx_db_globals)
+static void python_IfxPy_init_globals(struct _IfxPy_globals *IfxPy_globals)
 {
     // env handle 
-    ifx_db_globals->bin_mode = 1;
+    IfxPy_globals->bin_mode = 1;
 
-    memset(ifx_db_globals->__python_conn_err_msg, 0, DB_MAX_ERR_MSG_LEN);
-    memset(ifx_db_globals->__python_stmt_err_msg, 0, DB_MAX_ERR_MSG_LEN);
-    memset(ifx_db_globals->__python_conn_err_state, 0, SQL_SQLSTATE_SIZE + 1);
-    memset(ifx_db_globals->__python_stmt_err_state, 0, SQL_SQLSTATE_SIZE + 1);
+    memset(IfxPy_globals->__python_conn_err_msg, 0, DB_MAX_ERR_MSG_LEN);
+    memset(IfxPy_globals->__python_stmt_err_msg, 0, DB_MAX_ERR_MSG_LEN);
+    memset(IfxPy_globals->__python_conn_err_state, 0, SQL_SQLSTATE_SIZE + 1);
+    memset(IfxPy_globals->__python_stmt_err_state, 0, SQL_SQLSTATE_SIZE + 1);
 }
 
 
@@ -381,8 +381,8 @@ char *strtoupper(char *data, int max)
     return data;
 }
 
-//    static void _python_ifx_db_free_conn_struct 
-static void _python_ifx_db_free_conn_struct(conn_handle *handle)
+//    static void _python_IfxPy_free_conn_struct 
+static void _python_IfxPy_free_conn_struct(conn_handle *handle)
 {
 
     // Disconnect from DB. If stmt is allocated, it is freed automatically 
@@ -400,12 +400,12 @@ static void _python_ifx_db_free_conn_struct(conn_handle *handle)
     Py_TYPE(handle)->tp_free((PyObject*)handle);
 }
 
-//    static void _python_ifx_db_free_row_struct 
-//static void _python_ifx_db_free_row_struct(row_hash_struct *handle) {
+//    static void _python_IfxPy_free_row_struct 
+//static void _python_IfxPy_free_row_struct(row_hash_struct *handle) {
 // free(handle);
 //}
 
-static void _python_ifx_db_clear_param_cache(stmt_handle *stmt_res)
+static void _python_IfxPy_clear_param_cache(stmt_handle *stmt_res)
 {
     param_node *temp_ptr, *curr_ptr;
 
@@ -437,14 +437,14 @@ static void _python_ifx_db_clear_param_cache(stmt_handle *stmt_res)
     stmt_res->num_params = 0;
 }
 
-static void _python_ifx_db_free_result_struct(stmt_handle* handle)
+static void _python_IfxPy_free_result_struct(stmt_handle* handle)
 {
     int i;
     param_node *curr_ptr = NULL, *prev_ptr = NULL;
 
     if (handle != NULL)
     {
-        _python_ifx_db_clear_param_cache(handle);
+        _python_IfxPy_clear_param_cache(handle);
 
         // free row data cache 
         if (handle->row_data)
@@ -518,7 +518,7 @@ static void _python_ifx_db_free_result_struct(stmt_handle* handle)
     }
 }
 
-static stmt_handle *_ifx_db_new_stmt_struct(conn_handle* conn_res)
+static stmt_handle *_IfxPy_new_stmt_struct(conn_handle* conn_res)
 {
     stmt_handle *stmt_res;
 
@@ -550,7 +550,7 @@ static stmt_handle *_ifx_db_new_stmt_struct(conn_handle* conn_res)
     return stmt_res;
 }
 
-static void _python_ifx_db_free_stmt_struct(stmt_handle *handle)
+static void _python_IfxPy_free_stmt_struct(stmt_handle *handle)
 {
     static int TestingOnly = 0;
 
@@ -559,19 +559,19 @@ static void _python_ifx_db_free_stmt_struct(stmt_handle *handle)
         SQLFreeHandle(SQL_HANDLE_STMT, handle->hstmt);
         if (handle)
         {
-            _python_ifx_db_free_result_struct(handle);
+            _python_IfxPy_free_result_struct(handle);
         }
     }
     Py_TYPE(handle)->tp_free((PyObject*)handle);
 }
 
-static void _python_ifx_db_init_error_info(stmt_handle *stmt_res)
+static void _python_IfxPy_init_error_info(stmt_handle *stmt_res)
 {
     stmt_res->error_recno_tracker = 1;
     stmt_res->errormsg_recno_tracker = 1;
 }
 
-static void _python_ifx_db_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType, int rc, int cpy_to_global, char* ret_str, int API, SQLSMALLINT recno)
+static void _python_IfxPy_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType, int rc, int cpy_to_global, char* ret_str, int API, SQLSMALLINT recno)
 {
     SQLCHAR msg [SQL_MAX_MESSAGE_LENGTH + 1] = { 0 };
     SQLCHAR sqlstate [SQL_SQLSTATE_SIZE + 1] = { 0 };
@@ -621,7 +621,7 @@ static void _python_ifx_db_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType,
                     break;
                 }
             }
-            /* This call was made from ifx_db_errmsg or ifx_db_error or ifx_db_warn */
+            /* This call was made from IfxPy_errmsg or IfxPy_error or IfxPy_warn */
             /* Check for error and return */
             switch (API)
             {
@@ -663,7 +663,7 @@ static void _python_ifx_db_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType,
                     break;
                 }
             }
-            /* This call was made from ifx_db_errmsg or ifx_db_error or ifx_db_warn */
+            /* This call was made from IfxPy_errmsg or IfxPy_error or IfxPy_warn */
             /* Check for error and return */
             if ((API == IDS_WARNMSG) && (ret_str != NULL))
             {
@@ -676,8 +676,8 @@ static void _python_ifx_db_check_sql_errors(SQLHANDLE handle, SQLSMALLINT hType,
     }
 }
 
-/*    static int _python_ifx_db_assign_options( void *handle, int type, long opt_key, PyObject *data ) */
-static int _python_ifx_db_assign_options(void *handle, int type, long opt_key, PyObject *data)
+/*    static int _python_IfxPy_assign_options( void *handle, int type, long opt_key, PyObject *data ) */
+static int _python_IfxPy_assign_options(void *handle, int type, long opt_key, PyObject *data)
 {
     int rc = 0;
     long option_num = 0;
@@ -773,7 +773,7 @@ static int _python_ifx_db_assign_options(void *handle, int type, long opt_key, P
             rc = SQLSetStmtAttrW((SQLHSTMT)((stmt_handle *)handle)->hstmt, opt_key, (SQLPOINTER)option_str, SQL_IS_INTEGER);
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                _python_IfxPy_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             if (isNewBuffer)
                 PyMem_Del(option_str);
@@ -794,7 +794,7 @@ static int _python_ifx_db_assign_options(void *handle, int type, long opt_key, P
             rc = SQLSetStmtAttr((SQLHSTMT)((stmt_handle *)handle)->hstmt, opt_key, (SQLPOINTER)((SQLLEN)option_num), SQL_IS_INTEGER);
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                _python_IfxPy_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
         }
     }
@@ -807,7 +807,7 @@ static int _python_ifx_db_assign_options(void *handle, int type, long opt_key, P
             rc = SQLSetConnectAttrW((SQLHSTMT)((conn_handle*)handle)->hdbc, opt_key, (SQLPOINTER)option_str, SQL_NTS);
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                _python_IfxPy_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             if (isNewBuffer)
                 PyMem_Del(option_str);
@@ -828,7 +828,7 @@ static int _python_ifx_db_assign_options(void *handle, int type, long opt_key, P
             rc = SQLSetConnectAttrW((SQLHSTMT)((conn_handle*)handle)->hdbc, opt_key, (SQLPOINTER)((SQLLEN)option_num), SQL_IS_INTEGER);
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                _python_IfxPy_check_sql_errors((SQLHSTMT)((stmt_handle *)handle)->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
         }
     }
@@ -840,8 +840,8 @@ static int _python_ifx_db_assign_options(void *handle, int type, long opt_key, P
     return 0;
 }
 
-/*    static int _python_ifx_db_parse_options( PyObject *options, int type, void *handle)*/
-static int _python_ifx_db_parse_options(PyObject *options, int type, void *handle)
+/*    static int _python_IfxPy_parse_options( PyObject *options, int type, void *handle)*/
+static int _python_IfxPy_parse_options(PyObject *options, int type, void *handle)
 {
     Py_ssize_t numOpts = 0, i = 0;
     PyObject *keys = NULL;
@@ -863,7 +863,7 @@ static int _python_ifx_db_parse_options(PyObject *options, int type, void *handl
 
             /* Assign options to handle. */
             /* Sets the options in the handle with CLI/ODBC calls */
-            rc = _python_ifx_db_assign_options(handle, type, NUM2LONG(key), data);
+            rc = _python_IfxPy_assign_options(handle, type, NUM2LONG(key), data);
 
             if (rc)
                 return SQL_ERROR;
@@ -875,9 +875,9 @@ static int _python_ifx_db_parse_options(PyObject *options, int type, void *handl
     return SQL_SUCCESS;
 }
 
-//  static int _python_ifx_db_get_result_set_info(stmt_handle *stmt_res)
+//  static int _python_IfxPy_get_result_set_info(stmt_handle *stmt_res)
 // initialize the result set information of each column. This must be done once
-static int _python_ifx_db_get_result_set_info(stmt_handle *stmt_res)
+static int _python_IfxPy_get_result_set_info(stmt_handle *stmt_res)
 {
     int rc = -1, i;
     SQLSMALLINT nResultCols = 0, name_length;
@@ -889,25 +889,25 @@ static int _python_ifx_db_get_result_set_info(stmt_handle *stmt_res)
 
     if (rc == SQL_ERROR || nResultCols == 0)
     {
-        _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+        _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                         SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
         return -1;
     }
 
     //if( rc == SQL_SUCCESS_WITH_INFO )
     //{
-    //      _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+    //      _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
     //                     SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
     //}
 
     stmt_res->num_columns = nResultCols;
-    stmt_res->column_info = ALLOC_N(ifx_db_result_set_info, nResultCols);
+    stmt_res->column_info = ALLOC_N(IfxPy_result_set_info, nResultCols);
     if (stmt_res->column_info == NULL)
     {
         PyErr_SetString(PyExc_Exception, "Failed to Allocate Memory");
         return -1;
     }
-    memset(stmt_res->column_info, 0, sizeof(ifx_db_result_set_info)*nResultCols);
+    memset(stmt_res->column_info, 0, sizeof(IfxPy_result_set_info)*nResultCols);
     /* return a set of attributes for a column */
     for (i = 0; i < nResultCols; i++)
     {
@@ -922,7 +922,7 @@ static int _python_ifx_db_get_result_set_info(stmt_handle *stmt_res)
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
         }
         if (rc == SQL_ERROR)
@@ -960,7 +960,7 @@ static int _python_ifx_db_get_result_set_info(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             if (rc == SQL_ERROR)
@@ -986,20 +986,20 @@ static int _python_ifx_db_get_result_set_info(stmt_handle *stmt_res)
 //static int _python_ibn_bind_column_helper(stmt_handle *stmt_res)
 //bind columns to data, this must be done once
 
-static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
+static int _python_IfxPy_bind_column_helper(stmt_handle *stmt_res)
 {
     SQLULEN in_length = 0;
     SQLSMALLINT column_type;
-    ifx_db_row_data_type *row_data;
+    IfxPy_row_data_type *row_data;
     int i, rc = SQL_SUCCESS;
 
-    stmt_res->row_data = ALLOC_N(ifx_db_row_type, stmt_res->num_columns);
+    stmt_res->row_data = ALLOC_N(IfxPy_row_type, stmt_res->num_columns);
     if (stmt_res->row_data == NULL)
     {
         PyErr_SetString(PyExc_Exception, "Failed to Allocate Memory");
         return -1;
     }
-    memset(stmt_res->row_data, 0, sizeof(ifx_db_row_type)*stmt_res->num_columns);
+    memset(stmt_res->row_data, 0, sizeof(IfxPy_row_type)*stmt_res->num_columns);
 
     for (i = 0; i < stmt_res->num_columns; i++)
     {
@@ -1024,7 +1024,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
                                 (SQLLEN *)(&stmt_res->row_data [i].out_length));
                 if (rc == SQL_ERROR)
                 {
-                    _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                    _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                     SQL_HANDLE_STMT, rc, 1, NULL,
                                                     -1, 1);
                 }
@@ -1039,7 +1039,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
                             (SQLLEN *)(&stmt_res->row_data [i].out_length));
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL,
                                                 -1, 1);
             }
@@ -1066,7 +1066,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
                 if (rc == SQL_ERROR)
                 {
-                    _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                    _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                     SQL_HANDLE_STMT, rc, 1, NULL,
                                                     -1, 1);
                 }
@@ -1089,7 +1089,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
                 if (rc == SQL_ERROR)
                 {
-                    _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                    _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                     SQL_HANDLE_STMT, rc, 1, NULL,
                                                     -1, 1);
                 }
@@ -1113,7 +1113,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             break;
@@ -1134,7 +1134,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             break;
@@ -1155,7 +1155,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             break;
@@ -1176,7 +1176,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
                 return -1;
             }
@@ -1193,7 +1193,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1,
                                                 1);
             }
@@ -1210,7 +1210,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1,
                                                 1);
             }
@@ -1227,7 +1227,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1,
                                                 1);
             }
@@ -1244,7 +1244,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1,
                                                 1);
             }
@@ -1261,7 +1261,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1,
                                                 1);
             }
@@ -1286,7 +1286,7 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
 
             if (rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                                 SQL_HANDLE_STMT, rc, 1, NULL, -1,
                                                 1);
             }
@@ -1299,15 +1299,15 @@ static int _python_ifx_db_bind_column_helper(stmt_handle *stmt_res)
     return rc;
 }
 
-/*    static void _python_ifx_db_clear_stmt_err_cache () */
-static void _python_ifx_db_clear_stmt_err_cache(void)
+/*    static void _python_IfxPy_clear_stmt_err_cache () */
+static void _python_IfxPy_clear_stmt_err_cache(void)
 {
     memset(IFX_DB_G(__python_stmt_err_msg), 0, DB_MAX_ERR_MSG_LEN);
     memset(IFX_DB_G(__python_stmt_err_state), 0, SQL_SQLSTATE_SIZE + 1);
 }
 
 
-static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, int isPersistent)
+static PyObject *_python_IfxPy_connect_helper(PyObject *self, PyObject *args, int isPersistent)
 {
     PyObject *databaseObj = NULL;
     PyObject *uidObj = NULL;
@@ -1342,7 +1342,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
         // Check if we already have a connection for this userID & database combination
         if (isPersistent)
         {
-            hKey = PyUnicode_Concat(StringOBJ_FromASCII("__ifx_db_"), uidObj);
+            hKey = PyUnicode_Concat(StringOBJ_FromASCII("__IfxPy_"), uidObj);
             hKey = PyUnicode_Concat(hKey, databaseObj);
             hKey = PyUnicode_Concat(hKey, passwordObj);
 
@@ -1359,7 +1359,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
                     (SQLPOINTER)&conn_alive, 0, NULL);
                 if ((rc == SQL_SUCCESS) && conn_alive)
                 {
-                    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
+                    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
                                                     rc, 1, NULL, -1, 1);
                     reused = 1;
                 } /* else will re-connect since connection is dead */
@@ -1398,7 +1398,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
             rc = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &(conn_res->henv));
             if (rc != SQL_SUCCESS)
             {
-                _python_ifx_db_check_sql_errors(conn_res->henv, SQL_HANDLE_ENV, rc,
+                _python_IfxPy_check_sql_errors(conn_res->henv, SQL_HANDLE_ENV, rc,
                                                 1, NULL, -1, 1);
                 break;
             }
@@ -1412,7 +1412,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
             rc = SQLAllocHandle(SQL_HANDLE_DBC, conn_res->henv, &(conn_res->hdbc));
             if (rc != SQL_SUCCESS)
             {
-                _python_ifx_db_check_sql_errors(conn_res->henv, SQL_HANDLE_ENV, rc,
+                _python_IfxPy_check_sql_errors(conn_res->henv, SQL_HANDLE_ENV, rc,
                                                 1, NULL, -1, 1);
                 break;
             }
@@ -1447,7 +1447,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
                 PyErr_SetString(PyExc_Exception, "options Parameter must be of type dictionay");
                 return NULL;
             }
-            rc = _python_ifx_db_parse_options(options, SQL_HANDLE_DBC, conn_res);
+            rc = _python_IfxPy_parse_options(options, SQL_HANDLE_DBC, conn_res);
             if (rc != SQL_SUCCESS)
             {
                 SQLFreeHandle(SQL_HANDLE_DBC, conn_res->hdbc);
@@ -1513,7 +1513,7 @@ static PyObject *_python_ifx_db_connect_helper(PyObject *self, PyObject *args, i
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
                                                 rc, 1, NULL, -1, 1);
             }
             if (rc == SQL_ERROR)
@@ -1676,8 +1676,8 @@ static SQLWCHAR* xgetUnicodeDataAsSQLWCHAR(PyObject *pyobj, int *isNewBuffer)
 
 
 
-/* static void _python_ifx_db_clear_conn_err_cache () */
-static void _python_ifx_db_clear_conn_err_cache(void)
+/* static void _python_IfxPy_clear_conn_err_cache () */
+static void _python_IfxPy_clear_conn_err_cache(void)
 {
     /* Clear out the cached conn messages */
     memset(IFX_DB_G(__python_conn_err_msg), 0, DB_MAX_ERR_MSG_LEN);
@@ -1685,64 +1685,64 @@ static void _python_ifx_db_clear_conn_err_cache(void)
 }
 
 /*!#
-* ifx_db.connect
-* ifx_db.pconnect
-* ifx_db.autocommit
-* ifx_db.bind_param
-* ifx_db.close
-* ifx_db.column_privileges
-* ifx_db.columns
-* ifx_db.foreign_keys
-* ifx_db.primary_keys
-* ifx_db.procedure_columns
-* ifx_db.procedures
-* ifx_db.special_columns
-* ifx_db.statistics
-* ifx_db.table_privileges
-* ifx_db.tables
-* ifx_db.commit
-* ifx_db.exec
-* ifx_db.free_result
-* ifx_db.prepare
-* ifx_db.execute
-* ifx_db.conn_errormsg
-* ifx_db.stmt_errormsg
-* ifx_db.conn_error
-* ifx_db.stmt_error
-* ifx_db.next_result
-* ifx_db.num_fields
-* ifx_db.num_rows
-* ifx_db.get_num_result
-* ifx_db.field_name
-* ifx_db.field_display_size
-* ifx_db.field_num
-* ifx_db.field_precision
-* ifx_db.field_scale
-* ifx_db.field_type
-* ifx_db.field_width
-* ifx_db.cursor_type
-* ifx_db.rollback
-* ifx_db.free_stmt
-* ifx_db.result
-* ifx_db.fetch_row
-* ifx_db.fetch_assoc
-* ifx_db.fetch_array
-* ifx_db.fetch_both
-* ifx_db.set_option
-* ifx_db.server_info
-* ifx_db.client_info
-* ifx_db.active
-* ifx_db.get_option
+* IfxPy.connect
+* IfxPy.pconnect
+* IfxPy.autocommit
+* IfxPy.bind_param
+* IfxPy.close
+* IfxPy.column_privileges
+* IfxPy.columns
+* IfxPy.foreign_keys
+* IfxPy.primary_keys
+* IfxPy.procedure_columns
+* IfxPy.procedures
+* IfxPy.special_columns
+* IfxPy.statistics
+* IfxPy.table_privileges
+* IfxPy.tables
+* IfxPy.commit
+* IfxPy.exec
+* IfxPy.free_result
+* IfxPy.prepare
+* IfxPy.execute
+* IfxPy.conn_errormsg
+* IfxPy.stmt_errormsg
+* IfxPy.conn_error
+* IfxPy.stmt_error
+* IfxPy.next_result
+* IfxPy.num_fields
+* IfxPy.num_rows
+* IfxPy.get_num_result
+* IfxPy.field_name
+* IfxPy.field_display_size
+* IfxPy.field_num
+* IfxPy.field_precision
+* IfxPy.field_scale
+* IfxPy.field_type
+* IfxPy.field_width
+* IfxPy.cursor_type
+* IfxPy.rollback
+* IfxPy.free_stmt
+* IfxPy.result
+* IfxPy.fetch_row
+* IfxPy.fetch_assoc
+* IfxPy.fetch_array
+* IfxPy.fetch_both
+* IfxPy.set_option
+* IfxPy.server_info
+* IfxPy.client_info
+* IfxPy.active
+* IfxPy.get_option
 */
 
 
 
-/*!# ifx_db.connect
+/*!# IfxPy.connect
 *
 * ===Description
 *
 *  --    Returns a connection to a database
-* IFX_DBConnection ifx_db.connect (dsn=<..>, user=<..>, password=<..>,
+* IFX_DBConnection IfxPy.connect (dsn=<..>, user=<..>, password=<..>,
 *                                  host=<..>, database=<..>, options=<..>)
 *
 * Creates a new connection to an Informix Database,
@@ -1819,13 +1819,13 @@ static void _python_ifx_db_clear_conn_err_cache(void)
 *
 * Returns a IFX_DBConnection connection object if the connection attempt is
 * successful.
-* If the connection attempt fails, ifx_db.connect() returns None.
+* If the connection attempt fails, IfxPy.connect() returns None.
 *
 */
-static PyObject *ifx_db_connect(PyObject *self, PyObject *args)
+static PyObject *IfxPy_connect(PyObject *self, PyObject *args)
 {
-    _python_ifx_db_clear_conn_err_cache();
-    return _python_ifx_db_connect_helper(self, args, 0);
+    _python_IfxPy_clear_conn_err_cache();
+    return _python_IfxPy_connect_helper(self, args, 0);
 }
 
 
@@ -1862,11 +1862,11 @@ static void _python_clear_local_var(PyObject *dbNameObj, SQLWCHAR *dbName, PyObj
 
 
 
-/*!# ifx_db.autocommit
+/*!# IfxPy.autocommit
 *
 * ===Description
 *
-* mixed ifx_db.autocommit ( resource connection [, bool value] )
+* mixed IfxPy.autocommit ( resource connection [, bool value] )
 *
 * Returns or sets the AUTOCOMMIT behavior of the specified connection resource.
 *
@@ -1885,18 +1885,18 @@ static void _python_clear_local_var(PyObject *dbNameObj, SQLWCHAR *dbName, PyObj
 *
 * ===Return Values
 *
-* When ifx_db.autocommit() receives only the connection parameter, it returns
+* When IfxPy.autocommit() receives only the connection parameter, it returns
 * the current state of AUTOCOMMIT for the requested connection as an integer
 * value. A value of 0 indicates that AUTOCOMMIT is off, while a value of 1
 * indicates that AUTOCOMMIT is on.
 *
-* When ifx_db.autocommit() receives both the connection parameter and
+* When IfxPy.autocommit() receives both the connection parameter and
 * autocommit parameter, it attempts to set the AUTOCOMMIT state of the
 * requested connection to the corresponding state.
 *
 * Returns TRUE on success or FALSE on failure.
 */
-static PyObject *ifx_db_autocommit(PyObject *self, PyObject *args)
+static PyObject *IfxPy_autocommit(PyObject *self, PyObject *args)
 {
     PyObject *py_autocommit = NULL;
     PyObject *py_conn_res = NULL;
@@ -1947,7 +1947,7 @@ static PyObject *ifx_db_autocommit(PyObject *self, PyObject *args)
                     (SQLPOINTER)((SQLULEN)(autocommit == 0 ? SQL_AUTOCOMMIT_OFF : SQL_AUTOCOMMIT_ON)), SQL_IS_INTEGER);
                 if (rc == SQL_ERROR)
                 {
-                    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
+                    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
                                                     rc, 1, NULL, -1, 1);
                 }
                 conn_res->auto_commit = autocommit;
@@ -1963,7 +1963,7 @@ static PyObject *ifx_db_autocommit(PyObject *self, PyObject *args)
     return NULL;
 }
 
-static void _python_ifx_db_add_param_cache(
+static void _python_IfxPy_add_param_cache(
     stmt_handle *stmt_res,
     int param_no,
     PyObject *var_pyvalue,
@@ -2054,10 +2054,10 @@ static void _python_ifx_db_add_param_cache(
 }
 
 
-// static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_res, SQLUSMALLINT param_no, PyObject *var_pyvalue, long param_type,
+// static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res, SQLUSMALLINT param_no, PyObject *var_pyvalue, long param_type,
 //                      long data_type, long precision, long scale, long size)
 
-static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_res, SQLUSMALLINT param_no, PyObject *var_pyvalue, long param_type, long data_type, long precision, long scale, long size)
+static PyObject *_python_IfxPy_bind_param_helper(int argc, stmt_handle *stmt_res, SQLUSMALLINT param_no, PyObject *var_pyvalue, long param_type, long data_type, long precision, long scale, long size)
 {
     SQLSMALLINT sql_data_type = 0;
     SQLULEN     sql_precision = 0;
@@ -2080,7 +2080,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
 
         if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1,
                                             NULL, -1, 1);
         }
@@ -2092,7 +2092,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
             return NULL;
         }
         /* Add to cache */
-        _python_ifx_db_add_param_cache(stmt_res, param_no, var_pyvalue,
+        _python_IfxPy_add_param_cache(stmt_res, param_no, var_pyvalue,
                                        param_type, size,
                                        sql_data_type, sql_precision,
                                        sql_scale, sql_nullable);
@@ -2107,7 +2107,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
 
         if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1,
                                             NULL, -1, 1);
         }
@@ -2119,7 +2119,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
             return NULL;
         }
         /* Add to cache */
-        _python_ifx_db_add_param_cache(stmt_res, param_no, var_pyvalue,
+        _python_IfxPy_add_param_cache(stmt_res, param_no, var_pyvalue,
                                        param_type, size,
                                        sql_data_type, sql_precision,
                                        sql_scale, sql_nullable);
@@ -2134,7 +2134,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
 
         if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1,
                                             NULL, -1, 1);
         }
@@ -2147,7 +2147,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
         }
         sql_data_type = (SQLSMALLINT)data_type;
         /* Add to cache */
-        _python_ifx_db_add_param_cache(stmt_res, param_no, var_pyvalue,
+        _python_IfxPy_add_param_cache(stmt_res, param_no, var_pyvalue,
                                        param_type, size,
                                        sql_data_type, sql_precision,
                                        sql_scale, sql_nullable);
@@ -2162,7 +2162,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
 
         if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1,
                                             NULL, -1, 1);
         }
@@ -2176,7 +2176,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
         sql_data_type = (SQLSMALLINT)data_type;
         sql_precision = (SQLUINTEGER)precision;
         /* Add to cache */
-        _python_ifx_db_add_param_cache(stmt_res, param_no, var_pyvalue,
+        _python_IfxPy_add_param_cache(stmt_res, param_no, var_pyvalue,
                                        param_type, size,
                                        sql_data_type, sql_precision,
                                        sql_scale, sql_nullable);
@@ -2197,7 +2197,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
         sql_data_type = (SQLSMALLINT)data_type;
         sql_precision = (SQLUINTEGER)precision;
         sql_scale = (SQLSMALLINT)scale;
-        _python_ifx_db_add_param_cache(stmt_res, param_no, var_pyvalue,
+        _python_IfxPy_add_param_cache(stmt_res, param_no, var_pyvalue,
                                        param_type, size,
                                        sql_data_type, sql_precision,
                                        sql_scale, sql_nullable);
@@ -2209,32 +2209,32 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
     }
     /* end Switch */
 
-    /* We bind data with DB2 CLI in ifx_db.execute() */
+    /* We bind data with DB2 CLI in IfxPy.execute() */
     /* This will save network flow if we need to override params in it */
 
     Py_INCREF(Py_True);
     return Py_True;
 }
 
-/*!# ifx_db.bind_param
+/*!# IfxPy.bind_param
 *
 * ===Description
-* Py_True/Py_None ifx_db.bind_param (resource stmt, int parameter-number,
+* Py_True/Py_None IfxPy.bind_param (resource stmt, int parameter-number,
 *                                    string variable [, int parameter-type
 *                                    [, int data-type [, int precision
 *                                    [, int scale [, int size[]]]]]] )
 *
 * Binds a Python variable to an SQL statement parameter in a IFX_DBStatement
-* resource returned by ifx_db.prepare().
+* resource returned by IfxPy.prepare().
 * This function gives you more control over the parameter type, data type,
 * precision, and scale for the parameter than simply passing the variable as
-* part of the optional input array to ifx_db.execute().
+* part of the optional input array to IfxPy.execute().
 *
 * ===Parameters
 *
 * ====stmt
 *
-*    A prepared statement returned from ifx_db.prepare().
+*    A prepared statement returned from IfxPy.prepare().
 *
 * ====parameter-number
 *
@@ -2274,7 +2274,7 @@ static PyObject *_python_ifx_db_bind_param_helper(int argc, stmt_handle *stmt_re
 *
 *    Returns Py_True on success or NULL on failure.
 */
-static PyObject *ifx_db_bind_param(PyObject *self, PyObject *args)
+static PyObject *IfxPy_bind_param(PyObject *self, PyObject *args)
 {
     PyObject *var_pyvalue = NULL;
     PyObject *py_param_type = NULL;
@@ -2356,7 +2356,7 @@ static PyObject *ifx_db_bind_param(PyObject *self, PyObject *args)
         {
             stmt_res = (stmt_handle *)py_stmt_res;
         }
-        return _python_ifx_db_bind_param_helper((int)PyTuple_Size(args),
+        return _python_IfxPy_bind_param_helper((int)PyTuple_Size(args),
                                                 stmt_res, param_no, var_pyvalue, param_type, data_type, precision, scale, size);
     }
     else
@@ -2367,13 +2367,13 @@ static PyObject *ifx_db_bind_param(PyObject *self, PyObject *args)
 }
 
 
-/*!# ifx_db.close
+/*!# IfxPy.close
 *
 * ===Description
 *
-* bool ifx_db.close ( resource connection )
+* bool IfxPy.close ( resource connection )
 *
-* This function closes a IDS client connection created with ifx_db.connect()
+* This function closes a IDS client connection created with IfxPy.connect()
 * and returns the corresponding resources to the database server.
 *
 *
@@ -2385,7 +2385,7 @@ static PyObject *ifx_db_bind_param(PyObject *self, PyObject *args)
 * ===Return Values
 * Returns TRUE on success or FALSE on failure.
 */
-static PyObject *ifx_db_close(PyObject *self, PyObject *args)
+static PyObject *IfxPy_close(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     conn_handle *conn_res = NULL;
@@ -2425,7 +2425,7 @@ static PyObject *ifx_db_close(PyObject *self, PyObject *args)
                                 SQL_ROLLBACK);
                 if (rc == SQL_ERROR)
                 {
-                    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
+                    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
                                                     rc, 1, NULL, -1, 1);
                     return NULL;
                 }
@@ -2433,7 +2433,7 @@ static PyObject *ifx_db_close(PyObject *self, PyObject *args)
             rc = SQLDisconnect((SQLHDBC)conn_res->hdbc);
             if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -2448,7 +2448,7 @@ static PyObject *ifx_db_close(PyObject *self, PyObject *args)
 
             if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -2463,7 +2463,7 @@ static PyObject *ifx_db_close(PyObject *self, PyObject *args)
             rc = SQLFreeHandle(SQL_HANDLE_ENV, conn_res->henv);
             if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)
             {
-                _python_ifx_db_check_sql_errors(conn_res->henv,
+                _python_IfxPy_check_sql_errors(conn_res->henv,
                                                 SQL_HANDLE_ENV, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -2494,10 +2494,10 @@ static PyObject *ifx_db_close(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.column_privileges
+/*!# IfxPy.column_privileges
 *
 * ===Description
-* resource ifx_db.column_privileges ( resource connection [, string qualifier
+* resource IfxPy.column_privileges ( resource connection [, string qualifier
 * [, string schema [, string table-name [, string column-name]]]] )
 *
 * Returns a result set listing the columns and associated privileges for a
@@ -2540,7 +2540,7 @@ static PyObject *ifx_db_close(PyObject *self, PyObject *args)
 * IS_GRANTABLE:: Whether the GRANTEE is permitted to grant this privilege to
 * other users.
 */
-static PyObject *ifx_db_column_privileges(PyObject *self, PyObject *args)
+static PyObject *IfxPy_column_privileges(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -2640,11 +2640,11 @@ static PyObject *ifx_db_column_privileges(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -2675,7 +2675,7 @@ static PyObject *ifx_db_column_privileges(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -2702,9 +2702,9 @@ static PyObject *ifx_db_column_privileges(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.columns
+/*!# IfxPy.columns
 * ===Description
-* resource ifx_db.columns ( resource connection [, string qualifier
+* resource IfxPy.columns ( resource connection [, string qualifier
 * [, string schema [, string table-name [, string column-name]]]] )
 *
 * Returns a result set listing the columns and associated metadata for a table.
@@ -2762,7 +2762,7 @@ static PyObject *ifx_db_column_privileges(PyObject *self, PyObject *args)
 * IS_NULLABLE:: A string value where 'YES' means that the column is nullable
 * and 'NO' means that the column is not nullable.
 */
-static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
+static PyObject *IfxPy_columns(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -2862,12 +2862,12 @@ static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -2901,7 +2901,7 @@ static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -2928,10 +2928,10 @@ static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.foreign_keys
+/*!# IfxPy.foreign_keys
 *
 * ===Description
-* resource ifx_db.foreign_keys ( resource connection, string pk_qualifier,
+* resource IfxPy.foreign_keys ( resource connection, string pk_qualifier,
 * string pk_schema, string pk_table-name, string fk_qualifier
 * string fk_schema, string fk_table-name )
 *
@@ -2949,7 +2949,7 @@ static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
 *
 * ====pk_schema
 *        The schema for the pk_table-name argument which contains the tables. If
-* schema is NULL, ifx_db.foreign_keys() matches the schema for the current
+* schema is NULL, IfxPy.foreign_keys() matches the schema for the current
 * connection.
 *
 * ====pk_table-name
@@ -2962,7 +2962,7 @@ static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
 *
 * ====fk_schema
 *        The schema for the fk_table-name argument which contains the tables. If
-* schema is NULL, ifx_db.foreign_keys() matches the schema for the current
+* schema is NULL, IfxPy.foreign_keys() matches the schema for the current
 * connection.
 *
 * ====fk_table-name
@@ -2996,7 +2996,7 @@ static PyObject *ifx_db_columns(PyObject *self, PyObject *args)
 * deferrability is SQL_INITIALLY_DEFERRED, SQL_INITIALLY_IMMEDIATE, or
 * SQL_NOT_DEFERRABLE.
 */
-static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
+static PyObject *IfxPy_foreign_keys(PyObject *self, PyObject *args)
 {
     SQLWCHAR *pk_qualifier = NULL;
     SQLWCHAR *pk_owner = NULL;
@@ -3144,7 +3144,7 @@ static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         Py_BEGIN_ALLOW_THREADS;
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
@@ -3152,7 +3152,7 @@ static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_pk_qualifier);
             Py_XDECREF(py_pk_owner);
@@ -3195,7 +3195,7 @@ static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_pk_qualifier);
             Py_XDECREF(py_pk_owner);
@@ -3227,10 +3227,10 @@ static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.primary_keys
+/*!# IfxPy.primary_keys
 *
 * ===Description
-* resource ifx_db.primary_keys ( resource connection, string qualifier,
+* resource IfxPy.primary_keys ( resource connection, string qualifier,
 * string schema, string table-name )
 *
 * Returns a result set listing the primary keys for a table.
@@ -3246,7 +3246,7 @@ static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
 *
 * ====schema
 *        The schema which contains the tables. If schema is NULL,
-* ifx_db.primary_keys() matches the schema for the current connection.
+* IfxPy.primary_keys() matches the schema for the current connection.
 *
 * ====table-name
 *        The name of the table.
@@ -3266,7 +3266,7 @@ static PyObject *ifx_db_foreign_keys(PyObject *self, PyObject *args)
 * KEY_SEQ:: 1-indexed position of the column in the key.
 * PK_NAME:: The name of the primary key.
 */
-static PyObject *ifx_db_primary_keys(PyObject *self, PyObject *args)
+static PyObject *IfxPy_primary_keys(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -3347,12 +3347,12 @@ static PyObject *ifx_db_primary_keys(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -3381,7 +3381,7 @@ static PyObject *ifx_db_primary_keys(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -3406,10 +3406,10 @@ static PyObject *ifx_db_primary_keys(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.procedure_columns
+/*!# IfxPy.procedure_columns
 *
 * ===Description
-* resource ifx_db.procedure_columns ( resource connection, string qualifier,
+* resource IfxPy.procedure_columns ( resource connection, string qualifier,
 * string schema, string procedure, string parameter )
 *
 * Returns a result set listing the parameters for one or more stored procedures
@@ -3482,7 +3482,7 @@ static PyObject *ifx_db_primary_keys(PyObject *self, PyObject *args)
 * returns NULL values and 'NO' means that the parameter does not accept or
 * return NULL values.
 */
-static PyObject *ifx_db_procedure_columns(PyObject *self, PyObject *args)
+static PyObject *IfxPy_procedure_columns(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -3582,12 +3582,12 @@ static PyObject *ifx_db_procedure_columns(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -3621,7 +3621,7 @@ static PyObject *ifx_db_procedure_columns(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -3648,10 +3648,10 @@ static PyObject *ifx_db_procedure_columns(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.procedures
+/*!# IfxPy.procedures
 *
 * ===Description
-* resource ifx_db.procedures ( resource connection, string qualifier,
+* resource IfxPy.procedures ( resource connection, string qualifier,
 * string schema, string procedure )
 *
 * Returns a result set listing the stored procedures registered in a database.
@@ -3692,7 +3692,7 @@ static PyObject *ifx_db_procedure_columns(PyObject *self, PyObject *args)
 * PROCEDURE_TYPE:: Always returns 1, indicating that the stored procedure does
 * not return a return value.
 */
-static PyObject *ifx_db_procedures(PyObject *self, PyObject *args)
+static PyObject *IfxPy_procedures(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -3774,12 +3774,12 @@ static PyObject *ifx_db_procedures(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -3808,7 +3808,7 @@ static PyObject *ifx_db_procedures(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -3831,10 +3831,10 @@ static PyObject *ifx_db_procedures(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.special_columns
+/*!# IfxPy.special_columns
 *
 * ===Description
-* resource ifx_db.special_columns ( resource connection, string qualifier,
+* resource IfxPy.special_columns ( resource connection, string qualifier,
 * string schema, string table_name, int scope )
 *
 * Returns a result set listing the unique row identifier columns for a table.
@@ -3906,7 +3906,7 @@ static PyObject *ifx_db_procedures(PyObject *self, PyObject *args)
 *
 * PSEUDO_COLUMN:: Always returns 1.
 */
-static PyObject *ifx_db_special_columns(PyObject *self, PyObject *args)
+static PyObject *IfxPy_special_columns(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -4001,12 +4001,12 @@ static PyObject *ifx_db_special_columns(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4036,7 +4036,7 @@ static PyObject *ifx_db_special_columns(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4061,10 +4061,10 @@ static PyObject *ifx_db_special_columns(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.statistics
+/*!# IfxPy.statistics
 *
 * ===Description
-* resource ifx_db.statistics ( resource connection, string qualifier,
+* resource IfxPy.statistics ( resource connection, string qualifier,
 * string schema, string table-name, bool unique )
 *
 * Returns a result set listing the index and statistics for a table.
@@ -4145,7 +4145,7 @@ static PyObject *ifx_db_special_columns(PyObject *self, PyObject *args)
 * integer value representing the number of pages used to store the table.
 * FILTER_CONDITION:: Always returns NULL.
 */
-static PyObject *ifx_db_statistics(PyObject *self, PyObject *args)
+static PyObject *IfxPy_statistics(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -4245,13 +4245,13 @@ static PyObject *ifx_db_statistics(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
         sql_unique = unique;
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4280,7 +4280,7 @@ static PyObject *ifx_db_statistics(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4304,10 +4304,10 @@ static PyObject *ifx_db_statistics(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.table_privileges
+/*!# IfxPy.table_privileges
 *
 * ===Description
-* resource ifx_db.table_privileges ( resource connection [, string qualifier
+* resource IfxPy.table_privileges ( resource connection [, string qualifier
 * [, string schema [, string table_name]]] )
 *
 * Returns a result set listing the tables and associated privileges in a
@@ -4348,7 +4348,7 @@ static PyObject *ifx_db_statistics(PyObject *self, PyObject *args)
 * IS_GRANTABLE:: A string value of "YES" or "NO" indicating whether the grantee
 * can grant the privilege to other users.
 */
-static PyObject *ifx_db_table_privileges(PyObject *self, PyObject *args)
+static PyObject *IfxPy_table_privileges(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -4435,12 +4435,12 @@ static PyObject *ifx_db_table_privileges(PyObject *self, PyObject *args)
             Py_RETURN_FALSE;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4469,7 +4469,7 @@ static PyObject *ifx_db_table_privileges(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4493,10 +4493,10 @@ static PyObject *ifx_db_table_privileges(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.tables
+/*!# IfxPy.tables
 *
 * ===Description
-* resource ifx_db.tables ( resource connection [, string qualifier [, string
+* resource IfxPy.tables ( resource connection [, string qualifier [, string
 * schema [, string table-name [, string table-type]]]] )
 *
 * Returns a result set listing the tables and associated metadata in a database
@@ -4539,7 +4539,7 @@ static PyObject *ifx_db_table_privileges(PyObject *self, PyObject *args)
 * TABLE_TYPE:: Table type identifier for the table.
 * REMARKS:: Description of the table.
 */
-static PyObject *ifx_db_tables(PyObject *self, PyObject *args)
+static PyObject *IfxPy_tables(PyObject *self, PyObject *args)
 {
     SQLWCHAR *qualifier = NULL;
     SQLWCHAR *owner = NULL;
@@ -4639,12 +4639,12 @@ static PyObject *ifx_db_tables(PyObject *self, PyObject *args)
             return NULL;
         }
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4677,7 +4677,7 @@ static PyObject *ifx_db_tables(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             Py_XDECREF(py_qualifier);
             Py_XDECREF(py_owner);
@@ -4704,13 +4704,13 @@ static PyObject *ifx_db_tables(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.commit
+/*!# IfxPy.commit
 * ===Description
-* bool ifx_db.commit ( resource connection )
+* bool IfxPy.commit ( resource connection )
 *
 * Commits an in-progress transaction on the specified connection resource and
 * begins a new transaction.
-* Python applications normally default to AUTOCOMMIT mode, so ifx_db.commit()
+* Python applications normally default to AUTOCOMMIT mode, so IfxPy.commit()
 * is not necessary unless AUTOCOMMIT has been turned off for the connection
 * resource.
 *
@@ -4723,13 +4723,13 @@ static PyObject *ifx_db_tables(PyObject *self, PyObject *args)
 *
 * ====connection
 *        A valid database connection resource variable as returned from
-* ifx_db.connect() or ifx_db.pconnect().
+* IfxPy.connect() or IfxPy.pconnect().
 *
 * ===Return Values
 *
 * Returns TRUE on success or FALSE on failure.
 */
-static PyObject *ifx_db_commit(PyObject *self, PyObject *args)
+static PyObject *IfxPy_commit(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     conn_handle *conn_res;
@@ -4760,7 +4760,7 @@ static PyObject *ifx_db_commit(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_INCREF(Py_False);
             return Py_False;
@@ -4775,8 +4775,8 @@ static PyObject *ifx_db_commit(PyObject *self, PyObject *args)
     return Py_False;
 }
 
-// static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, char *stmt_string, stmt_handle *stmt_res, PyObject *options)
-static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_size, stmt_handle *stmt_res, PyObject *options)
+// static int _python_IfxPy_do_prepare(SQLHANDLE hdbc, char *stmt_string, stmt_handle *stmt_res, PyObject *options)
+static int _python_IfxPy_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_size, stmt_handle *stmt_res, PyObject *options)
 {
     int rc;
 
@@ -4784,7 +4784,7 @@ static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
     rc = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &(stmt_res->hstmt));
     if (rc == SQL_ERROR)
     {
-        _python_ifx_db_check_sql_errors(hdbc, SQL_HANDLE_DBC, rc,
+        _python_IfxPy_check_sql_errors(hdbc, SQL_HANDLE_DBC, rc,
                                         1, NULL, -1, 1);
         return rc;
     }
@@ -4799,14 +4799,14 @@ static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
 
     if (rc < SQL_SUCCESS)
     {
-        _python_ifx_db_check_sql_errors(hdbc, SQL_HANDLE_DBC, rc, 1, NULL, -1, 1);
+        _python_IfxPy_check_sql_errors(hdbc, SQL_HANDLE_DBC, rc, 1, NULL, -1, 1);
         PyErr_SetString(PyExc_Exception, "Statement prepare Failed: ");
         return rc;
     }
 
     if (!NIL_P(options))
     {
-        rc = _python_ifx_db_parse_options(options, SQL_HANDLE_STMT, stmt_res);
+        rc = _python_IfxPy_parse_options(options, SQL_HANDLE_STMT, stmt_res);
         if (rc == SQL_ERROR)
         {
             return rc;
@@ -4814,7 +4814,7 @@ static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
     }
 
     // Prepare the stmt. The cursor type requested has already been set in
-    // _python_ifx_db_assign_options
+    // _python_IfxPy_assign_options
     Py_BEGIN_ALLOW_THREADS;
     rc = SQLPrepareW((SQLHSTMT)stmt_res->hstmt, stmt,
                      stmt_size);
@@ -4822,27 +4822,27 @@ static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
 
     if (rc == SQL_ERROR)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                         1, NULL, -1, 1);
     }
     return rc;
 }
 
-/*!# ifx_db.exec
+/*!# IfxPy.exec
 *
 * ===Description
-* stmt_handle ifx_db.exec ( IFX_DBConnection connection, string statement
+* stmt_handle IfxPy.exec ( IFX_DBConnection connection, string statement
 *                                [, array options] )
 *
 * Prepares and executes an SQL statement.
 *
 * If you plan to interpolate Python variables into the SQL statement,
 * understand that this is one of the more common security exposures. Consider
-* calling ifx_db.prepare() to prepare an SQL statement with parameter markers    * for input values. Then you can call ifx_db.execute() to pass in the input
+* calling IfxPy.prepare() to prepare an SQL statement with parameter markers    * for input values. Then you can call IfxPy.execute() to pass in the input
 * values and avoid SQL injection attacks.
 *
 * If you plan to repeatedly issue the same SQL statement with different
-* parameters, consider calling ifx_db.:prepare() and ifx_db.execute() to
+* parameters, consider calling IfxPy.:prepare() and IfxPy.execute() to
 * enable the database server to reuse its access plan and increase the
 * efficiency of your database access.
 *
@@ -4851,7 +4851,7 @@ static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
 * ====connection
 *
 *        A valid database connection resource variable as returned from
-* ifx_db.connect() or ifx_db.pconnect().
+* IfxPy.connect() or IfxPy.pconnect().
 *
 * ====statement
 *
@@ -4878,7 +4878,7 @@ static int _python_ifx_db_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_si
 * Returns a stmt_handle resource if the SQL statement was issued
 * successfully, or FALSE if the database failed to execute the SQL statement.
 */
-static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
+static PyObject *IfxPy_exec(PyObject *self, PyObject *args)
 {
     PyObject *options = NULL;
     PyObject *py_conn_res = NULL;
@@ -4886,12 +4886,12 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
     conn_handle *conn_res;
     int rc;
     int isNewBuffer;
-    char* return_str = NULL; // This variable is used by _python_ifx_db_check_sql_errors to return err strings
+    char* return_str = NULL; // This variable is used by _python_IfxPy_check_sql_errors to return err strings
     SQLWCHAR *stmt = NULL;
     PyObject *py_stmt = NULL;
 
-    // This function basically is a wrap of the _python_ifx_db_do_prepare and
-    //_python_ifx_db_Execute_stmt
+    // This function basically is a wrap of the _python_IfxPy_do_prepare and
+    //_python_IfxPy_Execute_stmt
     //After completing statement execution, it returns the statement resource
 
 
@@ -4940,16 +4940,16 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
 
         memset(return_str, 0, DB_MAX_ERR_MSG_LEN);
 
-        _python_ifx_db_clear_stmt_err_cache();
+        _python_IfxPy_clear_stmt_err_cache();
 
-        stmt_res = _ifx_db_new_stmt_struct(conn_res);
+        stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
         /* Allocates the stmt handle */
         /* returns the stat_handle back to the calling function */
         rc = SQLAllocHandle(SQL_HANDLE_STMT, conn_res->hdbc, &(stmt_res->hstmt));
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyMem_Del(return_str);
             Py_XDECREF(py_stmt);
@@ -4958,7 +4958,7 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
 
         if (!NIL_P(options))
         {
-            rc = _python_ifx_db_parse_options(options, SQL_HANDLE_STMT, stmt_res);
+            rc = _python_IfxPy_parse_options(options, SQL_HANDLE_STMT, stmt_res);
             if (rc == SQL_ERROR)
             {
                 Py_XDECREF(py_stmt);
@@ -4975,7 +4975,7 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
         Py_END_ALLOW_THREADS;
         if (rc < SQL_SUCCESS)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, -1,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, -1,
                                             1, return_str, IDS_ERRMSG,
                                             stmt_res->errormsg_recno_tracker);
             SQLFreeHandle(SQL_HANDLE_STMT, stmt_res->hstmt);
@@ -4991,7 +4991,7 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
         }
         if (rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, 1,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, 1,
                                             1, return_str, IDS_WARNMSG,
                                             stmt_res->errormsg_recno_tracker);
         }
@@ -5007,14 +5007,14 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
     return NULL;
 }
 
-/*!# ifx_db.free_result
+/*!# IfxPy.free_result
 *
 * ===Description
-* bool ifx_db.free_result ( resource stmt )
+* bool IfxPy.free_result ( resource stmt )
 *
 * Frees the system and database resources that are associated with a result
 * set. These resources are freed implicitly when a script finishes, but you
-* can call ifx_db.free_result() to explicitly free the result set resources
+* can call IfxPy.free_result() to explicitly free the result set resources
 * before the end of the script.
 *
 * ===Parameters
@@ -5026,7 +5026,7 @@ static PyObject *ifx_db_exec(PyObject *self, PyObject *args)
 *
 * Returns TRUE on success or FALSE on failure.
 */
-static PyObject *ifx_db_free_result(PyObject *self, PyObject *args)
+static PyObject *IfxPy_free_result(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     stmt_handle *stmt_res;
@@ -5056,7 +5056,7 @@ static PyObject *ifx_db_free_result(PyObject *self, PyObject *args)
             Py_END_ALLOW_THREADS;
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                                 rc, 1, NULL, -1, 1);
             }
             if (rc == SQL_ERROR)
@@ -5065,7 +5065,7 @@ static PyObject *ifx_db_free_result(PyObject *self, PyObject *args)
                 Py_RETURN_FALSE;
             }
         }
-        _python_ifx_db_free_result_struct(stmt_res);
+        _python_IfxPy_free_result_struct(stmt_res);
     }
     else
     {
@@ -5077,7 +5077,7 @@ static PyObject *ifx_db_free_result(PyObject *self, PyObject *args)
 }
 
 
-static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *py_stmt, PyObject *options)
+static PyObject *_python_IfxPy_prepare_helper(conn_handle *conn_res, PyObject *py_stmt, PyObject *options)
 {
     stmt_handle *stmt_res;
     int rc;
@@ -5114,12 +5114,12 @@ static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *
         }
     }
 
-    _python_ifx_db_clear_stmt_err_cache();
+    _python_IfxPy_clear_stmt_err_cache();
 
     /* Initialize stmt resource members with default values. */
     /* Parsing will update options if needed */
 
-    stmt_res = _ifx_db_new_stmt_struct(conn_res);
+    stmt_res = _IfxPy_new_stmt_struct(conn_res);
 
     /* Allocates the stmt handle */
     /* Prepares the statement */
@@ -5127,7 +5127,7 @@ static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *
     if (py_stmt && py_stmt != Py_None)
         stmt = getUnicodeDataAsSQLWCHAR(py_stmt, &isNewBuffer);
 
-    rc = _python_ifx_db_do_prepare(conn_res->hdbc, stmt, stmt_size, stmt_res, options);
+    rc = _python_IfxPy_do_prepare(conn_res->hdbc, stmt, stmt_size, stmt_res, options);
     if (isNewBuffer)
     {
         if (stmt) PyMem_Del(stmt);
@@ -5143,24 +5143,24 @@ static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *
     return (PyObject *)stmt_res;
 }
 
-/*!# ifx_db.prepare
+/*!# IfxPy.prepare
 *
 * ===Description
-* IBMDB_Statement ifx_db.prepare ( IFX_DBConnection connection,
+* IBMDB_Statement IfxPy.prepare ( IFX_DBConnection connection,
 *                                  string statement [, array options] )
 *
-* ifx_db.prepare() creates a prepared SQL statement which can include 0 or
+* IfxPy.prepare() creates a prepared SQL statement which can include 0 or
 * more parameter markers (? characters) representing parameters for input,
 * output, or input/output. You can pass parameters to the prepared statement
-* using ifx_db.bind_param(), or for input values only, as an array passed to
-* ifx_db.execute().
+* using IfxPy.bind_param(), or for input values only, as an array passed to
+* IfxPy.execute().
 *
 * There are three main advantages to using prepared statements in your
 * application:
 *        * Performance: when you prepare a statement, the database server
 *         creates an optimized access plan for retrieving data with that
 *         statement. Subsequently issuing the prepared statement with
-*         ifx_db.execute() enables the statements to reuse that access plan
+*         IfxPy.execute() enables the statements to reuse that access plan
 *         and avoids the overhead of dynamically creating a new access plan
 *         for every statement you issue.
 *        * Security: when you prepare a statement, you can include parameter
@@ -5171,13 +5171,13 @@ static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *
 *        * Advanced functionality: Parameter markers not only enable you to
 *         pass input values to prepared SQL statements, they also enable you
 *         to retrieve OUT and INOUT parameters from stored procedures using
-*         ifx_db.bind_param().
+*         IfxPy.bind_param().
 *
 * ===Parameters
 * ====connection
 *
 *        A valid database connection resource variable as returned from
-*        ifx_db.connect() or ifx_db.pconnect().
+*        IfxPy.connect() or IfxPy.pconnect().
 *
 * ====statement
 *
@@ -5204,9 +5204,9 @@ static PyObject *_python_ifx_db_prepare_helper(conn_handle *conn_res, PyObject *
 * Returns a IFX_DBStatement object if the SQL statement was successfully
 * parsed and prepared by the database server. Returns FALSE if the database
 * server returned an error. You can determine which error was returned by
-* calling ifx_db.stmt_error() or ifx_db.stmt_errormsg().
+* calling IfxPy.stmt_error() or IfxPy.stmt_errormsg().
 */
-static PyObject *ifx_db_prepare(PyObject *self, PyObject *args)
+static PyObject *IfxPy_prepare(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     PyObject *options = NULL;
@@ -5228,7 +5228,7 @@ static PyObject *ifx_db_prepare(PyObject *self, PyObject *args)
         {
             conn_res = (conn_handle *)py_conn_res;
         }
-        return _python_ifx_db_prepare_helper(conn_res, py_stmt, options);
+        return _python_IfxPy_prepare_helper(conn_res, py_stmt, options);
     }
 
     return NULL;
@@ -5271,7 +5271,7 @@ static param_node* build_list(stmt_handle *stmt_res, int param_no, SQLSMALLINT d
 }
 
 
-static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyObject *bind_data)
+static int _python_IfxPy_bind_data(stmt_handle *stmt_res, param_node *curr, PyObject *bind_data)
 {
     int rc;
     SQLSMALLINT valueType = 0;
@@ -5332,7 +5332,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
         return rc;
@@ -5367,7 +5367,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                                 rc, 1, NULL, -1, 1);
             }
             Py_XDECREF(tempobj);
@@ -5384,7 +5384,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                                 rc, 1, NULL, -1, 1);
             }
             curr->data_type = SQL_C_LONG;
@@ -5403,7 +5403,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
         curr->data_type = SQL_C_LONG;
@@ -5420,7 +5420,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
         curr->data_type = SQL_C_LONG;
@@ -5437,7 +5437,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
         curr->data_type = SQL_C_DOUBLE;
@@ -5565,7 +5565,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             curr->data_type = valueType;
         }
@@ -5679,7 +5679,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                                 rc, 1, NULL, -1, 1);
             }
             curr->data_type = valueType;
@@ -5718,7 +5718,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             }
             curr->data_type = valueType;
             Py_XDECREF(tempobj);
@@ -5780,7 +5780,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
         break;
@@ -5791,7 +5791,7 @@ static int _python_ifx_db_bind_data(stmt_handle *stmt_res, param_node *curr, PyO
     return rc;
 }
 
-static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data, int bind_cmp_list, int bind_params)
+static int _python_IfxPy_execute_helper2(stmt_handle *stmt_res, PyObject *data, int bind_cmp_list, int bind_params)
 {
     int rc = SQL_SUCCESS;
     param_node *curr = NULL;    /* To traverse the list */
@@ -5827,7 +5827,7 @@ static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data,
             if (bind_data == NULL)
                 return -1;
 
-            rc = _python_ifx_db_bind_data(stmt_res, curr, bind_data);
+            rc = _python_IfxPy_bind_data(stmt_res, curr, bind_data);
             if (rc == SQL_ERROR)
             {
                 sprintf(error, "Binding Error 1: %s",
@@ -5847,7 +5847,7 @@ static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data,
             if (bind_params)
             {
                 //This condition applies if the parameter has not been
-                //bound using ifx_db.bind_param. Need to describe the
+                //bound using IfxPy.bind_param. Need to describe the
                 //parameter and then bind it.
 
                 param_no = ++stmt_res->num_params;
@@ -5860,7 +5860,7 @@ static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data,
 
                 if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
                 {
-                    _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+                    _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                                     SQL_HANDLE_STMT,
                                                     rc, 1, NULL, -1, 1);
                 }
@@ -5873,7 +5873,7 @@ static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data,
                 }
                 curr = build_list(stmt_res, param_no, data_type, precision,
                                   scale, nullable);
-                rc = _python_ifx_db_bind_data(stmt_res, curr, data);
+                rc = _python_IfxPy_bind_data(stmt_res, curr, data);
                 if (rc == SQL_ERROR)
                 {
                     sprintf(error, "Binding Error 2: %s",
@@ -5885,12 +5885,12 @@ static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data,
             else
             {
                 //This is always at least the head_cache_node -- assigned in
-                //ifx_db.execute(), if params have been bound.
+                //IfxPy.execute(), if params have been bound.
 
                 curr = stmt_res->current_node;
                 if (curr != NULL)
                 {
-                    rc = _python_ifx_db_bind_data(stmt_res, curr, data);
+                    rc = _python_IfxPy_bind_data(stmt_res, curr, data);
                     if (rc == SQL_ERROR)
                     {
                         sprintf(error, "Binding Error 2: %s",
@@ -5907,7 +5907,7 @@ static int _python_ifx_db_execute_helper2(stmt_handle *stmt_res, PyObject *data,
     return rc;
 }
 
-static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject *parameters_tuple)
+static PyObject *_python_IfxPy_execute_helper1(stmt_handle *stmt_res, PyObject *parameters_tuple)
 {
     Py_ssize_t numOpts = 0;
     int rc, i, bind_params = 0;
@@ -5921,7 +5921,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
     SQLFreeStmt((SQLHSTMT)stmt_res->hstmt, SQL_CLOSE);
     Py_END_ALLOW_THREADS;
 
-    // This ensures that each call to ifx_db.execute start from scratch 
+    // This ensures that each call to IfxPy.execute start from scratch 
     stmt_res->current_node = stmt_res->head_cache_list;
 
     Py_BEGIN_ALLOW_THREADS;
@@ -5933,7 +5933,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
         // Parameter Handling 
         if (!NIL_P(parameters_tuple))
         {
-            // Make sure ifx_db.bind_param has been called 
+            // Make sure IfxPy.bind_param has been called 
             // If the param list is NULL -- ERROR 
             if (stmt_res->head_cache_list == NULL)
             {
@@ -5978,7 +5978,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
                 //has been described. So we need to call SQLDescribeParam
                 //before binding depending on this.
 
-                rc = _python_ifx_db_execute_helper2(stmt_res, data, 0, bind_params);
+                rc = _python_IfxPy_execute_helper2(stmt_res, data, 0, bind_params);
                 if (rc == SQL_ERROR)
                 {
                     sprintf(error, "Binding Error: %s", IFX_DB_G(__python_stmt_err_msg));
@@ -6017,7 +6017,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
                 //The 1 denotes that you work with the whole list
                 //And bind sequentially
 
-                rc = _python_ifx_db_execute_helper2(stmt_res, NULL, 1, 0);
+                rc = _python_IfxPy_execute_helper2(stmt_res, NULL, 1, 0);
                 if (rc == SQL_ERROR)
                 {
                     sprintf(error, "Binding Error 3: %s", IFX_DB_G(__python_stmt_err_msg));
@@ -6038,7 +6038,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
@@ -6058,7 +6058,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
     Py_END_ALLOW_THREADS;
     if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                         SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
     }
     if (rc == SQL_ERROR)
@@ -6088,7 +6088,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 
             if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                                 rc, 1, NULL, -1, 1);
             }
             if (rc == SQL_ERROR)
@@ -6104,7 +6104,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
         }
         if (rc == SQL_ERROR)
@@ -6119,7 +6119,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
     /* cleanup dynamic bindings if present */
     if (bind_params == 1)
     {
-        _python_ifx_db_clear_param_cache(stmt_res);
+        _python_IfxPy_clear_param_cache(stmt_res);
     }
 
     if (rc != SQL_ERROR)
@@ -6130,29 +6130,29 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
     return NULL;
 }
 
-/*!# ifx_db.execute
+/*!# IfxPy.execute
 *
 * ===Description
-* Py_True/Py_False ifx_db.execute ( IFX_DBStatement stmt [, tuple parameters] )
+* Py_True/Py_False IfxPy.execute ( IFX_DBStatement stmt [, tuple parameters] )
 *
-* ifx_db.execute() executes an SQL statement that was prepared by
-* ifx_db.prepare().
+* IfxPy.execute() executes an SQL statement that was prepared by
+* IfxPy.prepare().
 *
 * If the SQL statement returns a result set, for example, a SELECT statement
 * or a CALL to a stored procedure that returns one or more result sets, you
 * can retrieve a row as an tuple/dictionary from the stmt resource using
-* ifx_db.fetch_assoc(), ifx_db.fetch_both(), or ifx_db.fetch_tuple().
-* Alternatively, you can use ifx_db.fetch_row() to move the result set pointer
+* IfxPy.fetch_assoc(), IfxPy.fetch_both(), or IfxPy.fetch_tuple().
+* Alternatively, you can use IfxPy.fetch_row() to move the result set pointer
 * to the next row and fetch a column at a time from that row with
-* ifx_db.result().
+* IfxPy.result().
 *
-* Refer to ifx_db.prepare() for a brief discussion of the advantages of using
-* ifx_db.prepare() and ifx_db.execute() rather than ifx_db.exec().
+* Refer to IfxPy.prepare() for a brief discussion of the advantages of using
+* IfxPy.prepare() and IfxPy.execute() rather than IfxPy.exec().
 *
 * ===Parameters
 * ====stmt
 *
-*        A prepared statement returned from ifx_db.prepare().
+*        A prepared statement returned from IfxPy.prepare().
 *
 * ====parameters
 *
@@ -6163,7 +6163,7 @@ static PyObject *_python_ifx_db_execute_helper1(stmt_handle *stmt_res, PyObject 
 *
 * Returns Py_True on success or Py_False on failure.
 */
-static PyObject *ifx_db_execute(PyObject *self, PyObject *args)
+static PyObject *IfxPy_execute(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *parameters_tuple = NULL;
@@ -6182,7 +6182,7 @@ static PyObject *ifx_db_execute(PyObject *self, PyObject *args)
         {
             stmt_res = (stmt_handle *)py_stmt_res;
         }
-        return _python_ifx_db_execute_helper1(stmt_res, parameters_tuple);
+        return _python_IfxPy_execute_helper1(stmt_res, parameters_tuple);
     }
     else
     {
@@ -6193,15 +6193,15 @@ static PyObject *ifx_db_execute(PyObject *self, PyObject *args)
 }
 
 
-/*!# ifx_db.conn_errormsg
+/*!# IfxPy.conn_errormsg
 *
 * ===Description
-* string ifx_db.conn_errormsg ( [resource connection] )
+* string IfxPy.conn_errormsg ( [resource connection] )
 *
-* ifx_db.conn_errormsg() returns an error message and SQLCODE value
+* IfxPy.conn_errormsg() returns an error message and SQLCODE value
 * representing the reason the last database connection attempt failed.
-* As ifx_db.connect() returns FALSE in the event of a failed connection
-* attempt, do not pass any parameters to ifx_db.conn_errormsg() to retrieve
+* As IfxPy.connect() returns FALSE in the event of a failed connection
+* attempt, do not pass any parameters to IfxPy.conn_errormsg() to retrieve
 * the associated error message and SQLCODE value.
 *
 * If, however, the connection was successful but becomes invalid over time,
@@ -6217,14 +6217,14 @@ static PyObject *ifx_db_execute(PyObject *self, PyObject *args)
 *
 * Returns a string containing the error message and SQLCODE value resulting
 * from a failed connection attempt. If there is no error associated with the
-* last connection attempt, ifx_db.conn_errormsg() returns an empty string.
+* last connection attempt, IfxPy.conn_errormsg() returns an empty string.
 */
-static PyObject *ifx_db_conn_errormsg(PyObject *self, PyObject *args)
+static PyObject *IfxPy_conn_errormsg(PyObject *self, PyObject *args)
 {
     conn_handle *conn_res = NULL;
     PyObject *py_conn_res = NULL;
     PyObject *retVal = NULL;
-    char* return_str = NULL;    // This variable is used by _python_ifx_db_check_sql_errors to return err  strings
+    char* return_str = NULL;    // This variable is used by _python_IfxPy_check_sql_errors to return err  strings
 
     if (!PyArg_ParseTuple(args, "|O", &py_conn_res))
         return NULL;
@@ -6250,7 +6250,7 @@ static PyObject *ifx_db_conn_errormsg(PyObject *self, PyObject *args)
 
         memset(return_str, 0, DB_MAX_ERR_MSG_LEN);
 
-        _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, -1, 0,
+        _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, -1, 0,
                                         return_str, IDS_ERRMSG,
                                         conn_res->errormsg_recno_tracker);
         if (conn_res->errormsg_recno_tracker - conn_res->error_recno_tracker >= 1)
@@ -6270,15 +6270,15 @@ static PyObject *ifx_db_conn_errormsg(PyObject *self, PyObject *args)
         return StringOBJ_FromASCII(IFX_DB_G(__python_conn_err_msg));
     }
 }
-/*!# ifx_db_conn_warn
+/*!# IfxPy_conn_warn
 *
 * ===Description
-* string ifx_db.conn_warn ( [resource connection] )
+* string IfxPy.conn_warn ( [resource connection] )
 *
-* ifx_db.conn_warn() returns a warning message and SQLCODE value
+* IfxPy.conn_warn() returns a warning message and SQLCODE value
 * representing the reason the last database connection attempt failed.
-* As ifx_db.connect() returns FALSE in the event of a failed connection
-* attempt, do not pass any parameters to ifx_db.warn_conn_msg() to retrieve
+* As IfxPy.connect() returns FALSE in the event of a failed connection
+* attempt, do not pass any parameters to IfxPy.warn_conn_msg() to retrieve
 * the associated warning message and SQLCODE value.
 *
 * If, however, the connection was successful but becomes invalid over time,
@@ -6294,14 +6294,14 @@ static PyObject *ifx_db_conn_errormsg(PyObject *self, PyObject *args)
 *
 * Returns a string containing the warning message and SQLCODE value resulting
 * from a failed connection attempt. If there is no warning associated with the
-* last connection attempt, ifx_db.warn_conn_msg() returns an empty string.
+* last connection attempt, IfxPy.warn_conn_msg() returns an empty string.
 */
-static PyObject *ifx_db_conn_warn(PyObject *self, PyObject *args)
+static PyObject *IfxPy_conn_warn(PyObject *self, PyObject *args)
 {
     conn_handle *conn_res = NULL;
     PyObject *py_conn_res = NULL;
     PyObject *retVal = NULL;
-    char *return_str = NULL; // This variable is used by _python_ifx_db_check_sql_errors to return warning strings
+    char *return_str = NULL; // This variable is used by _python_IfxPy_check_sql_errors to return warning strings
 
     if (!PyArg_ParseTuple(args, "|O", &py_conn_res))
         return NULL;
@@ -6321,7 +6321,7 @@ static PyObject *ifx_db_conn_warn(PyObject *self, PyObject *args)
         PyErr_Clear();
         memset(return_str, 0, SQL_SQLSTATE_SIZE + 1);
 
-        _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, 1, 0,
+        _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, 1, 0,
                                         return_str, IDS_WARNMSG,
                                         conn_res->error_recno_tracker);
         if (conn_res->error_recno_tracker - conn_res->errormsg_recno_tracker >= 1)
@@ -6344,17 +6344,17 @@ static PyObject *ifx_db_conn_warn(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.stmt_warn
+/*!# IfxPy.stmt_warn
 *
 * ===Description
-* string ifx_db.stmt_warn ( [resource stmt] )
+* string IfxPy.stmt_warn ( [resource stmt] )
 *
 * Returns a string containing the last SQL statement error message.
 *
 * If you do not pass a statement resource as an argument to
-* ifx_db.warn_stmt_msg(), the driver returns the warning message associated with
+* IfxPy.warn_stmt_msg(), the driver returns the warning message associated with
 * the last attempt to return a statement resource, for example, from
-* ifx_db.prepare() or ifx_db.exec().
+* IfxPy.prepare() or IfxPy.exec().
 *
 * ===Parameters
 *
@@ -6366,12 +6366,12 @@ static PyObject *ifx_db_conn_warn(PyObject *self, PyObject *args)
 * Returns a string containing the warning message and SQLCODE value for the last
 * warning that occurred issuing an SQL statement.
 */
-static PyObject *ifx_db_stmt_warn(PyObject *self, PyObject *args)
+static PyObject *IfxPy_stmt_warn(PyObject *self, PyObject *args)
 {
     stmt_handle *stmt_res = NULL;
     PyObject *py_stmt_res = NULL;
     PyObject *retVal = NULL;
-    char* return_str = NULL;    // This variable is used by _python_ifx_db_check_sql_errors to return err strings
+    char* return_str = NULL;    // This variable is used by _python_IfxPy_check_sql_errors to return err strings
 
 
     if (!PyArg_ParseTuple(args, "|O", &py_stmt_res))
@@ -6392,7 +6392,7 @@ static PyObject *ifx_db_stmt_warn(PyObject *self, PyObject *args)
 
         memset(return_str, 0, DB_MAX_ERR_MSG_LEN);
 
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, 1, 0,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, 1, 0,
                                         return_str, IDS_WARNMSG,
                                         stmt_res->errormsg_recno_tracker);
         if (stmt_res->errormsg_recno_tracker - stmt_res->error_recno_tracker >= 1)
@@ -6413,17 +6413,17 @@ static PyObject *ifx_db_stmt_warn(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.stmt_errormsg
+/*!# IfxPy.stmt_errormsg
 *
 * ===Description
-* string ifx_db.stmt_errormsg ( [resource stmt] )
+* string IfxPy.stmt_errormsg ( [resource stmt] )
 *
 * Returns a string containing the last SQL statement error message.
 *
 * If you do not pass a statement resource as an argument to
-* ifx_db.stmt_errormsg(), the driver returns the error message associated with
+* IfxPy.stmt_errormsg(), the driver returns the error message associated with
 * the last attempt to return a statement resource, for example, from
-* ifx_db.prepare() or ifx_db.exec().
+* IfxPy.prepare() or IfxPy.exec().
 *
 * ===Parameters
 *
@@ -6435,12 +6435,12 @@ static PyObject *ifx_db_stmt_warn(PyObject *self, PyObject *args)
 * Returns a string containing the error message and SQLCODE value for the last
 * error that occurred issuing an SQL statement.
 */
-static PyObject *ifx_db_stmt_errormsg(PyObject *self, PyObject *args)
+static PyObject *IfxPy_stmt_errormsg(PyObject *self, PyObject *args)
 {
     stmt_handle *stmt_res = NULL;
     PyObject *py_stmt_res = NULL;
     PyObject *retVal = NULL;
-    char* return_str = NULL;    // This variable is used by _python_ifx_db_check_sql_errors to return err strings
+    char* return_str = NULL;    // This variable is used by _python_IfxPy_check_sql_errors to return err strings
 
 
     if (!PyArg_ParseTuple(args, "|O", &py_stmt_res))
@@ -6461,7 +6461,7 @@ static PyObject *ifx_db_stmt_errormsg(PyObject *self, PyObject *args)
 
         memset(return_str, 0, DB_MAX_ERR_MSG_LEN);
 
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, -1, 0,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, -1, 0,
                                         return_str, IDS_ERRMSG,
                                         stmt_res->errormsg_recno_tracker);
         if (stmt_res->errormsg_recno_tracker - stmt_res->error_recno_tracker >= 1)
@@ -6482,14 +6482,14 @@ static PyObject *ifx_db_stmt_errormsg(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.conn_error
+/*!# IfxPy.conn_error
 * ===Description
-* string ifx_db.conn_error ( [resource connection] )
+* string IfxPy.conn_error ( [resource connection] )
 *
-* ifx_db.conn_error() returns an SQLSTATE value representing the reason the
-* last attempt to connect to a database failed. As ifx_db.connect() returns
+* IfxPy.conn_error() returns an SQLSTATE value representing the reason the
+* last attempt to connect to a database failed. As IfxPy.connect() returns
 * FALSE in the event of a failed connection attempt, you do not pass any
-* parameters to ifx_db.conn_error() to retrieve the SQLSTATE value.
+* parameters to IfxPy.conn_error() to retrieve the SQLSTATE value.
 *
 * If, however, the connection was successful but becomes invalid over time, you
 * can pass the connection parameter to retrieve the SQLSTATE value for a
@@ -6497,7 +6497,7 @@ static PyObject *ifx_db_stmt_errormsg(PyObject *self, PyObject *args)
 *
 * To learn what the SQLSTATE value means, you can issue the following command
 * at a DB2 Command Line Processor prompt: db2 '? sqlstate-value'. You can also
-* call ifx_db.conn_errormsg() to retrieve an explicit error message and the
+* call IfxPy.conn_errormsg() to retrieve an explicit error message and the
 * associated SQLCODE value.
 *
 * ===Parameters
@@ -6512,12 +6512,12 @@ static PyObject *ifx_db_stmt_errormsg(PyObject *self, PyObject *args)
 * Returns an empty string if there is no error associated with the last
 * connection attempt.
 */
-static PyObject *ifx_db_conn_error(PyObject *self, PyObject *args)
+static PyObject *IfxPy_conn_error(PyObject *self, PyObject *args)
 {
     conn_handle *conn_res = NULL;
     PyObject *py_conn_res = NULL;
     PyObject *retVal = NULL;
-    char *return_str = NULL; // This variable is used by _python_ifx_db_check_sql_errors to return err strings 
+    char *return_str = NULL; // This variable is used by _python_IfxPy_check_sql_errors to return err strings 
 
     if (!PyArg_ParseTuple(args, "|O", &py_conn_res))
         return NULL;
@@ -6537,7 +6537,7 @@ static PyObject *ifx_db_conn_error(PyObject *self, PyObject *args)
 
         memset(return_str, 0, SQL_SQLSTATE_SIZE + 1);
 
-        _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, -1, 0,
+        _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, -1, 0,
                                         return_str, IDS_ERR,
                                         conn_res->error_recno_tracker);
         if (conn_res->error_recno_tracker - conn_res->errormsg_recno_tracker >= 1)
@@ -6560,21 +6560,21 @@ static PyObject *ifx_db_conn_error(PyObject *self, PyObject *args)
     }
 }
 
-/*!# ifx_db.stmt_error
+/*!# IfxPy.stmt_error
 *
 * ===Description
-* string ifx_db.stmt_error ( [resource stmt] )
+* string IfxPy.stmt_error ( [resource stmt] )
 *
 * Returns a string containing the SQLSTATE value returned by an SQL statement.
 *
 * If you do not pass a statement resource as an argument to
-* ifx_db.stmt_error(), the driver returns the SQLSTATE value associated with
+* IfxPy.stmt_error(), the driver returns the SQLSTATE value associated with
 * the last attempt to return a statement resource, for example, from
-* ifx_db.prepare() or ifx_db.exec().
+* IfxPy.prepare() or IfxPy.exec().
 *
 * To learn what the SQLSTATE value means, you can issue the following command
 * at a DB2 Command Line Processor prompt: db2 '? sqlstate-value'. You can also
-* call ifx_db.stmt_errormsg() to retrieve an explicit error message and the
+* call IfxPy.stmt_errormsg() to retrieve an explicit error message and the
 * associated SQLCODE value.
 *
 * ===Parameters
@@ -6586,12 +6586,12 @@ static PyObject *ifx_db_conn_error(PyObject *self, PyObject *args)
 *
 * Returns a string containing an SQLSTATE value.
 */
-static PyObject *ifx_db_stmt_error(PyObject *self, PyObject *args)
+static PyObject *IfxPy_stmt_error(PyObject *self, PyObject *args)
 {
     stmt_handle *stmt_res = NULL;
     PyObject *py_stmt_res = NULL;
     PyObject *retVal = NULL;
-    char* return_str = NULL; // This variable is used by _python_ifx_db_check_sql_errors to return err strings 
+    char* return_str = NULL; // This variable is used by _python_IfxPy_check_sql_errors to return err strings 
 
     if (!PyArg_ParseTuple(args, "|O", &py_stmt_res))
         return NULL;
@@ -6611,7 +6611,7 @@ static PyObject *ifx_db_stmt_error(PyObject *self, PyObject *args)
 
         memset(return_str, 0, DB_MAX_ERR_MSG_LEN);
 
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, -1, 0,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, -1, 0,
                                         return_str, IDS_ERR,
                                         stmt_res->error_recno_tracker);
 
@@ -6636,10 +6636,10 @@ static PyObject *ifx_db_stmt_error(PyObject *self, PyObject *args)
 }
 
 
-/*!# ifx_db.num_fields
+/*!# IfxPy.num_fields
 *
 * ===Description
-* int ifx_db.num_fields ( resource stmt )
+* int IfxPy.num_fields ( resource stmt )
 *
 * Returns the number of fields contained in a result set. This is most useful
 * for handling the result sets returned by dynamically generated queries, or
@@ -6657,7 +6657,7 @@ static PyObject *ifx_db_stmt_error(PyObject *self, PyObject *args)
 * associated with the specified statement resource. Returns FALSE if the
 * statement resource is not a valid input value.
 */
-static PyObject *ifx_db_num_fields(PyObject *self, PyObject *args)
+static PyObject *IfxPy_num_fields(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     stmt_handle *stmt_res;
@@ -6686,7 +6686,7 @@ static PyObject *ifx_db_num_fields(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
         }
         if (rc == SQL_ERROR)
@@ -6707,10 +6707,10 @@ static PyObject *ifx_db_num_fields(PyObject *self, PyObject *args)
     return Py_False;
 }
 
-/*!# ifx_db.num_rows
+/*!# IfxPy.num_rows
 *
 * ===Description
-* int ifx_db.num_rows ( resource stmt )
+* int IfxPy.num_rows ( resource stmt )
 *
 * Returns the number of rows deleted, inserted, or updated by an SQL statement.
 *
@@ -6719,11 +6719,11 @@ static PyObject *ifx_db_num_fields(PyObject *self, PyObject *args)
 * statement and retrieve the value. If your application logic checks the number
 * of rows returned by a SELECT statement and branches if the number of rows is
 * 0, consider modifying your application to attempt to return the first row
-* with one of ifx_db.fetch_assoc(), ifx_db.fetch_both(), ifx_db.fetch_array(),
-* or ifx_db.fetch_row(), and branch if the fetch function returns FALSE.
+* with one of IfxPy.fetch_assoc(), IfxPy.fetch_both(), IfxPy.fetch_array(),
+* or IfxPy.fetch_row(), and branch if the fetch function returns FALSE.
 *
 * Note: If you issue a SELECT statement using a scrollable cursor,
-* ifx_db.num_rows() returns the number of rows returned by the SELECT
+* IfxPy.num_rows() returns the number of rows returned by the SELECT
 * statement. However, the overhead associated with scrollable cursors
 * significantly degrades the performance of your application, so if this is the
 * only reason you are considering using scrollable cursors, you should use a
@@ -6741,7 +6741,7 @@ static PyObject *ifx_db_num_fields(PyObject *self, PyObject *args)
 * Returns the number of rows affected by the last SQL statement issued by the
 * specified statement handle.
 */
-static PyObject *ifx_db_num_rows(PyObject *self, PyObject *args)
+static PyObject *IfxPy_num_rows(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     stmt_handle *stmt_res;
@@ -6770,7 +6770,7 @@ static PyObject *ifx_db_num_rows(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc,
                                             1, NULL, -1, 1);
             sprintf(error, "SQLRowCount failed: %s",
                     IFX_DB_G(__python_stmt_err_msg));
@@ -6788,10 +6788,10 @@ static PyObject *ifx_db_num_rows(PyObject *self, PyObject *args)
     return Py_False;
 }
 
-/*!# ifx_db.get_num_result
+/*!# IfxPy.get_num_result
 *
 * ===Description
-* int ifx_db.num_rows ( resource stmt )
+* int IfxPy.num_rows ( resource stmt )
 *
 * Returns the number of rows in a current open non-dynamic scrollable cursor.
 *
@@ -6804,7 +6804,7 @@ static PyObject *ifx_db_num_rows(PyObject *self, PyObject *args)
 *
 * True on success or False on failure.
 */
-static PyObject *ifx_db_get_num_result(PyObject *self, PyObject *args)
+static PyObject *IfxPy_get_num_result(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     stmt_handle *stmt_res;
@@ -6836,7 +6836,7 @@ static PyObject *ifx_db_get_num_result(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
         if (rc == SQL_ERROR)
@@ -6857,13 +6857,13 @@ static PyObject *ifx_db_get_num_result(PyObject *self, PyObject *args)
     return Py_False;
 }
 
-static int _python_ifx_db_get_column_by_name(stmt_handle *stmt_res, char *col_name, int col)
+static int _python_IfxPy_get_column_by_name(stmt_handle *stmt_res, char *col_name, int col)
 {
     int i;
     /* get column header info */
     if (stmt_res->column_info == NULL)
     {
-        if (_python_ifx_db_get_result_set_info(stmt_res) < 0)
+        if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
         {
             return -1;
         }
@@ -6892,10 +6892,10 @@ static int _python_ifx_db_get_column_by_name(stmt_handle *stmt_res, char *col_na
     return -1;
 }
 
-/*!# ifx_db.field_name
+/*!# IfxPy.field_name
 *
 * ===Description
-* string ifx_db.field_name ( resource stmt, mixed column )
+* string IfxPy.field_name ( resource stmt, mixed column )
 *
 * Returns the name of the specified column in the result set.
 *
@@ -6912,10 +6912,10 @@ static int _python_ifx_db_get_column_by_name(stmt_handle *stmt_res, char *col_na
 * ===Return Values
 *
 * Returns a string containing the name of the specified column. If the
-* specified column does not exist in the result set, ifx_db.field_name()
+* specified column does not exist in the result set, IfxPy.field_name()
 * returns FALSE.
 */
-static PyObject *ifx_db_field_name(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_name(PyObject *self, PyObject *args)
 {
     PyObject *column = NULL;
 #if  PY_MAJOR_VERSION >= 3
@@ -6960,7 +6960,7 @@ static PyObject *ifx_db_field_name(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -6975,10 +6975,10 @@ static PyObject *ifx_db_field_name(PyObject *self, PyObject *args)
     return StringOBJ_FromASCII((char*)stmt_res->column_info [col].name);
 }
 
-/*!# ifx_db.field_display_size
+/*!# IfxPy.field_display_size
 *
 * ===Description
-* int ifx_db.field_display_size ( resource stmt, mixed column )
+* int IfxPy.field_display_size ( resource stmt, mixed column )
 *
 * Returns the maximum number of bytes required to display a column in a result
 * set.
@@ -6996,10 +6996,10 @@ static PyObject *ifx_db_field_name(PyObject *self, PyObject *args)
 *
 * Returns an integer value with the maximum number of bytes required to display
 * the specified column.
-* If the column does not exist in the result set, ifx_db.field_display_size()
+* If the column does not exist in the result set, IfxPy.field_display_size()
 * returns FALSE.
 */
-static PyObject *ifx_db_field_display_size(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_display_size(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7046,7 +7046,7 @@ static PyObject *ifx_db_field_display_size(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7068,7 +7068,7 @@ static PyObject *ifx_db_field_display_size(PyObject *self, PyObject *args)
 
     if (rc < SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
     }
     if (rc < SQL_SUCCESS)
@@ -7078,10 +7078,10 @@ static PyObject *ifx_db_field_display_size(PyObject *self, PyObject *args)
     }
     return PyInt_FromLong(colDataDisplaySize);
 }
-/*!# ifx_db.field_nullable
+/*!# IfxPy.field_nullable
 *
 * ===Description
-* bool ifx_db.field_nullable ( resource stmt, mixed column )
+* bool IfxPy.field_nullable ( resource stmt, mixed column )
 *
 * Returns True/False based on indicated column in result set is nullable or not.
 *
@@ -7098,9 +7098,9 @@ static PyObject *ifx_db_field_display_size(PyObject *self, PyObject *args)
 * ===Return Values
 *
 * Returns TRUE if indicated column is nullable else returns FALSE.
-* If the specified column does not exist in the result set, ifx_db.field_nullable() returns FALSE
+* If the specified column does not exist in the result set, IfxPy.field_nullable() returns FALSE
 */
-static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_nullable(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7147,7 +7147,7 @@ static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7166,13 +7166,13 @@ static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
 
     if (rc < SQL_SUCCESS)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
         Py_RETURN_FALSE;
     }
     else if (rc == SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
     }
     else if (nullableCol == SQL_NULLABLE)
@@ -7188,10 +7188,10 @@ static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
 }
 
 
-/*!# ifx_db.field_num
+/*!# IfxPy.field_num
 *
 * ===Description
-* int ifx_db.field_num ( resource stmt, mixed column )
+* int IfxPy.field_num ( resource stmt, mixed column )
 *
 * Returns the position of the named column in a result set.
 *
@@ -7209,10 +7209,10 @@ static PyObject *ifx_db_field_nullable(PyObject *self, PyObject *args)
 *
 * Returns an integer containing the 0-indexed position of the named column in
 * the result set. If the specified column does not exist in the result set,
-* ifx_db.field_num() returns FALSE.
+* IfxPy.field_num() returns FALSE.
 */
 
-static PyObject *ifx_db_field_num(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_num(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7257,7 +7257,7 @@ static PyObject *ifx_db_field_num(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7272,10 +7272,10 @@ static PyObject *ifx_db_field_num(PyObject *self, PyObject *args)
     return PyInt_FromLong(col);
 }
 
-/*!# ifx_db.field_precision
+/*!# IfxPy.field_precision
 *
 * ===Description
-* int ifx_db.field_precision ( resource stmt, mixed column )
+* int IfxPy.field_precision ( resource stmt, mixed column )
 *
 * Returns the precision of the indicated column in a result set.
 *
@@ -7292,10 +7292,10 @@ static PyObject *ifx_db_field_num(PyObject *self, PyObject *args)
 * ===Return Values
 *
 * Returns an integer containing the precision of the specified column. If the
-* specified column does not exist in the result set, ifx_db.field_precision()
+* specified column does not exist in the result set, IfxPy.field_precision()
 * returns FALSE.
 */
-static PyObject *ifx_db_field_precision(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_precision(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7340,7 +7340,7 @@ static PyObject *ifx_db_field_precision(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7355,10 +7355,10 @@ static PyObject *ifx_db_field_precision(PyObject *self, PyObject *args)
 
 }
 
-/*!# ifx_db.field_scale
+/*!# IfxPy.field_scale
 *
 * ===Description
-* int ifx_db.field_scale ( resource stmt, mixed column )
+* int IfxPy.field_scale ( resource stmt, mixed column )
 *
 * Returns the scale of the indicated column in a result set.
 *
@@ -7374,10 +7374,10 @@ static PyObject *ifx_db_field_precision(PyObject *self, PyObject *args)
 * ===Return Values
 *
 * Returns an integer containing the scale of the specified column. If the
-* specified column does not exist in the result set, ifx_db.field_scale()
+* specified column does not exist in the result set, IfxPy.field_scale()
 * returns FALSE.
 */
-static PyObject *ifx_db_field_scale(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_scale(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7421,7 +7421,7 @@ static PyObject *ifx_db_field_scale(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7435,10 +7435,10 @@ static PyObject *ifx_db_field_scale(PyObject *self, PyObject *args)
     return PyInt_FromLong(stmt_res->column_info [col].scale);
 }
 
-/*!# ifx_db.field_type
+/*!# IfxPy.field_type
 *
 * ===Description
-* string ifx_db.field_type ( resource stmt, mixed column )
+* string IfxPy.field_type ( resource stmt, mixed column )
 *
 * Returns the data type of the indicated column in a result set.
 *
@@ -7454,10 +7454,10 @@ static PyObject *ifx_db_field_scale(PyObject *self, PyObject *args)
 * ====Return Values
 *
 * Returns a string containing the defined data type of the specified column.
-* If the specified column does not exist in the result set, ifx_db.field_type()
+* If the specified column does not exist in the result set, IfxPy.field_type()
 * returns FALSE.
 */
-static PyObject *ifx_db_field_type(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_type(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7502,7 +7502,7 @@ static PyObject *ifx_db_field_type(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7548,10 +7548,10 @@ static PyObject *ifx_db_field_type(PyObject *self, PyObject *args)
     return StringOBJ_FromASCII(str_val);
 }
 
-/*!# ifx_db.field_width
+/*!# IfxPy.field_width
 *
 * ===Description
-* int ifx_db.field_width ( resource stmt, mixed column )
+* int IfxPy.field_width ( resource stmt, mixed column )
 *
 * Returns the width of the current value of the indicated column in a result
 * set. This is the maximum width of the column for a fixed-length data type, or
@@ -7571,9 +7571,9 @@ static PyObject *ifx_db_field_type(PyObject *self, PyObject *args)
 *
 * Returns an integer containing the width of the specified character or binary
 * data type column in a result set. If the specified column does not exist in
-* the result set, ifx_db.field_width() returns FALSE.
+* the result set, IfxPy.field_width() returns FALSE.
 */
-static PyObject *ifx_db_field_width(PyObject *self, PyObject *args)
+static PyObject *IfxPy_field_width(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7619,7 +7619,7 @@ static PyObject *ifx_db_field_width(PyObject *self, PyObject *args)
         /* Column argument has to be either an integer or string */
         Py_RETURN_FALSE;
     }
-    col = _python_ifx_db_get_column_by_name(stmt_res, col_name, col);
+    col = _python_IfxPy_get_column_by_name(stmt_res, col_name, col);
 #if  PY_MAJOR_VERSION >= 3
     if (col_name_py3_tmp != NULL)
     {
@@ -7638,7 +7638,7 @@ static PyObject *ifx_db_field_width(PyObject *self, PyObject *args)
 
     if (rc != SQL_SUCCESS)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
         PyErr_Clear();
         Py_RETURN_FALSE;
@@ -7646,10 +7646,10 @@ static PyObject *ifx_db_field_width(PyObject *self, PyObject *args)
     return PyInt_FromLong(colDataSize);
 }
 
-/*!# ifx_db.cursor_type
+/*!# IfxPy.cursor_type
 *
 * ===Description
-* int ifx_db.cursor_type ( resource stmt )
+* int IfxPy.cursor_type ( resource stmt )
 *
 * Returns the cursor type used by a statement resource. Use this to determine
 * if you are working with a forward-only cursor or scrollable cursor.
@@ -7664,7 +7664,7 @@ static PyObject *ifx_db_field_width(PyObject *self, PyObject *args)
 * forward-only cursor or SQL_CURSOR_KEYSET_DRIVEN if the statement resource
 * uses a scrollable cursor.
 */
-static PyObject *ifx_db_cursor_type(PyObject *self, PyObject *args)
+static PyObject *IfxPy_cursor_type(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     stmt_handle *stmt_res = NULL;
@@ -7685,14 +7685,14 @@ static PyObject *ifx_db_cursor_type(PyObject *self, PyObject *args)
     return PyInt_FromLong(stmt_res->cursor_type != SQL_SCROLL_FORWARD_ONLY);
 }
 
-/*!# ifx_db.rollback
+/*!# IfxPy.rollback
 *
 * ===Description
-* bool ifx_db.rollback ( resource connection )
+* bool IfxPy.rollback ( resource connection )
 *
 * Rolls back an in-progress transaction on the specified connection resource
 * and begins a new transaction. Python applications normally default to
-* AUTOCOMMIT mode, so ifx_db.rollback() normally has no effect unless
+* AUTOCOMMIT mode, so IfxPy.rollback() normally has no effect unless
 * AUTOCOMMIT has been turned off for the connection resource.
 *
 * Note: If the specified connection resource is a persistent connection, all
@@ -7704,13 +7704,13 @@ static PyObject *ifx_db_cursor_type(PyObject *self, PyObject *args)
 *
 * ====connection
 *        A valid database connection resource variable as returned from
-* ifx_db.connect() or ifx_db.pconnect().
+* IfxPy.connect() or IfxPy.pconnect().
 *
 * ===Return Values
 *
 * Returns TRUE on success or FALSE on failure.
 */
-static PyObject *ifx_db_rollback(PyObject *self, PyObject *args)
+static PyObject *IfxPy_rollback(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     conn_handle *conn_res;
@@ -7740,7 +7740,7 @@ static PyObject *ifx_db_rollback(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -7753,14 +7753,14 @@ static PyObject *ifx_db_rollback(PyObject *self, PyObject *args)
     Py_RETURN_FALSE;
 }
 
-/*!# ifx_db.free_stmt
+/*!# IfxPy.free_stmt
 *
 * ===Description
-* bool ifx_db.free_stmt ( resource stmt )
+* bool IfxPy.free_stmt ( resource stmt )
 *
 * Frees the system and database resources that are associated with a statement
 * resource. These resources are freed implicitly when a script finishes, but
-* you can call ifx_db.free_stmt() to explicitly free the statement resources
+* you can call IfxPy.free_stmt() to explicitly free the statement resources
 * before the end of the script.
 *
 * ===Parameters
@@ -7773,7 +7773,7 @@ static PyObject *ifx_db_rollback(PyObject *self, PyObject *args)
 *
 * DEPRECATED
 */
-static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
+static PyObject *IfxPy_free_stmt(PyObject *self, PyObject *args)
 {
     PyObject    *py_stmt_res = NULL;
     stmt_handle *handle = NULL;
@@ -7792,7 +7792,7 @@ static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
 
                 if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
                 {
-                    _python_ifx_db_check_sql_errors(handle->hstmt,
+                    _python_IfxPy_check_sql_errors(handle->hstmt,
                                                     SQL_HANDLE_STMT,
                                                     rc, 1, NULL, -1, 1);
                 }
@@ -7800,7 +7800,7 @@ static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
                 {
                     Py_RETURN_FALSE;
                 }
-                _python_ifx_db_free_result_struct(handle);
+                _python_IfxPy_free_result_struct(handle);
                 handle->hstmt = NULL;
                 Py_RETURN_TRUE;
             }
@@ -7809,7 +7809,7 @@ static PyObject *ifx_db_free_stmt(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 }
 
-static RETCODE _python_ifx_db_get_data(stmt_handle *stmt_res, int col_num, short ctype, void *buff, SQLLEN in_length, SQLLEN *out_length)
+static RETCODE _python_IfxPy_get_data(stmt_handle *stmt_res, int col_num, short ctype, void *buff, SQLLEN in_length, SQLLEN *out_length)
 {
     RETCODE rc = SQL_SUCCESS;
 
@@ -7820,21 +7820,21 @@ static RETCODE _python_ifx_db_get_data(stmt_handle *stmt_res, int col_num, short
 
     if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
     }
     return rc;
 }
 
-/*!# ifx_db.result
+/*!# IfxPy.result
 *
 * ===Description
-* mixed ifx_db.result ( resource stmt, mixed column )
+* mixed IfxPy.result ( resource stmt, mixed column )
 *
 * Returns a single column from a row in the result set
 *
-* Use ifx_db.result() to return the value of a specified column in the current  * row of a result set. You must call ifx_db.fetch_row() before calling
-* ifx_db.result() to set the location of the result set pointer.
+* Use IfxPy.result() to return the value of a specified column in the current  * row of a result set. You must call IfxPy.fetch_row() before calling
+* IfxPy.result() to set the location of the result set pointer.
 *
 * ===Parameters
 *
@@ -7849,7 +7849,7 @@ static RETCODE _python_ifx_db_get_data(stmt_handle *stmt_res, int col_num, short
 * Returns the value of the requested field if the field exists in the result
 * set. Returns NULL if the field does not exist, and issues a warning.
 */
-static PyObject *ifx_db_result(PyObject *self, PyObject *args)
+static PyObject *IfxPy_result(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *column = NULL;
@@ -7903,7 +7903,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
             }
             column = col_name_py3_tmp;
 #endif
-            col_num = _python_ifx_db_get_column_by_name(stmt_res, PyBytes_AsString(column), -1);
+            col_num = _python_IfxPy_get_column_by_name(stmt_res, PyBytes_AsString(column), -1);
 #if  PY_MAJOR_VERSION >= 3
             if (col_name_py3_tmp != NULL)
             {
@@ -7920,7 +7920,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
         /* get column header info */
         if (stmt_res->column_info == NULL)
         {
-            if (_python_ifx_db_get_result_set_info(stmt_res) < 0)
+            if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
             {
                 sprintf(error, "Column information cannot be retrieved: %s",
                         IFX_DB_G(__python_stmt_err_msg));
@@ -7966,7 +7966,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
                 return NULL;
             }
 
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, SQL_C_WCHAR,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_WCHAR,
                                          out_ptr, in_length * sizeof(Py_UNICODE), &out_length);
 
             if (rc == SQL_ERROR)
@@ -8003,7 +8003,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
                 return NULL;
             }
 
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, SQL_C_TYPE_DATE,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_TYPE_DATE,
                                          date_ptr, sizeof(DATE_STRUCT), &out_length);
 
             if (rc == SQL_ERROR)
@@ -8039,7 +8039,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
                 return NULL;
             }
 
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, SQL_C_TYPE_TIME,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_TYPE_TIME,
                                          time_ptr, sizeof(TIME_STRUCT), &out_length);
 
             if (rc == SQL_ERROR)
@@ -8076,7 +8076,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
                 return NULL;
             }
 
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, SQL_C_TYPE_TIMESTAMP,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_TYPE_TIMESTAMP,
                                          ts_ptr, sizeof(TIMESTAMP_STRUCT), &out_length);
 
             if (rc == SQL_ERROR)
@@ -8107,7 +8107,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
 
         case SQL_SMALLINT:
         case SQL_INTEGER:
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, SQL_C_LONG,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_LONG,
                                          &long_val, sizeof(long_val),
                                          &out_length);
             if (rc == SQL_ERROR)
@@ -8128,7 +8128,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
         case SQL_REAL:
         case SQL_FLOAT:
         case SQL_DOUBLE:
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, SQL_C_DOUBLE,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_DOUBLE,
                                          &double_val, sizeof(double_val),
                                          &out_length);
             if (rc == SQL_ERROR)
@@ -8174,7 +8174,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
                                 "Failed to Allocate Memory for XML Data");
                 return NULL;
             }
-            rc = _python_ifx_db_get_data(stmt_res, col_num + 1, targetCType, out_ptr,
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, targetCType, out_ptr,
                                          INIT_BUFSIZ + len_terChar, &out_length);
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
@@ -8185,7 +8185,7 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
                 PyMem_Del(out_ptr);
                 out_ptr = tmp_out_ptr;
 
-                rc = _python_ifx_db_get_data(stmt_res, col_num + 1, targetCType, (char *)out_ptr + INIT_BUFSIZ,
+                rc = _python_IfxPy_get_data(stmt_res, col_num + 1, targetCType, (char *)out_ptr + INIT_BUFSIZ,
                                              out_length + len_terChar, &out_length);
                 if (rc == SQL_ERROR)
                 {
@@ -8245,14 +8245,14 @@ static PyObject *ifx_db_result(PyObject *self, PyObject *args)
     Py_RETURN_FALSE;
 }
 
-static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
+static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
 {
     int rc = -1;
     int column_number;
     SQLINTEGER row_number = -1;
     stmt_handle *stmt_res = NULL;
     SQLSMALLINT column_type;
-    ifx_db_row_data_type *row_data;
+    IfxPy_row_data_type *row_data;
     SQLULEN tmp_length = 0;
     SQLLEN out_length = 0;
     void *out_ptr = NULL;
@@ -8291,12 +8291,12 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
             return NULL;
         }
     }
-    _python_ifx_db_init_error_info(stmt_res);
+    _python_IfxPy_init_error_info(stmt_res);
 
     /* get column header info */
     if (stmt_res->column_info == NULL)
     {
-        if (_python_ifx_db_get_result_set_info(stmt_res) < 0)
+        if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
         {
             sprintf(error, "Column information cannot be retrieved: %s",
                     IFX_DB_G(__python_stmt_err_msg));
@@ -8307,7 +8307,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
     /* bind the data */
     if (stmt_res->row_data == NULL)
     {
-        rc = _python_ifx_db_bind_column_helper(stmt_res);
+        rc = _python_IfxPy_bind_column_helper(stmt_res);
         if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
         {
             sprintf(error, "Column binding cannot be done: %s",
@@ -8324,7 +8324,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
                             row_number);
         if (rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1,
                                             NULL, -1, 1);
         }
@@ -8344,7 +8344,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
         rc = SQLFetch((SQLHSTMT)stmt_res->hstmt);
         if (rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                             rc, 1, NULL, -1, 1);
         }
 
@@ -8358,7 +8358,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
     }
     else if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
         sprintf(error, "Fetch Failure: %s", IFX_DB_G(__python_stmt_err_msg));
         PyErr_SetString(PyExc_Exception, error);
@@ -8366,7 +8366,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
     }
     if (rc == SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                         rc, 1, NULL, -1, 1);
     }
     /* copy the data over return_value */
@@ -8437,8 +8437,8 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
                     return NULL;
                 }
 
-                /*  _python_ifx_db_get_data null terminates all output. */
-                rc = _python_ifx_db_get_data(stmt_res, column_number + 1, SQL_C_WCHAR, wout_ptr,
+                /*  _python_IfxPy_get_data null terminates all output. */
+                rc = _python_IfxPy_get_data(stmt_res, column_number + 1, SQL_C_WCHAR, wout_ptr,
                     (tmp_length * sizeof(SQLWCHAR) + 1), &out_length);
                 if (rc == SQL_ERROR)
                 {
@@ -8547,27 +8547,27 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
     }
     if (rc == SQL_SUCCESS_WITH_INFO)
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT,
                                         rc, 1, NULL, -1, 1);
     }
 
     return return_value;
 }
 
-/*!# ifx_db.fetch_row
+/*!# IfxPy.fetch_row
 *
 * ===Description
-* bool ifx_db.fetch_row ( resource stmt [, int row_number] )
+* bool IfxPy.fetch_row ( resource stmt [, int row_number] )
 *
 * Sets the result set pointer to the next row or requested row
 *
-* Use ifx_db.fetch_row() to iterate through a result set, or to point to a
+* Use IfxPy.fetch_row() to iterate through a result set, or to point to a
 * specific row in a result set if you requested a scrollable cursor.
 *
-* To retrieve individual fields from the result set, call the ifx_db.result()
-* function. Rather than calling ifx_db.fetch_row() and ifx_db.result(), most
-* applications will call one of ifx_db.fetch_assoc(), ifx_db.fetch_both(), or
-* ifx_db.fetch_array() to advance the result set pointer and return a complete
+* To retrieve individual fields from the result set, call the IfxPy.result()
+* function. Rather than calling IfxPy.fetch_row() and IfxPy.result(), most
+* applications will call one of IfxPy.fetch_assoc(), IfxPy.fetch_both(), or
+* IfxPy.fetch_array() to advance the result set pointer and return a complete
 * row as an array.
 *
 * ===Parameters
@@ -8583,7 +8583,7 @@ static PyObject *_python_ifx_db_bind_fetch_helper(PyObject *args, int op)
 * Returns TRUE if the requested row exists in the result set. Returns FALSE if
 * the requested row does not exist in the result set.
 */
-static PyObject *ifx_db_fetch_row(PyObject *self, PyObject *args)
+static PyObject *IfxPy_fetch_row(PyObject *self, PyObject *args)
 {
     PyObject *py_stmt_res = NULL;
     PyObject *py_row_number = NULL;
@@ -8620,7 +8620,7 @@ static PyObject *ifx_db_fetch_row(PyObject *self, PyObject *args)
     /* get column header info */
     if (stmt_res->column_info == NULL)
     {
-        if (_python_ifx_db_get_result_set_info(stmt_res) < 0)
+        if (_python_IfxPy_get_result_set_info(stmt_res) < 0)
         {
             sprintf(error, "Column information cannot be retrieved: %s",
                     IFX_DB_G(__python_stmt_err_msg));
@@ -8637,7 +8637,7 @@ static PyObject *ifx_db_fetch_row(PyObject *self, PyObject *args)
                             row_number);
         if (rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1, NULL,
                                             -1, 1);
         }
@@ -8661,7 +8661,7 @@ static PyObject *ifx_db_fetch_row(PyObject *self, PyObject *args)
     {
         if (rc == SQL_SUCCESS_WITH_INFO)
         {
-            _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+            _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                             SQL_HANDLE_STMT, rc, 1,
                                             NULL, -1, 1);
         }
@@ -8673,17 +8673,17 @@ static PyObject *ifx_db_fetch_row(PyObject *self, PyObject *args)
     }
     else
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1,
                                         NULL, -1, 1);
         PyErr_Clear();
         Py_RETURN_FALSE;
     }
 }
 
-/*!# ifx_db.fetch_assoc
+/*!# IfxPy.fetch_assoc
 *
 * ===Description
-* dictionary ifx_db.fetch_assoc ( resource stmt [, int row_number] )
+* dictionary IfxPy.fetch_assoc ( resource stmt [, int row_number] )
 *
 * Returns a dictionary, indexed by column name, representing a row in a result  * set.
 *
@@ -8705,17 +8705,17 @@ static PyObject *ifx_db_fetch_row(PyObject *self, PyObject *args)
 * in the result set,
 * or if the row requested by row_number does not exist in the result set.
 */
-static PyObject *ifx_db_fetch_assoc(PyObject *self, PyObject *args)
+static PyObject *IfxPy_fetch_assoc(PyObject *self, PyObject *args)
 {
-    return _python_ifx_db_bind_fetch_helper(args, FETCH_ASSOC);
+    return _python_IfxPy_bind_fetch_helper(args, FETCH_ASSOC);
 }
 
 
 /*
-* ifx_db.fetch_object --    Returns an object with properties representing columns in the fetched row
+* IfxPy.fetch_object --    Returns an object with properties representing columns in the fetched row
 *
 * ===Description
-* object ifx_db.fetch_object ( resource stmt [, int row_number] )
+* object IfxPy.fetch_object ( resource stmt [, int row_number] )
 *
 * Returns an object in which each property represents a column returned in the row fetched from a result set.
 *
@@ -8744,16 +8744,16 @@ static PyObject *ifx_db_fetch_assoc(PyObject *self, PyObject *args)
 * Returns FALSE if no row was retrieved.
 */
 /*
-PyObject *ifx_db_fetch_object(int argc, PyObject **argv, PyObject *self)
+PyObject *IfxPy_fetch_object(int argc, PyObject **argv, PyObject *self)
 {
 row_hash_struct *row_res;
 
 row_res = ALLOC(row_hash_struct);
-row_res->hash = _python_ifx_db_bind_fetch_helper(argc, argv, FETCH_ASSOC);
+row_res->hash = _python_IfxPy_bind_fetch_helper(argc, argv, FETCH_ASSOC);
 
 if (RTEST(row_res->hash)) {
 return Data_Wrap_Struct(le_row_struct,
-_python_ifx_db_mark_row_struct, _python_ifx_db_free_row_struct,
+_python_IfxPy_mark_row_struct, _python_IfxPy_free_row_struct,
 row_res);
 } else {
 free(row_res);
@@ -8762,11 +8762,11 @@ return Py_False;
 }
 */
 
-/*!# ifx_db.fetch_array
+/*!# IfxPy.fetch_array
 *
 * ===Description
 *
-* array ifx_db.fetch_array ( resource stmt [, int row_number] )
+* array IfxPy.fetch_array ( resource stmt [, int row_number] )
 *
 * Returns a tuple, indexed by column position, representing a row in a result
 * set. The columns are 0-indexed.
@@ -8787,18 +8787,18 @@ return Py_False;
 * there are no rows left in the result set, or if the row requested by
 * row_number does not exist in the result set.
 */
-static PyObject *ifx_db_fetch_array(PyObject *self, PyObject *args)
+static PyObject *IfxPy_fetch_array(PyObject *self, PyObject *args)
 {
-    return _python_ifx_db_bind_fetch_helper(args, FETCH_INDEX);
+    return _python_IfxPy_bind_fetch_helper(args, FETCH_INDEX);
 }
 
-/*!# ifx_db.fetch_both
+/*!# IfxPy.fetch_both
 *
 * ===Description
-* dictionary ifx_db.fetch_both ( resource stmt [, int row_number] )
+* dictionary IfxPy.fetch_both ( resource stmt [, int row_number] )
 *
-* Returns a dictionary, indexed by both column name and position, representing  * a row in a result set. Note that the row returned by ifx_db.fetch_both()
-* requires more memory than the single-indexed dictionaries/arrays returned by  * ifx_db.fetch_assoc() or ifx_db.fetch_tuple().
+* Returns a dictionary, indexed by both column name and position, representing  * a row in a result set. Note that the row returned by IfxPy.fetch_both()
+* requires more memory than the single-indexed dictionaries/arrays returned by  * IfxPy.fetch_assoc() or IfxPy.fetch_tuple().
 *
 * ===Parameters
 *
@@ -8817,15 +8817,15 @@ static PyObject *ifx_db_fetch_array(PyObject *self, PyObject *args)
 * Returns FALSE if there are no rows left in the result set, or if the row
 * requested by row_number does not exist in the result set.
 */
-static PyObject *ifx_db_fetch_both(PyObject *self, PyObject *args)
+static PyObject *IfxPy_fetch_both(PyObject *self, PyObject *args)
 {
-    return _python_ifx_db_bind_fetch_helper(args, FETCH_BOTH);
+    return _python_IfxPy_bind_fetch_helper(args, FETCH_BOTH);
 }
 
-/*!# ifx_db.set_option
+/*!# IfxPy.set_option
 *
 * ===Description
-* bool ifx_db.set_option ( resource resc, array options, int type )
+* bool IfxPy.set_option ( resource resc, array options, int type )
 *
 * Sets options for a connection or statement resource. You cannot set options
 * for result set resources.
@@ -8846,7 +8846,7 @@ static PyObject *ifx_db_fetch_both(PyObject *self, PyObject *args)
 *
 * Returns TRUE on success or FALSE on failure
 */
-static PyObject *ifx_db_set_option(PyObject *self, PyObject *args)
+static PyObject *IfxPy_set_option(PyObject *self, PyObject *args)
 {
     PyObject *conn_or_stmt = NULL;
     PyObject *options = NULL;
@@ -8884,7 +8884,7 @@ static PyObject *ifx_db_set_option(PyObject *self, PyObject *args)
 
             if (!NIL_P(options))
             {
-                rc = _python_ifx_db_parse_options(options, SQL_HANDLE_DBC,
+                rc = _python_IfxPy_parse_options(options, SQL_HANDLE_DBC,
                                                   conn_res);
                 if (rc == SQL_ERROR)
                 {
@@ -8905,7 +8905,7 @@ static PyObject *ifx_db_set_option(PyObject *self, PyObject *args)
 
             if (!NIL_P(options))
             {
-                rc = _python_ifx_db_parse_options(options, SQL_HANDLE_STMT,
+                rc = _python_IfxPy_parse_options(options, SQL_HANDLE_STMT,
                                                   stmt_res);
                 if (rc == SQL_ERROR)
                 {
@@ -8925,7 +8925,7 @@ static PyObject *ifx_db_set_option(PyObject *self, PyObject *args)
     }
 }
 
-static PyObject *ifx_db_get_db_info(PyObject *self, PyObject *args)
+static PyObject *IfxPy_get_db_info(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     PyObject *return_value = NULL;
@@ -8976,7 +8976,7 @@ static PyObject *ifx_db_get_db_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             if (value != NULL)
             {
@@ -8990,7 +8990,7 @@ static PyObject *ifx_db_get_db_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9007,10 +9007,10 @@ static PyObject *ifx_db_get_db_info(PyObject *self, PyObject *args)
     return Py_False;
 }
 
-/*!# ifx_db.server_info
+/*!# IfxPy.server_info
 *
 * ===Description
-* object ifx_db.server_info ( resource connection )
+* object IfxPy.server_info ( resource connection )
 *
 * This function returns a read-only object with information about the IDS
 * or Informix Dynamic Server.
@@ -9121,7 +9121,7 @@ static PyObject *ifx_db_get_db_info(PyObject *self, PyObject *args)
 *
 * Returns an object on a successful call. Returns FALSE on failure.
 */
-static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
+static PyObject *IfxPy_server_info(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     conn_handle *conn_res;
@@ -9174,7 +9174,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9194,7 +9194,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9203,7 +9203,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9220,7 +9220,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         //if (rc == SQL_ERROR)
         //{
-        //    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+        //    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
         //                                    NULL, -1, 1);
         //    PyErr_Clear();
         //    Py_RETURN_FALSE;
@@ -9229,7 +9229,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         //{
         //    if (rc == SQL_SUCCESS_WITH_INFO)
         //    {
-        //        _python_ifx_db_check_sql_errors(conn_res->hdbc,
+        //        _python_IfxPy_check_sql_errors(conn_res->hdbc,
         //                                        SQL_HANDLE_DBC, rc, 1,
         //                                        NULL, -1, 1);
         //    }
@@ -9247,7 +9247,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             Py_INCREF(Py_False);
             return Py_False;
@@ -9256,7 +9256,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9274,7 +9274,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9283,7 +9283,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9300,7 +9300,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9309,7 +9309,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9327,7 +9327,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9336,7 +9336,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9376,7 +9376,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9385,7 +9385,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9421,7 +9421,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9430,7 +9430,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9474,7 +9474,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9483,7 +9483,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9517,7 +9517,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9526,7 +9526,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9552,7 +9552,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9561,7 +9561,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9578,7 +9578,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9587,7 +9587,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9613,7 +9613,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9622,7 +9622,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9639,7 +9639,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9648,7 +9648,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9666,7 +9666,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9675,7 +9675,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9692,7 +9692,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9701,7 +9701,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9718,7 +9718,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9727,7 +9727,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9745,7 +9745,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9754,7 +9754,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9771,7 +9771,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9780,7 +9780,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9797,7 +9797,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9806,7 +9806,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9824,7 +9824,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9833,7 +9833,7 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9857,10 +9857,10 @@ static PyObject *ifx_db_server_info(PyObject *self, PyObject *args)
     Py_RETURN_FALSE;
 }
 
-/*!# ifx_db.client_info
+/*!# IfxPy.client_info
 *
 * ===Description
-* object ifx_db.client_info ( resource connection )
+* object IfxPy.client_info ( resource connection )
 *
 * This function returns a read-only object with information about the IDS client.
 The following table lists the client properties:
@@ -9905,7 +9905,7 @@ The following table lists the client properties:
 *
 * Returns an object on a successful call. Returns FALSE on failure.
 */
-static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
+static PyObject *IfxPy_client_info(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     conn_handle *conn_res = NULL;
@@ -9946,7 +9946,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9955,7 +9955,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
             return_value->DRIVER_NAME = StringOBJ_FromASCII(buffer255);
@@ -9971,7 +9971,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -9980,7 +9980,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -9997,7 +9997,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -10006,7 +10006,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -10023,7 +10023,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -10032,7 +10032,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -10050,7 +10050,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -10059,7 +10059,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -10078,7 +10078,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
             Py_RETURN_FALSE;
@@ -10087,7 +10087,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         {
             if (rc == SQL_SUCCESS_WITH_INFO)
             {
-                _python_ifx_db_check_sql_errors(conn_res->hdbc,
+                _python_IfxPy_check_sql_errors(conn_res->hdbc,
                                                 SQL_HANDLE_DBC, rc, 1,
                                                 NULL, -1, 1);
             }
@@ -10119,7 +10119,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         //if (rc == SQL_ERROR)
         //{
-        //    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+        //    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
         //                                    NULL, -1, 1);
         //    PyErr_Clear();
         //    Py_RETURN_FALSE;
@@ -10128,7 +10128,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         //{
         //    if (rc == SQL_SUCCESS_WITH_INFO)
         //    {
-        //        _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+        //        _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
         //                                        NULL, -1, 1);
         //    }
         //    return_value->APPL_CODEPAGE = PyInt_FromLong(bufferint32);
@@ -10144,7 +10144,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 
         //if (rc == SQL_ERROR)
         //{
-        //    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+        //    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
         //                                    NULL, -1, 1);
         //    PyErr_Clear();
         //    Py_RETURN_FALSE;
@@ -10153,7 +10153,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
         //{
         //    if (rc == SQL_SUCCESS_WITH_INFO)
         //    {
-        //        _python_ifx_db_check_sql_errors(conn_res->hdbc,
+        //        _python_IfxPy_check_sql_errors(conn_res->hdbc,
         //                                        SQL_HANDLE_DBC, rc, 1,
         //                                        NULL, -1, 1);
         //    }
@@ -10167,10 +10167,10 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
     Py_RETURN_FALSE;
 }
 
-/*!# ifx_db.active
+/*!# IfxPy.active
 *
 * ===Description
-* Py_True/Py_False ifx_db.active(resource connection)
+* Py_True/Py_False IfxPy.active(resource connection)
 *
 * Checks if the specified connection resource is active
 *
@@ -10185,7 +10185,7 @@ static PyObject *ifx_db_client_info(PyObject *self, PyObject *args)
 * Returns Py_True if the given connection resource is active, otherwise it will
 * return Py_False
 */
-static PyObject *ifx_db_active(PyObject *self, PyObject *args)
+static PyObject *IfxPy_active(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     int rc;
@@ -10212,7 +10212,7 @@ static PyObject *ifx_db_active(PyObject *self, PyObject *args)
             (SQLPOINTER)&conn_dead, 0, NULL);
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
+            _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC, rc, 1,
                                             NULL, -1, 1);
             PyErr_Clear();
         }
@@ -10224,10 +10224,10 @@ static PyObject *ifx_db_active(PyObject *self, PyObject *args)
     Py_RETURN_FALSE; 
 }
 
-/*!# ifx_db.get_option
+/*!# IfxPy.get_option
 *
 * ===Description
-* mixed ifx_db.get_option ( resource resc, int options, int type )
+* mixed IfxPy.get_option ( resource resc, int options, int type )
 *
 * Returns a value, that is the current setting of a connection or statement
 * attribute.
@@ -10248,7 +10248,7 @@ static PyObject *ifx_db_active(PyObject *self, PyObject *args)
 *
 * Returns the current setting of the resource attribute provided.
 */
-static PyObject *ifx_db_get_option(PyObject *self, PyObject *args)
+static PyObject *IfxPy_get_option(PyObject *self, PyObject *args)
 {
     PyObject *conn_or_stmt = NULL;
     PyObject *retVal = NULL;
@@ -10324,7 +10324,7 @@ static PyObject *ifx_db_get_option(PyObject *self, PyObject *args)
                     (SQLPOINTER)value, ACCTSTR_LEN, NULL);
                 if (rc == SQL_ERROR)
                 {
-                    _python_ifx_db_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
+                    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
                                                     rc, 1, NULL, -1, 1);
                     if (value != NULL)
                     {
@@ -10364,7 +10364,7 @@ static PyObject *ifx_db_get_option(PyObject *self, PyObject *args)
                                         &value_int, SQL_IS_INTEGER, NULL);
                     if (rc == SQL_ERROR)
                     {
-                        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
                         PyErr_Clear();
                         Py_RETURN_FALSE;
                     }
@@ -10414,13 +10414,13 @@ static void _build_client_err_list(error_msg_node *head_error_list, char *err_ms
 
 
 
-//ifx_db.execute_many -- can be used to execute an SQL with multiple values of parameter marker.
+//IfxPy.execute_many -- can be used to execute an SQL with multiple values of parameter marker.
 //===Description
-//int ifx_db.execute_many(IFX_DBStatement, Parameters[, Options])
+//int IfxPy.execute_many(IFX_DBStatement, Parameters[, Options])
 //Returns number of inserted/updated/deleted rows if batch executed successfully.
 //return NULL if batch fully or partialy fails  (All the rows executed except for which error occurs).
 
-static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
+static PyObject* IfxPy_execute_many(PyObject *self, PyObject *args)
 {
     PyObject *options = NULL;
     PyObject *params = NULL;
@@ -10468,7 +10468,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
         SQLFreeStmt((SQLHSTMT)stmt_res->hstmt, SQL_CLOSE);
         Py_END_ALLOW_THREADS;
 
-        _python_ifx_db_clear_stmt_err_cache();
+        _python_IfxPy_clear_stmt_err_cache();
         stmt_res->head_cache_list = NULL;
         stmt_res->current_node = NULL;
 
@@ -10495,7 +10495,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
 
                 if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
                 {
-                    _python_ifx_db_check_sql_errors(stmt_res->hstmt,
+                    _python_IfxPy_check_sql_errors(stmt_res->hstmt,
                                                     SQL_HANDLE_STMT,
                                                     rc, 1, NULL, -1, 1);
                 }
@@ -10615,7 +10615,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
                     curr->data_type = data_type [curr->param_num - 1];
                     if (TYPE(data) != PYTHON_NIL)
                     {
-                        rc = _python_ifx_db_bind_data(stmt_res, curr, data);
+                        rc = _python_IfxPy_bind_data(stmt_res, curr, data);
                     }
                     else
                     {
@@ -10686,7 +10686,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
                         Py_END_ALLOW_THREADS;
                         if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO)
                         {
-                            _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                            _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
                         }
                     }
                     if (rc != SQL_SUCCESS)
@@ -10704,7 +10704,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
                 //if (!chaining_start && (error [0] == '\0'))
                 //{
                 //    // Set statement attribute SQL_ATTR_CHAINING_BEGIN
-                //    rc = _ifx_db_chaining_flag(stmt_res, SQL_ATTR_CHAINING_BEGIN, NULL, 0);
+                //    rc = _IfxPy_chaining_flag(stmt_res, SQL_ATTR_CHAINING_BEGIN, NULL, 0);
                 //    chaining_start = 1;
                 //    if (rc != SQL_SUCCESS)
                 //    {
@@ -10739,7 +10739,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
                             }
                             if (rc == SQL_ERROR)
                             {
-                                _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                                _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
                                 sprintf(error, "Sending data failed: %s", IFX_DB_G(__python_stmt_err_msg));
                                 _build_client_err_list(head_error_list, error);
                                 err_count++;
@@ -10758,7 +10758,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
         }
 
         // Set statement attribute SQL_ATTR_CHAINING_END 
-        //rc = _ifx_db_chaining_flag(stmt_res, SQL_ATTR_CHAINING_END, head_error_list->next, err_count);
+        //rc = _IfxPy_chaining_flag(stmt_res, SQL_ATTR_CHAINING_END, head_error_list->next, err_count);
         //if (head_error_list != NULL)
         //{
         //    error_msg_node *tmp_err = NULL;
@@ -10787,7 +10787,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
 
     if ((rc == SQL_ERROR) && (stmt_res != NULL))
     {
-        _python_ifx_db_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+        _python_IfxPy_check_sql_errors(stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
         sprintf(error, "SQLRowCount failed: %s", IFX_DB_G(__python_stmt_err_msg));
         PyErr_SetString(PyExc_Exception, error);
         return NULL;
@@ -10799,7 +10799,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
 
 /*
 * ===Description
-*  ifx_db.callproc( conn_handle conn_res, char *procName, (In/INOUT/OUT parameters tuple) )
+*  IfxPy.callproc( conn_handle conn_res, char *procName, (In/INOUT/OUT parameters tuple) )
 *
 * Returns resultset and INOUT/OUT parameters
 *
@@ -10821,7 +10821,7 @@ static PyObject* ifx_db_execute_many(PyObject *self, PyObject *args)
 *
 * If procedure not found than it return NULL
 */
-static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
+static PyObject* IfxPy_callproc(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     PyObject *parameters_tuple = NULL;
@@ -10894,7 +10894,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
             sql = PyUnicode_Concat(subsql2, subsql1);
             Py_XDECREF(subsql1);
             Py_XDECREF(subsql2);
-            stmt_res = (stmt_handle *)_python_ifx_db_prepare_helper(conn_res, sql, NULL);
+            stmt_res = (stmt_handle *)_python_IfxPy_prepare_helper(conn_res, sql, NULL);
             PyMem_Del(strsubsql);
             Py_XDECREF(sql);
             if (NIL_P(stmt_res))
@@ -10906,7 +10906,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
             {
                 PyObject *bind_result = NULL;
                 data = PyTuple_GET_ITEM(parameters_tuple, i);
-                bind_result = _python_ifx_db_bind_param_helper(4, stmt_res, i + 1, data, SQL_PARAM_INPUT_OUTPUT, 0, 0, 0, 0);
+                bind_result = _python_IfxPy_bind_param_helper(4, stmt_res, i + 1, data, SQL_PARAM_INPUT_OUTPUT, 0, 0, 0, 0);
                 if (NIL_P(bind_result))
                 {
                     return NULL;
@@ -10925,7 +10925,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
             sql = PyUnicode_Concat(subsql2, subsql1);
             Py_XDECREF(subsql1);
             Py_XDECREF(subsql2);
-            stmt_res = (stmt_handle *)_python_ifx_db_prepare_helper(conn_res, sql, NULL);
+            stmt_res = (stmt_handle *)_python_IfxPy_prepare_helper(conn_res, sql, NULL);
             Py_XDECREF(sql);
             if (NIL_P(stmt_res))
             {
@@ -10933,7 +10933,7 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
             }
         }
 
-        if (!NIL_P(_python_ifx_db_execute_helper1(stmt_res, NULL)))
+        if (!NIL_P(_python_IfxPy_execute_helper1(stmt_res, NULL)))
         {
             tmp_curr = stmt_res->head_cache_list;
             if (numOfParam != 0 && tmp_curr != NULL)
@@ -11079,13 +11079,13 @@ static PyObject* ifx_db_callproc(PyObject *self, PyObject *args)
 
 
 /*
-* ifx_db.check_function_support-- can be used to query whether a  ODBC function is supported
+* IfxPy.check_function_support-- can be used to query whether a  ODBC function is supported
 * ===Description
-* int ifx_db.check_function_support(ConnectionHandle, FunctionId)
+* int IfxPy.check_function_support(ConnectionHandle, FunctionId)
 * Returns Py_True if a ODBC function is supported
 * return Py_False if a ODBC function is not supported
 */
-static PyObject* ifx_db_check_function_support(PyObject *self, PyObject *args)
+static PyObject* IfxPy_check_function_support(PyObject *self, PyObject *args)
 {
     PyObject *py_conn_res = NULL;
     PyObject *py_funtion_id = NULL;
@@ -11154,10 +11154,10 @@ static PyObject* ifx_db_check_function_support(PyObject *self, PyObject *args)
 }
 
 /*
-* ifx_db.get_last_serial_value --    Gets the last inserted serial value from IDS
+* IfxPy.get_last_serial_value --    Gets the last inserted serial value from IDS
 *
 * ===Description
-* string ifx_db.get_last_serial_value ( resource stmt )
+* string IfxPy.get_last_serial_value ( resource stmt )
 *
 * Returns a string, that is the last inserted value for a serial column for IDS.
 * The last inserted value could be auto-generated or entered explicitly by the user
@@ -11173,7 +11173,7 @@ static PyObject* ifx_db_check_function_support(PyObject *self, PyObject *args)
 * Returns a string representation of last inserted serial value on a successful call.
 * Returns FALSE on failure.
 */
-PyObject *ifx_db_get_last_serial_value(int argc, PyObject *args, PyObject *self)
+PyObject *IfxPy_get_last_serial_value(int argc, PyObject *args, PyObject *self)
 {
     PyObject *stmt = NULL;
     SQLCHAR *value = NULL;
@@ -11211,7 +11211,7 @@ PyObject *ifx_db_get_last_serial_value(int argc, PyObject *args, PyObject *self)
         rc = SQLGetStmtAttr((SQLHSTMT)stmt_res->hstmt, SQL_ATTR_GET_GENERATED_VALUE, (SQLPOINTER)value, 31, &pcbValue);
         if (rc == SQL_ERROR)
         {
-            _python_ifx_db_check_sql_errors((SQLHSTMT)stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+            _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt, SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
             if (value != NULL)
             {
                 PyMem_Del(value);
@@ -11288,63 +11288,63 @@ static int _python_get_variable_type(PyObject *variable_value)
     else return 0;
 }
 
-/* Listing of ifx_db module functions: */
-static PyMethodDef ifx_db_Methods[] = {
+/* Listing of IfxPy module functions: */
+static PyMethodDef IfxPy_Methods[] = {
     /* name, function, argument type, docstring */
-    { "connect", (PyCFunction)ifx_db_connect, METH_VARARGS | METH_KEYWORDS, "Connect to the database" },
-    { "exec_immediate", (PyCFunction)ifx_db_exec, METH_VARARGS, "Prepares and executes an SQL statement." },
-    { "prepare", (PyCFunction)ifx_db_prepare, METH_VARARGS, "Prepares an SQL statement." },
-    { "bind_param", (PyCFunction)ifx_db_bind_param, METH_VARARGS, "Binds a Python variable to an SQL statement parameter" },
-    { "execute", (PyCFunction)ifx_db_execute, METH_VARARGS, "Executes an SQL statement that was prepared by ifx_db.prepare()" },
-    { "fetch_tuple", (PyCFunction)ifx_db_fetch_array, METH_VARARGS, "Returns an tuple, indexed by column position, representing a row in a result set" },
-    { "fetch_assoc", (PyCFunction)ifx_db_fetch_assoc, METH_VARARGS, "Returns a dictionary, indexed by column name, representing a row in a result set" },
-    { "fetch_both", (PyCFunction)ifx_db_fetch_both, METH_VARARGS, "Returns a dictionary, indexed by both column name and position, representing a row in a result set" },
-    { "fetch_row", (PyCFunction)ifx_db_fetch_row, METH_VARARGS, "Sets the result set pointer to the next row or requested row" },
-    { "result", (PyCFunction)ifx_db_result, METH_VARARGS, "Returns a single column from a row in the result set" },
-    { "active", (PyCFunction)ifx_db_active, METH_VARARGS, "Checks if the specified connection resource is active" },
-    { "autocommit", (PyCFunction)ifx_db_autocommit, METH_VARARGS, "Returns or sets the AUTOCOMMIT state for a database connection" },
-    { "callproc", (PyCFunction)ifx_db_callproc, METH_VARARGS, "Returns a tuple containing OUT/INOUT variable value" },
-    { "check_function_support", (PyCFunction)ifx_db_check_function_support, METH_VARARGS, "return true if fuction is supported otherwise return false" },
-    { "close", (PyCFunction)ifx_db_close, METH_VARARGS, "Close a database connection" },
-    { "conn_error", (PyCFunction)ifx_db_conn_error, METH_VARARGS, "Returns a string containing the SQLSTATE returned by the last connection attempt" },
-    { "conn_errormsg", (PyCFunction)ifx_db_conn_errormsg, METH_VARARGS, "Returns an error message and SQLCODE value representing the reason the last database connection attempt failed" },
-    { "conn_warn", (PyCFunction)ifx_db_conn_warn, METH_VARARGS, "Returns a warning string containing the SQLSTATE returned by the last connection attempt" },
-    { "client_info", (PyCFunction)ifx_db_client_info, METH_VARARGS, "Returns a read-only object with information about the IDS database client" },
-    { "column_privileges", (PyCFunction)ifx_db_column_privileges, METH_VARARGS, "Returns a result set listing the columns and associated privileges for a table." },
-    { "columns", (PyCFunction)ifx_db_columns, METH_VARARGS, "Returns a result set listing the columns and associated metadata for a table" },
-    { "commit", (PyCFunction)ifx_db_commit, METH_VARARGS, "Commits a transaction" },
-    { "cursor_type", (PyCFunction)ifx_db_cursor_type, METH_VARARGS, "Returns the cursor type used by a statement resource" },
-    { "execute_many", (PyCFunction)ifx_db_execute_many, METH_VARARGS, "Execute SQL with multiple rows." }, // sat
-    { "field_display_size", (PyCFunction)ifx_db_field_display_size, METH_VARARGS, "Returns the maximum number of bytes required to display a column" },
-    { "field_name", (PyCFunction)ifx_db_field_name, METH_VARARGS, "Returns the name of the column in the result set" },
-    { "field_nullable", (PyCFunction)ifx_db_field_nullable, METH_VARARGS, "Returns indicated column can contain nulls or not" },
-    { "field_num", (PyCFunction)ifx_db_field_num, METH_VARARGS, "Returns the position of the named column in a result set" },
-    { "field_precision", (PyCFunction)ifx_db_field_precision, METH_VARARGS, "Returns the precision of the indicated column in a result set" },
-    { "field_scale", (PyCFunction)ifx_db_field_scale, METH_VARARGS, "Returns the scale of the indicated column in a result set" },
-    { "field_type", (PyCFunction)ifx_db_field_type, METH_VARARGS, "Returns the data type of the indicated column in a result set" },
-    { "field_width", (PyCFunction)ifx_db_field_width, METH_VARARGS, "Returns the width of the indicated column in a result set" },
-    { "foreign_keys", (PyCFunction)ifx_db_foreign_keys, METH_VARARGS, "Returns a result set listing the foreign keys for a table" },
-    { "free_result", (PyCFunction)ifx_db_free_result, METH_VARARGS, "Frees resources associated with a result set" },
-    { "free_stmt", (PyCFunction)ifx_db_free_stmt, METH_VARARGS, "Frees resources associated with the indicated statement resource" },
-    { "get_option", (PyCFunction)ifx_db_get_option, METH_VARARGS, "Gets the specified option in the resource." },
-    { "num_fields", (PyCFunction)ifx_db_num_fields, METH_VARARGS, "Returns the number of fields contained in a result set" },
-    { "num_rows", (PyCFunction)ifx_db_num_rows, METH_VARARGS, "Returns the number of rows affected by an SQL statement" },
-    { "get_num_result", (PyCFunction)ifx_db_get_num_result, METH_VARARGS, "Returns the number of rows in a current open non-dynamic scrollable cursor" },
-    { "primary_keys", (PyCFunction)ifx_db_primary_keys, METH_VARARGS, "Returns a result set listing primary keys for a table" },
-    { "procedure_columns", (PyCFunction)ifx_db_procedure_columns, METH_VARARGS, "Returns a result set listing the parameters for one or more stored procedures." },
-    { "procedures", (PyCFunction)ifx_db_procedures, METH_VARARGS, "Returns a result set listing the stored procedures registered in a database" },
-    { "rollback", (PyCFunction)ifx_db_rollback, METH_VARARGS, "Rolls back a transaction" },
-    { "server_info", (PyCFunction)ifx_db_server_info, METH_VARARGS, "Returns an object with properties that describe the IDS database server" },
-    { "get_db_info", (PyCFunction)ifx_db_get_db_info, METH_VARARGS, "Returns an object with properties that describe the IDS database server according to the option passed" },
-    { "set_option", (PyCFunction)ifx_db_set_option, METH_VARARGS, "Sets the specified option in the resource" },
-    { "special_columns", (PyCFunction)ifx_db_special_columns, METH_VARARGS, "Returns a result set listing the unique row identifier columns for a table" },
-    { "statistics", (PyCFunction)ifx_db_statistics, METH_VARARGS, "Returns a result set listing the index and statistics for a table" },
-    { "stmt_error", (PyCFunction)ifx_db_stmt_error, METH_VARARGS, "Returns a string containing the SQLSTATE returned by an SQL statement" },
-    { "stmt_warn", (PyCFunction)ifx_db_stmt_warn, METH_VARARGS, "Returns a warning string containing the SQLSTATE returned by last SQL statement" },
-    { "stmt_errormsg", (PyCFunction)ifx_db_stmt_errormsg, METH_VARARGS, "Returns a string containing the last SQL statement error message" },
-    { "table_privileges", (PyCFunction)ifx_db_table_privileges, METH_VARARGS, "Returns a result set listing the tables and associated privileges in a database" },
-    { "tables", (PyCFunction)ifx_db_tables, METH_VARARGS, "Returns a result set listing the tables and associated metadata in a database" },
-    { "get_last_serial_value", (PyCFunction)ifx_db_get_last_serial_value, METH_VARARGS, "Returns last serial value inserted for identity column" },
+    { "connect", (PyCFunction)IfxPy_connect, METH_VARARGS | METH_KEYWORDS, "Connect to the database" },
+    { "exec_immediate", (PyCFunction)IfxPy_exec, METH_VARARGS, "Prepares and executes an SQL statement." },
+    { "prepare", (PyCFunction)IfxPy_prepare, METH_VARARGS, "Prepares an SQL statement." },
+    { "bind_param", (PyCFunction)IfxPy_bind_param, METH_VARARGS, "Binds a Python variable to an SQL statement parameter" },
+    { "execute", (PyCFunction)IfxPy_execute, METH_VARARGS, "Executes an SQL statement that was prepared by IfxPy.prepare()" },
+    { "fetch_tuple", (PyCFunction)IfxPy_fetch_array, METH_VARARGS, "Returns an tuple, indexed by column position, representing a row in a result set" },
+    { "fetch_assoc", (PyCFunction)IfxPy_fetch_assoc, METH_VARARGS, "Returns a dictionary, indexed by column name, representing a row in a result set" },
+    { "fetch_both", (PyCFunction)IfxPy_fetch_both, METH_VARARGS, "Returns a dictionary, indexed by both column name and position, representing a row in a result set" },
+    { "fetch_row", (PyCFunction)IfxPy_fetch_row, METH_VARARGS, "Sets the result set pointer to the next row or requested row" },
+    { "result", (PyCFunction)IfxPy_result, METH_VARARGS, "Returns a single column from a row in the result set" },
+    { "active", (PyCFunction)IfxPy_active, METH_VARARGS, "Checks if the specified connection resource is active" },
+    { "autocommit", (PyCFunction)IfxPy_autocommit, METH_VARARGS, "Returns or sets the AUTOCOMMIT state for a database connection" },
+    { "callproc", (PyCFunction)IfxPy_callproc, METH_VARARGS, "Returns a tuple containing OUT/INOUT variable value" },
+    { "check_function_support", (PyCFunction)IfxPy_check_function_support, METH_VARARGS, "return true if fuction is supported otherwise return false" },
+    { "close", (PyCFunction)IfxPy_close, METH_VARARGS, "Close a database connection" },
+    { "conn_error", (PyCFunction)IfxPy_conn_error, METH_VARARGS, "Returns a string containing the SQLSTATE returned by the last connection attempt" },
+    { "conn_errormsg", (PyCFunction)IfxPy_conn_errormsg, METH_VARARGS, "Returns an error message and SQLCODE value representing the reason the last database connection attempt failed" },
+    { "conn_warn", (PyCFunction)IfxPy_conn_warn, METH_VARARGS, "Returns a warning string containing the SQLSTATE returned by the last connection attempt" },
+    { "client_info", (PyCFunction)IfxPy_client_info, METH_VARARGS, "Returns a read-only object with information about the IDS database client" },
+    { "column_privileges", (PyCFunction)IfxPy_column_privileges, METH_VARARGS, "Returns a result set listing the columns and associated privileges for a table." },
+    { "columns", (PyCFunction)IfxPy_columns, METH_VARARGS, "Returns a result set listing the columns and associated metadata for a table" },
+    { "commit", (PyCFunction)IfxPy_commit, METH_VARARGS, "Commits a transaction" },
+    { "cursor_type", (PyCFunction)IfxPy_cursor_type, METH_VARARGS, "Returns the cursor type used by a statement resource" },
+    { "execute_many", (PyCFunction)IfxPy_execute_many, METH_VARARGS, "Execute SQL with multiple rows." }, // sat
+    { "field_display_size", (PyCFunction)IfxPy_field_display_size, METH_VARARGS, "Returns the maximum number of bytes required to display a column" },
+    { "field_name", (PyCFunction)IfxPy_field_name, METH_VARARGS, "Returns the name of the column in the result set" },
+    { "field_nullable", (PyCFunction)IfxPy_field_nullable, METH_VARARGS, "Returns indicated column can contain nulls or not" },
+    { "field_num", (PyCFunction)IfxPy_field_num, METH_VARARGS, "Returns the position of the named column in a result set" },
+    { "field_precision", (PyCFunction)IfxPy_field_precision, METH_VARARGS, "Returns the precision of the indicated column in a result set" },
+    { "field_scale", (PyCFunction)IfxPy_field_scale, METH_VARARGS, "Returns the scale of the indicated column in a result set" },
+    { "field_type", (PyCFunction)IfxPy_field_type, METH_VARARGS, "Returns the data type of the indicated column in a result set" },
+    { "field_width", (PyCFunction)IfxPy_field_width, METH_VARARGS, "Returns the width of the indicated column in a result set" },
+    { "foreign_keys", (PyCFunction)IfxPy_foreign_keys, METH_VARARGS, "Returns a result set listing the foreign keys for a table" },
+    { "free_result", (PyCFunction)IfxPy_free_result, METH_VARARGS, "Frees resources associated with a result set" },
+    { "free_stmt", (PyCFunction)IfxPy_free_stmt, METH_VARARGS, "Frees resources associated with the indicated statement resource" },
+    { "get_option", (PyCFunction)IfxPy_get_option, METH_VARARGS, "Gets the specified option in the resource." },
+    { "num_fields", (PyCFunction)IfxPy_num_fields, METH_VARARGS, "Returns the number of fields contained in a result set" },
+    { "num_rows", (PyCFunction)IfxPy_num_rows, METH_VARARGS, "Returns the number of rows affected by an SQL statement" },
+    { "get_num_result", (PyCFunction)IfxPy_get_num_result, METH_VARARGS, "Returns the number of rows in a current open non-dynamic scrollable cursor" },
+    { "primary_keys", (PyCFunction)IfxPy_primary_keys, METH_VARARGS, "Returns a result set listing primary keys for a table" },
+    { "procedure_columns", (PyCFunction)IfxPy_procedure_columns, METH_VARARGS, "Returns a result set listing the parameters for one or more stored procedures." },
+    { "procedures", (PyCFunction)IfxPy_procedures, METH_VARARGS, "Returns a result set listing the stored procedures registered in a database" },
+    { "rollback", (PyCFunction)IfxPy_rollback, METH_VARARGS, "Rolls back a transaction" },
+    { "server_info", (PyCFunction)IfxPy_server_info, METH_VARARGS, "Returns an object with properties that describe the IDS database server" },
+    { "get_db_info", (PyCFunction)IfxPy_get_db_info, METH_VARARGS, "Returns an object with properties that describe the IDS database server according to the option passed" },
+    { "set_option", (PyCFunction)IfxPy_set_option, METH_VARARGS, "Sets the specified option in the resource" },
+    { "special_columns", (PyCFunction)IfxPy_special_columns, METH_VARARGS, "Returns a result set listing the unique row identifier columns for a table" },
+    { "statistics", (PyCFunction)IfxPy_statistics, METH_VARARGS, "Returns a result set listing the index and statistics for a table" },
+    { "stmt_error", (PyCFunction)IfxPy_stmt_error, METH_VARARGS, "Returns a string containing the SQLSTATE returned by an SQL statement" },
+    { "stmt_warn", (PyCFunction)IfxPy_stmt_warn, METH_VARARGS, "Returns a warning string containing the SQLSTATE returned by last SQL statement" },
+    { "stmt_errormsg", (PyCFunction)IfxPy_stmt_errormsg, METH_VARARGS, "Returns a string containing the last SQL statement error message" },
+    { "table_privileges", (PyCFunction)IfxPy_table_privileges, METH_VARARGS, "Returns a result set listing the tables and associated privileges in a database" },
+    { "tables", (PyCFunction)IfxPy_tables, METH_VARARGS, "Returns a result set listing the tables and associated metadata in a database" },
+    { "get_last_serial_value", (PyCFunction)IfxPy_get_last_serial_value, METH_VARARGS, "Returns last serial value inserted for identity column" },
 
     // An end-of-listing sentinel:
     { NULL, NULL, 0, NULL }
@@ -11363,20 +11363,20 @@ static struct PyModuleDef moduledef = {
     DriverModuleName,
     DriverModuleDescription,
     -1,
-    ifx_db_Methods,
+    IfxPy_Methods,
 };
 #endif
 
 /* Module initialization function */
 PyMODINIT_FUNC
-INIT_ifx_db(void)
+INIT_IfxPy(void)
 {
     PyObject* m;
 
     PyDateTime_IMPORT;
-    ifx_db_globals = ALLOC(struct _ifx_db_globals);
-    memset(ifx_db_globals, 0, sizeof(struct _ifx_db_globals));
-    python_ifx_db_init_globals(ifx_db_globals);
+    IfxPy_globals = ALLOC(struct _IfxPy_globals);
+    memset(IfxPy_globals, 0, sizeof(struct _IfxPy_globals));
+    python_IfxPy_init_globals(IfxPy_globals);
 
     persistent_list = PyDict_New();
 
@@ -11397,8 +11397,8 @@ INIT_ifx_db(void)
         return MOD_RETURN_ERROR;
 
 #if PY_MAJOR_VERSION < 3
-    //m = Py_InitModule3("ifx_db", ifx_db_Methods, "Informix Native Driver for Python.");
-    m = Py_InitModule3(DriverModuleName, ifx_db_Methods, DriverModuleDescription);
+    //m = Py_InitModule3("IfxPy", IfxPy_Methods, "Informix Native Driver for Python.");
+    m = Py_InitModule3(DriverModuleName, IfxPy_Methods, DriverModuleDescription);
 
 #else
     m = PyModule_Create(&moduledef);

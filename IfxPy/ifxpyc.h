@@ -73,7 +73,7 @@
 #define Py_TYPE(ob)            (((PyObject*)(ob))->ob_type)
 #define MOD_RETURN_ERROR        
 #define MOD_RETURN_VAL(mod)            
-#define INIT_ifx_db                initifx_db
+#define INIT_IfxPy                initIfxPy
 #else
 #define PyInt_Check                PyLong_Check
 #define PyInt_FromLong             PyLong_FromLong
@@ -85,7 +85,7 @@
 #define StringObj_Size             PyUnicode_GET_SIZE
 #define MOD_RETURN_ERROR           NULL
 #define MOD_RETURN_VAL(mod)        mod
-#define INIT_ifx_db                PyInit_ifx_db
+#define INIT_IfxPy                PyInit_IfxPy
 #endif
 
 #define NUM2LONG(data)    PyInt_AsLong(data)
@@ -170,7 +170,7 @@ enum
 }ROUNDING_MODE;
 
 
-struct _ifx_db_globals {
+struct _IfxPy_globals {
     int  bin_mode;
     char __python_conn_err_msg   [DB_MAX_ERR_MSG_LEN + 1];
     char __python_conn_err_state [SQL_SQLSTATE_SIZE  + 1];
@@ -208,7 +208,7 @@ static PyMemberDef le_client_info_members[] = {
 
 static PyTypeObject client_infoType = {
         PyVarObject_HEAD_INIT(NULL, 0)
-        "ifx_db.IFX_DBClientInfo",              // tp_name           
+        "IfxPy.IFX_DBClientInfo",              // tp_name           
         sizeof(le_client_info),                 // tp_basicsize      
         0,                                      // tp_itemsize       
         0,                                      // tp_dealloc        
@@ -301,7 +301,7 @@ static PyMemberDef le_server_info_members[] = {
 
 static PyTypeObject server_infoType = {
         PyVarObject_HEAD_INIT(NULL, 0)
-        "ifx_db.IFX_DBServerInfo",              // tp_name           
+        "IfxPy.IFX_DBServerInfo",              // tp_name           
         sizeof(le_server_info),                 // tp_basicsize      
         0,                                      // tp_itemsize       
         0,                                      // tp_dealloc        
@@ -341,10 +341,10 @@ static PyTypeObject server_infoType = {
 
 
 
-#define IFX_DB_G(v) (ifx_db_globals->v)
+#define IFX_DB_G(v) (IfxPy_globals->v)
 
-static void _python_ifx_db_clear_stmt_err_cache(void);
-static void _python_ifx_db_clear_conn_err_cache(void);
+static void _python_IfxPy_clear_stmt_err_cache(void);
+static void _python_IfxPy_clear_conn_err_cache(void);
 static int _python_get_variable_type(PyObject *variable_value);
 
 

@@ -79,16 +79,16 @@ That means if you are using higher version of VS then you may map **VSxxCOMNTOOL
 ```bash
 #For example:   
 #If you are using Visual Studio 2010 (VS10):  
-SET VS90COMNTOOLS=%VS100COMNTOOLS%  
+SET VS90COMNTOOLS=%VS100COMNTOOLS%
   
 #If you are using Visual Studio 2012 (VS11):   
-SET VS90COMNTOOLS=%VS110COMNTOOLS%  
+SET VS90COMNTOOLS=%VS110COMNTOOLS%
   
 #If you are using Visual Studio 2013 (VS12):   
-SET VS90COMNTOOLS=%VS120COMNTOOLS%  
+SET VS90COMNTOOLS=%VS120COMNTOOLS%
   
 #If you are using Visual Studio 2015 (VS14):   
-SET VS90COMNTOOLS=%VS140COMNTOOLS%  
+SET VS90COMNTOOLS=%VS140COMNTOOLS%
 ```
 
 ##### Starting the build

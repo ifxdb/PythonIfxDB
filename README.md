@@ -295,7 +295,7 @@ $ 2to3 -w *.py
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=usr1;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")

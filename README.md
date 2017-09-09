@@ -1,4 +1,4 @@
-##### Copyright 2017 ifxdb and Informix
+##### Copyright 2017 OpenIfx and Informix
 
 ### Licensed under the Apache License, Version 2.0
 
@@ -10,7 +10,7 @@ The driver has been well tested across all major platforms such as **ARM**, **Li
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 **FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. You may build the drive from its source code on your environment to pick latest changes.  
-* [prebuilt](https://github.com/ifxdb/IfxPy/tree/master/prebuilt)
+* [prebuilt](https://github.com/OpenIfx/IfxPy/tree/master/prebuilt)
 
 #### ifx_db (Advanced native extension module)
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
@@ -51,7 +51,7 @@ cd C:\work
 or
 cd /work 
 
-git clone https://github.com/ifxdb/IfxPy.git
+git clone https://github.com/OpenIfx/IfxPy.git
 ```
 
 ##### Build Shell Environment 
@@ -128,7 +128,7 @@ python test1.py
 ##### FYI: Unicode encoding
 The python interpreter used should match with operating system default Unicode encoding. 
 Some of the Linux flavors, python interpreter is available with UCS2/UTF16 and also UCS4/UTF32.
-If the OS default for Unicode is UTF32 then the ifxdb driver will work if the python interpreter is also using the Unicode UCS4/UTF32.  
+If the OS default for Unicode is UTF32 then the OpenIfx driver will work if the python interpreter is also using the Unicode UCS4/UTF32.  
 
 
 ###### To check which Unicode encoding your python interpreter is using.
@@ -172,10 +172,10 @@ $ sudo make
 
 ##### Clone the informix python driver source code
 ```bash
-mkdir /work/ifxdb
-cd /work/ifxdb
+mkdir /work/OpenIfx
+cd /work/OpenIfx
 
-git clone https://github.com/ifxdb/IfxPy.git
+git clone https://github.com/OpenIfx/IfxPy.git
 ```
 
 ##### Set Env for driver build 
@@ -189,7 +189,7 @@ export MY_PY_DIR=/work/dev/Python
 
 #### Fire the driver build
 ```bash
-cd /work/ifxdb/IfxPy/ifx_db
+cd /work/OpenIfx/IfxPy/ifx_db
 rm -rf build
 
 python setup.py build > out.txt 2>&1
@@ -208,22 +208,22 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (ifx_db.so) to your Python module directory
 # For example:
-cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 
 # if ARM
-# cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 ```
 
 ####  Quick Try
 ```bash
-mkdir /work/ifxdb/try/
-cd /work/ifxdb/try/
-cp /work/ifxdb/IfxPy/Examples/test1.py .
+mkdir /work/OpenIfx/try/
+cd /work/OpenIfx/try/
+cp /work/OpenIfx/IfxPy/Examples/test1.py .
 
 rm ifx_db.so
-cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
-# cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 ```
 * Edit connection string
 * Set Informix Client SDK Runtime Environment
@@ -251,16 +251,16 @@ SET PATH=C:\informix\bin;%PATH%
 ## Run tests
 ##### Specify connection information
 ```bash
-cd /work/ifxdb/IfxPy/ifx_db
+cd /work/OpenIfx/IfxPy/ifx_db
 cp   config.py.sample   config.py
 ```
 Then Modify the connection properties specified in config.py
 
 ##### Run all tests
 ```bash
-cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
+cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-x86_64-2.7/ifx_db.so .
 # if ARM then
-# cp /work/ifxdb/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
+# cp /work/OpenIfx/IfxPy/ifx_db/build/lib.linux-armv7l-2.7/ifx_db.so .
 
 python tests.py
 ```

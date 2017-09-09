@@ -13,10 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// This source code is based on python-ibmdb from ibmdb
-// Additional changes are licensed under the same terms as
-// Licensed under the Apache License, Version 2.0.
-//
 // Authors:
 //    Sathyanesh Krishnan
 //    Javier Sagrera

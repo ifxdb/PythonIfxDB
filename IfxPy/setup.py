@@ -4,7 +4,7 @@ import struct
 
 from distutils.core import setup, Extension
 
-PACKAGE = 'ifx_db'
+PACKAGE = 'IfxPy'
 VERSION = '2.0.7'
 LICENSE = 'Apache License 2.0'
 

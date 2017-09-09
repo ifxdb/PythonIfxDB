@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,39 +16,39 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_213)
 
   def run_test_213(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    result = ifx_db.exec_immediate(conn, "select * from sales")
+    result = IfxPy.exec_immediate(conn, "select * from sales")
     
     i = "sales_person"
     
-    print "%s size %d\n" % (i, (ifx_db.field_display_size(result,i) or 0))
+    print "%s size %d\n" % (i, (IfxPy.field_display_size(result,i) or 0))
     
     i = "REGION"
     
-    print "%s size %d\n" % (i, (ifx_db.field_display_size(result,i) or 0))
+    print "%s size %d\n" % (i, (IfxPy.field_display_size(result,i) or 0))
     
     i = "REgion"
     
-    print "%s size %d\n" % (i, (ifx_db.field_display_size(result,i) or 0))
+    print "%s size %d\n" % (i, (IfxPy.field_display_size(result,i) or 0))
     
     i = "HELMUT"
     
-    print "%s size %d\n" % (i, (ifx_db.field_display_size(result,i) or 0))
+    print "%s size %d\n" % (i, (IfxPy.field_display_size(result,i) or 0))
     
-    t = ifx_db.field_display_size(result,"")
-    
-    print t
-    
-    t = ifx_db.field_display_size(result,"HELMUT")
+    t = IfxPy.field_display_size(result,"")
     
     print t
     
-    t = ifx_db.field_display_size(result,"Region")
+    t = IfxPy.field_display_size(result,"HELMUT")
     
     print t
     
-    t = ifx_db.field_display_size(result,"SALES_DATE")
+    t = IfxPy.field_display_size(result,"Region")
+    
+    print t
+    
+    t = IfxPy.field_display_size(result,"SALES_DATE")
     
     print t
 

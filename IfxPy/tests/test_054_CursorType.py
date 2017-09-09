@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,26 +16,26 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_054)
 
   def run_test_054(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    serverinfo = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    serverinfo = IfxPy.server_info( conn )
 
-    stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals")
-    val = ifx_db.get_option(stmt, ifx_db.SQL_ATTR_CURSOR_TYPE, 0)
+    stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals")
+    val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
     print val
 
-    op = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_FORWARD_ONLY}
-    stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals", op)
-    val = ifx_db.get_option(stmt, ifx_db.SQL_ATTR_CURSOR_TYPE, 0)
+    op = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_FORWARD_ONLY}
+    stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals", op)
+    val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
     print val
 
-    op = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN}
-    stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals", op)
-    val = ifx_db.get_option(stmt, ifx_db.SQL_ATTR_CURSOR_TYPE, 0)
+    op = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN}
+    stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals", op)
+    val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
     print val
 
-    op = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_STATIC}
-    stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals", op)
-    val = ifx_db.get_option(stmt, ifx_db.SQL_ATTR_CURSOR_TYPE, 0)
+    op = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_STATIC}
+    stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals", op)
+    val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
     print val
 
 #__END__

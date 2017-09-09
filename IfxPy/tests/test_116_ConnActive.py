@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -17,34 +17,34 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_116(self):
     conn = None
-    is_alive = ifx_db.active(conn)
+    is_alive = IfxPy.active(conn)
     if is_alive:
       print "Is active"
     else:
       print "Is not active"
 
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    is_alive = ifx_db.active(conn)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    is_alive = IfxPy.active(conn)
     if is_alive:
       print "Is active"
     else:
       print "Is not active"
 
-    ifx_db.close(conn)
-    is_alive = ifx_db.active(conn)
+    IfxPy.close(conn)
+    is_alive = IfxPy.active(conn)
     if is_alive:
       print "Is active"
     else:
       print "Is not active"
 
     # Executing active method multiple times to reproduce a customer reported defect
-    print ifx_db.active(conn)
-    print ifx_db.active(conn)
-    print ifx_db.active(conn)
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    print ifx_db.active(conn)
-    print ifx_db.active(conn)
-    print ifx_db.active(conn)
+    print IfxPy.active(conn)
+    print IfxPy.active(conn)
+    print IfxPy.active(conn)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    print IfxPy.active(conn)
+    print IfxPy.active(conn)
+    print IfxPy.active(conn)
 
 #__END__
 #__LUW_EXPECTED__

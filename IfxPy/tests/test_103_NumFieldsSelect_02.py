@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,13 +16,13 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_103)
 
   def run_test_103(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-       result = ifx_db.exec_immediate(conn, "select * from org, project order by project.projname,org.deptnumb")
-       cols = ifx_db.num_fields(result)
+       result = IfxPy.exec_immediate(conn, "select * from org, project order by project.projname,org.deptnumb")
+       cols = IfxPy.num_fields(result)
        j = 1
-       row = ifx_db.fetch_tuple(result)
+       row = IfxPy.fetch_tuple(result)
        while ( row ):
           print "%d) " % j
           for i in range(0, cols):
@@ -30,10 +30,10 @@ class IfxDbTestCase(unittest.TestCase):
           j += 1
           if (j > 10):
              break
-          row = ifx_db.fetch_tuple(result)
-       ifx_db.close(conn)
+          row = IfxPy.fetch_tuple(result)
+       IfxPy.close(conn)
     else:
-      print ifx_db.conn_errormsg()
+      print IfxPy.conn_errormsg()
 
 #__END__
 #__IDS_EXPECTED__

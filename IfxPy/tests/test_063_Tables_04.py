@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,14 +16,14 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_063)
 
   def run_test_063(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
-    result = ifx_db.tables(conn, None, "SYSIBM", "", "VIEW")
+    result = IfxPy.tables(conn, None, "SYSIBM", "", "VIEW")
     
-    if (type(result) == ifx_db.IFXStatement):
+    if (type(result) == IfxPy.IFXStatement):
       print "Resource is a IFX Statement"
       
-    ifx_db.free_result(result)
+    IfxPy.free_result(result)
 
 #__END__
 #__IDS_EXPECTED__

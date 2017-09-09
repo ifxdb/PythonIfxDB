@@ -6,7 +6,7 @@
 
 from __future__ import print_function
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -21,29 +21,29 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_312)
   
   def run_test_312(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
+    IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
     
     query = "INSERT INTO department (deptno, deptname, mgrno, admrdept, location) VALUES (?, ?, ?, ?, ?)"
     
     if conn:
-      stmt = ifx_db.prepare(conn, query)
+      stmt = IfxPy.prepare(conn, query)
       params = ['STG', 'Systems & Technology', '123456', 'RSF', 'Fiji']
 
       print("Binding parameters")
       for i,p in enumerate(params, 1):
-        ifx_db.bind_param(stmt, i, Wrapper(p))
+        IfxPy.bind_param(stmt, i, Wrapper(p))
       
-      if ifx_db.execute(stmt):
+      if IfxPy.execute(stmt):
         print("Executing statement")
-        ifx_db.execute(stmt)
+        IfxPy.execute(stmt)
 
         # force the cache to be unbound
         for i,p in enumerate(params, 1):
-          ifx_db.bind_param(stmt, i, p)
+          IfxPy.bind_param(stmt, i, p)
         
-        ifx_db.rollback(conn)
+        IfxPy.rollback(conn)
       else:
         print("Connection failed.")
 

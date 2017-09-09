@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 import os
 from testfunctions import IfxDbTestFunctions
@@ -18,30 +18,30 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_122(self):
     os.environ['DELIMIDENT'] = 'y' 
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
     if conn:
       drop = "drop table ftest"
       try:
-        ifx_db.exec_immediate( conn, drop )
+        IfxPy.exec_immediate( conn, drop )
       except:
         pass
       
       create = "create table ftest ( \"TEST\" integer, \"test\" integer, \"Test\" integer  )"
-      ifx_db.exec_immediate(conn, create)
+      IfxPy.exec_immediate(conn, create)
       
       insert = "INSERT INTO ftest values (1,2,3)"
-      ifx_db.exec_immediate(conn, insert)
+      IfxPy.exec_immediate(conn, insert)
       
-      stmt = ifx_db.exec_immediate(conn, "SELECT * FROM ftest")
+      stmt = IfxPy.exec_immediate(conn, "SELECT * FROM ftest")
     
-      num1 = ifx_db.field_name(stmt, 0)
-      num2 = ifx_db.field_name(stmt, 1)
-      num3 = ifx_db.field_name(stmt, 2)
+      num1 = IfxPy.field_name(stmt, 0)
+      num2 = IfxPy.field_name(stmt, 1)
+      num3 = IfxPy.field_name(stmt, 2)
       
-      num4 = ifx_db.field_name(stmt, "TEST")
-      num5 = ifx_db.field_name(stmt, 'test')
-      num6 = ifx_db.field_name(stmt, 'Test')
+      num4 = IfxPy.field_name(stmt, "TEST")
+      num5 = IfxPy.field_name(stmt, 'test')
+      num6 = IfxPy.field_name(stmt, 'Test')
 
       print "string(%d) \"%s\"" % (len(num1), num1)
       print "string(%d) \"%s\"" % (len(num2), num2)

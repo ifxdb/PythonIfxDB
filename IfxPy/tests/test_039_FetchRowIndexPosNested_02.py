@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,27 +16,27 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_039)
 
   def run_test_039(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    serverinfo = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    serverinfo = IfxPy.server_info( conn )
 
     if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
-      result = ifx_db.prepare(conn, "SELECT * FROM animals", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
+      result = IfxPy.prepare(conn, "SELECT * FROM animals", {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
     else:
-      result = ifx_db.prepare(conn, "SELECT * FROM animals")
-    ifx_db.execute(result)
-    row = ifx_db.fetch_row(result)
+      result = IfxPy.prepare(conn, "SELECT * FROM animals")
+    IfxPy.execute(result)
+    row = IfxPy.fetch_row(result)
     while ( row ):
       if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
-        result2 = ifx_db.prepare(conn, "SELECT * FROM animals", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
+        result2 = IfxPy.prepare(conn, "SELECT * FROM animals", {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
       else:
-        result2 = ifx_db.prepare(conn, "SELECT * FROM animals")
-      ifx_db.execute(result2)
-      while (ifx_db.fetch_row(result2)):
-        print "%s : %s : %s : %s" % (ifx_db.result(result2, 0), \
-                                     ifx_db.result(result2, 1), \
-                                     ifx_db.result(result2, 2), \
-                                     ifx_db.result(result2, 3))
-      row = ifx_db.fetch_row(result)
+        result2 = IfxPy.prepare(conn, "SELECT * FROM animals")
+      IfxPy.execute(result2)
+      while (IfxPy.fetch_row(result2)):
+        print "%s : %s : %s : %s" % (IfxPy.result(result2, 0), \
+                                     IfxPy.result(result2, 1), \
+                                     IfxPy.result(result2, 2), \
+                                     IfxPy.result(result2, 3))
+      row = IfxPy.fetch_row(result)
 
 #__END__
 #__LUW_EXPECTED__

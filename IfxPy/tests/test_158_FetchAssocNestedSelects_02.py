@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,36 +16,36 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_158)
 
   def run_test_158(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
 
-    result = ifx_db.exec_immediate(conn, "SELECT * FROM staff WHERE id < 50")
+    result = IfxPy.exec_immediate(conn, "SELECT * FROM staff WHERE id < 50")
     
     output = ''
-    row = ifx_db.fetch_assoc(result)
+    row = IfxPy.fetch_assoc(result)
     while ( row ):
       output += str(row['ID']) + ', ' + row['NAME'] + ', ' + str(row['DEPT']) + ', ' + row['JOB'] + ', ' + str(row['YEARS']) + ', ' + str(row['SALARY']) + ', ' + str(row['COMM'])
-      row = ifx_db.fetch_assoc(result)
+      row = IfxPy.fetch_assoc(result)
       
-    result2 = ifx_db.exec_immediate(conn,"SELECT * FROM department WHERE substr(deptno,1,1) in ('A','B','C','D','E')")
-    row2 = ifx_db.fetch_assoc(result2)
+    result2 = IfxPy.exec_immediate(conn,"SELECT * FROM department WHERE substr(deptno,1,1) in ('A','B','C','D','E')")
+    row2 = IfxPy.fetch_assoc(result2)
     while ( row2 ):
         if (row2['MGRNO'] == None): 
             row2['MGRNO'] = ''
         if (row2['LOCATION'] == None): 
             row2['LOCATION'] = ''
         output += str(row2['DEPTNO']) + ', ' + row2['DEPTNAME'] + ', ' + str(row2['MGRNO']) + ', ' + row2['ADMRDEPT'] + ', ' + row2['LOCATION']
-        row2 = ifx_db.fetch_assoc(result2)
+        row2 = IfxPy.fetch_assoc(result2)
     
-    result3 = ifx_db.exec_immediate(conn,"SELECT * FROM employee WHERE lastname IN ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT')")
-    row3 = ifx_db.fetch_tuple(result3)
+    result3 = IfxPy.exec_immediate(conn,"SELECT * FROM employee WHERE lastname IN ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT')")
+    row3 = IfxPy.fetch_tuple(result3)
     while ( row3 ):
         output += row3[0] + ', ' + row3[3] + ', ' + row3[5]
-        row3=ifx_db.fetch_tuple(result3)
+        row3=IfxPy.fetch_tuple(result3)
     print output
 
 #__END__

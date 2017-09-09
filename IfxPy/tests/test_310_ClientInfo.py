@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,9 +16,9 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_310)
 
   def run_test_310(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    client = ifx_db.client_info(conn)
+    client = IfxPy.client_info(conn)
     
     if client:
       print "DRIVER_NAME: string(%d) \"%s\"" % (len(client.DRIVER_NAME), client.DRIVER_NAME)
@@ -28,7 +28,7 @@ class IfxDbTestCase(unittest.TestCase):
       print "ODBC_VER: string(%d) \"%s\"" % (len(client.ODBC_VER), client.ODBC_VER)
       print "ODBC_SQL_CONFORMANCE: string(%d) \"%s\"" % (len(client.ODBC_SQL_CONFORMANCE), client.ODBC_SQL_CONFORMANCE)
     
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Error."
 

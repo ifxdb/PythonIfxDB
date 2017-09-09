@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,27 +16,27 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_125)
 
   def run_test_125(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
-    result = ifx_db.exec_immediate(conn, "SELECT * FROM sales")
-    result2 = ifx_db.exec_immediate(conn, "SELECT * FROM staff")
+    result = IfxPy.exec_immediate(conn, "SELECT * FROM sales")
+    result2 = IfxPy.exec_immediate(conn, "SELECT * FROM staff")
     
-    for i in range(0, ifx_db.num_fields(result)):
-      print "%d:%s" % (i, ifx_db.field_name(result,i))
+    for i in range(0, IfxPy.num_fields(result)):
+      print "%d:%s" % (i, IfxPy.field_name(result,i))
     
     print "-----"
     
-    for i in range(0, ifx_db.num_fields(result2)):
-      print "%d:%s" % (i, ifx_db.field_name(result2,i))
+    for i in range(0, IfxPy.num_fields(result2)):
+      print "%d:%s" % (i, IfxPy.field_name(result2,i))
     
     print "-----"
     
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      print "Region:%s" % ifx_db.field_name(result, 'region')
+      print "Region:%s" % IfxPy.field_name(result, 'region')
     else:
-      print "Region:%s" % ifx_db.field_name(result, 'REGION')
-    print "5:%s" % ifx_db.field_name(result2, 5)
+      print "Region:%s" % IfxPy.field_name(result, 'REGION')
+    print "5:%s" % IfxPy.field_name(result2, 5)
 
 #__END__
 #__LUW_EXPECTED__

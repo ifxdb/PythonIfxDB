@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,12 +16,12 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_155)
 
   def run_test_155(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    serverinfo = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    serverinfo = IfxPy.server_info( conn )
     
-    result = ifx_db.exec_immediate(conn, "select * from employee where lastname in ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT')")
+    result = IfxPy.exec_immediate(conn, "select * from employee where lastname in ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT')")
     i=0
-    row = ifx_db.fetch_assoc(result)
+    row = IfxPy.fetch_assoc(result)
     while ( row ):
       i += 1
       if (serverinfo.DBMS_NAME[0:3] == 'Inf'):
@@ -31,7 +31,7 @@ class IfxDbTestCase(unittest.TestCase):
           (row['empno'], row['firstnme'], row['midinit'], row['lastname'], row['workdept'], \
           row['phoneno'], row['hiredate'], row['job'], row['edlevel'], row['sex'], \
           row['birthdate'], row['salary'], row['bonus'], row['comm'])
-        row = ifx_db.fetch_assoc(result)
+        row = IfxPy.fetch_assoc(result)
       else:
         if (row['MIDINIT'] == None):
           row['MIDINIT'] = ''
@@ -39,7 +39,7 @@ class IfxDbTestCase(unittest.TestCase):
           (row['EMPNO'], row['FIRSTNME'], row['MIDINIT'], row['LASTNAME'], row['WORKDEPT'], \
           row['PHONENO'], row['HIREDATE'], row['JOB'], row['EDLEVEL'], row['SEX'], \
           row['BIRTHDATE'], row['SALARY'], row['BONUS'], row['COMM'])
-        row = ifx_db.fetch_assoc(result)
+        row = IfxPy.fetch_assoc(result)
     print "%d record(s) selected." % i
 
 #__END__

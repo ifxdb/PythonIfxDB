@@ -43,28 +43,28 @@ if sys.version_info < (3, ):
 else:
    exception = Exception
    
-import ifx_db
-__version__ = ifx_db.__version__
+import IfxPy
+__version__ = IfxPy.__version__
 
 # Constants for specifying database connection options.
-SQL_ATTR_AUTOCOMMIT = ifx_db.SQL_ATTR_AUTOCOMMIT
-SQL_ATTR_CURRENT_SCHEMA = ifx_db.SQL_ATTR_CURRENT_SCHEMA
-SQL_AUTOCOMMIT_OFF = ifx_db.SQL_AUTOCOMMIT_OFF
-SQL_AUTOCOMMIT_ON = ifx_db.SQL_AUTOCOMMIT_ON
-ATTR_CASE = ifx_db.ATTR_CASE
-CASE_NATURAL = ifx_db.CASE_NATURAL
-CASE_LOWER = ifx_db.CASE_LOWER
-CASE_UPPER = ifx_db.CASE_UPPER
-SQL_FALSE = ifx_db.SQL_FALSE
-SQL_TRUE = ifx_db.SQL_TRUE
-SQL_TABLE_STAT = ifx_db.SQL_TABLE_STAT
-SQL_INDEX_CLUSTERED = ifx_db.SQL_INDEX_CLUSTERED
-SQL_INDEX_OTHER = ifx_db.SQL_INDEX_OTHER
-SQL_DBMS_VER = ifx_db.SQL_DBMS_VER
-SQL_DBMS_NAME = ifx_db.SQL_DBMS_NAME
-USE_WCHAR = ifx_db.USE_WCHAR
-WCHAR_YES = ifx_db.WCHAR_YES
-WCHAR_NO = ifx_db.WCHAR_NO
+SQL_ATTR_AUTOCOMMIT = IfxPy.SQL_ATTR_AUTOCOMMIT
+SQL_ATTR_CURRENT_SCHEMA = IfxPy.SQL_ATTR_CURRENT_SCHEMA
+SQL_AUTOCOMMIT_OFF = IfxPy.SQL_AUTOCOMMIT_OFF
+SQL_AUTOCOMMIT_ON = IfxPy.SQL_AUTOCOMMIT_ON
+ATTR_CASE = IfxPy.ATTR_CASE
+CASE_NATURAL = IfxPy.CASE_NATURAL
+CASE_LOWER = IfxPy.CASE_LOWER
+CASE_UPPER = IfxPy.CASE_UPPER
+SQL_FALSE = IfxPy.SQL_FALSE
+SQL_TRUE = IfxPy.SQL_TRUE
+SQL_TABLE_STAT = IfxPy.SQL_TABLE_STAT
+SQL_INDEX_CLUSTERED = IfxPy.SQL_INDEX_CLUSTERED
+SQL_INDEX_OTHER = IfxPy.SQL_INDEX_OTHER
+SQL_DBMS_VER = IfxPy.SQL_DBMS_VER
+SQL_DBMS_NAME = IfxPy.SQL_DBMS_NAME
+USE_WCHAR = IfxPy.USE_WCHAR
+WCHAR_YES = IfxPy.WCHAR_YES
+WCHAR_NO = IfxPy.WCHAR_NO
 FIX_RETURN_TYPE = 1
 
 # Module globals
@@ -457,7 +457,7 @@ def _server_connect(dsn, user='', password='', host=''):
     if password != '' and dsn.find('PWD=') == -1:
         dsn = dsn + "PWD=" + password + ";"
     try:    
-        conn = ifx_db.connect(dsn, '', '')
+        conn = IfxPy.connect(dsn, '', '')
     except Exception, inst:
         raise _get_exception(inst)
     
@@ -507,8 +507,8 @@ def connect(dsn, user='', password='', host='', database='', conn_options=None):
     if password != '' and dsn.find('PWD=') == -1:
         dsn = dsn + "PWD=" + password + ";"
     try:    
-        conn = ifx_db.connect(dsn, '', '', conn_options)
-        ifx_db.set_option(conn, {SQL_ATTR_CURRENT_SCHEMA : user}, 1)
+        conn = IfxPy.connect(dsn, '', '', conn_options)
+        IfxPy.set_option(conn, {SQL_ATTR_CURRENT_SCHEMA : user}, 1)
     except Exception, inst:
         raise _get_exception(inst)
 
@@ -521,7 +521,7 @@ class Connection(object):
 
     """
     def __init__(self, conn_handler):
-        """Constructor for Connection object. It takes ifx_db 
+        """Constructor for Connection object. It takes IfxPy 
         connection handler as an argument. 
 
         """
@@ -530,8 +530,8 @@ class Connection(object):
         # Used to identify close cursors for generating exceptions 
         # after the connection is closed.
         self._cursor_list = []
-        self.__dbms_name = ifx_db.get_db_info(conn_handler, SQL_DBMS_NAME)
-        self.__dbms_ver = ifx_db.get_db_info(conn_handler, SQL_DBMS_VER)
+        self.__dbms_name = IfxPy.get_db_info(conn_handler, SQL_DBMS_NAME)
+        self.__dbms_ver = IfxPy.get_db_info(conn_handler, SQL_DBMS_VER)
         self.FIX_RETURN_TYPE = 1 
 
     # This method is used to get the DBMS_NAME 
@@ -561,7 +561,7 @@ class Connection(object):
                 raise ProgrammingError("Connection cannot be closed; "
                                      "connection is no longer active.")
             else:
-                return_value = ifx_db.close(self.conn_handler)
+                return_value = IfxPy.close(self.conn_handler)
         except Exception, inst:
             raise _get_exception(inst)
         self.conn_handler = None
@@ -580,7 +580,7 @@ class Connection(object):
 
         """
         try:
-            return_value = ifx_db.commit(self.conn_handler)
+            return_value = IfxPy.commit(self.conn_handler)
         except Exception, inst:
             raise _get_exception(inst)
         return return_value
@@ -591,7 +591,7 @@ class Connection(object):
 
         """
         try:
-            return_value = ifx_db.rollback(self.conn_handler)
+            return_value = IfxPy.rollback(self.conn_handler)
         except Exception, inst:
             raise _get_exception(inst)
         return return_value
@@ -613,14 +613,14 @@ class Connection(object):
         """Input: connection attribute dictionary
            Return: True on success or False on failure
         """
-        return ifx_db.set_option(self.conn_handler, attr_dict, 1)
+        return IfxPy.set_option(self.conn_handler, attr_dict, 1)
 
     # Retrieves connection attributes values
     def get_option(self, attr_key):
         """Input: connection attribute key
            Return: current setting of the resource attribute requested
         """
-        return ifx_db.get_option(self.conn_handler, attr_key, 1)
+        return IfxPy.get_option(self.conn_handler, attr_key, 1)
 
     # Sets FIX_RETURN_TYPE. Added for performance improvement
     def set_fix_return_type(self, is_on):
@@ -640,9 +640,9 @@ class Connection(object):
         """
         try:
           if is_on:
-            is_set = ifx_db.set_option(self.conn_handler, {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_ON}, 1)
+            is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_ON}, 1)
           else:
-            is_set = ifx_db.set_option(self.conn_handler, {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_OFF}, 1)
+            is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_OFF}, 1)
         except Exception, inst:
           raise _get_exception(inst)
         return is_set
@@ -654,7 +654,7 @@ class Connection(object):
         """
         self.current_schema = schema_name
         try:
-          is_set = ifx_db.set_option(self.conn_handler, {SQL_ATTR_CURRENT_SCHEMA : schema_name}, 1)
+          is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_CURRENT_SCHEMA : schema_name}, 1)
         except Exception, inst:
           raise _get_exception(inst)
         return is_set
@@ -664,7 +664,7 @@ class Connection(object):
         """Return: current setting of the schema attribute
         """
         try:
-          conn_schema = ifx_db.get_option(self.conn_handler, SQL_ATTR_CURRENT_SCHEMA, 1)
+          conn_schema = IfxPy.get_option(self.conn_handler, SQL_ATTR_CURRENT_SCHEMA, 1)
           if conn_schema is not None and conn_schema != '':
             self.current_schema = conn_schema
         except Exception, inst:
@@ -688,7 +688,7 @@ class Connection(object):
 
     # Retrieves the tables for a specified schema (and/or given table name)
     def tables(self, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFXConnection object
+        """Input: connection - IfxPy.IFXConnection object
            Return: sequence of table metadata dicts for the specified schema
         """
             
@@ -699,14 +699,14 @@ class Connection(object):
             table_name = self.set_case(table_name)
 
         try:      
-          stmt = ifx_db.tables(self.conn_handler, None, schema_name, table_name)
-          row = ifx_db.fetch_assoc(stmt)
+          stmt = IfxPy.tables(self.conn_handler, None, schema_name, table_name)
+          row = IfxPy.fetch_assoc(stmt)
           i = 0
           while (row):
               result.append( row )
               i += 1    
-              row = ifx_db.fetch_assoc(stmt)
-          ifx_db.free_result(stmt)
+              row = IfxPy.fetch_assoc(stmt)
+          IfxPy.free_result(stmt)
         except Exception, inst:
           raise _get_exception(inst)
 
@@ -714,7 +714,7 @@ class Connection(object):
 
     # Retrieves metadata pertaining to index for specified schema (and/or table name)
     def indexes(self, unique=True, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFXConnection object
+        """Input: connection - IfxPy.IFXConnection object
            Return: sequence of index metadata dicts for the specified table
         Example:
            Index metadata retrieved from schema 'PYTHONIC.TEST_TABLE' table
@@ -736,15 +736,15 @@ class Connection(object):
             table_name = self.set_case(table_name)
 
         try:
-          stmt = ifx_db.statistics(self.conn_handler, None, schema_name, table_name, unique)
-          row = ifx_db.fetch_assoc(stmt)
+          stmt = IfxPy.statistics(self.conn_handler, None, schema_name, table_name, unique)
+          row = IfxPy.fetch_assoc(stmt)
           i = 0
           while (row):
               if row['TYPE'] == SQL_INDEX_OTHER:
                   result.append( row )
               i += 1    
-              row = ifx_db.fetch_assoc(stmt)
-          ifx_db.free_result(stmt)
+              row = IfxPy.fetch_assoc(stmt)
+          IfxPy.free_result(stmt)
         except Exception, inst:
           raise _get_exception(inst)
 
@@ -752,7 +752,7 @@ class Connection(object):
 
     # Retrieves metadata pertaining to primary keys for specified schema (and/or table name)
     def primary_keys(self, unique=True, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFXConnection object
+        """Input: connection - IfxPy.IFXConnection object
            Return: sequence of PK metadata dicts for the specified table
         Example:
            PK metadata retrieved from 'PYTHONIC.ORDERS' table
@@ -771,14 +771,14 @@ class Connection(object):
             table_name = self.set_case(table_name)
 
         try:
-          stmt = ifx_db.primary_keys(self.conn_handler, None, schema_name, table_name)
-          row = ifx_db.fetch_assoc(stmt)
+          stmt = IfxPy.primary_keys(self.conn_handler, None, schema_name, table_name)
+          row = IfxPy.fetch_assoc(stmt)
           i = 0
           while (row):
               result.append( row )
               i += 1    
-              row = ifx_db.fetch_assoc(stmt)
-          ifx_db.free_result(stmt)
+              row = IfxPy.fetch_assoc(stmt)
+          IfxPy.free_result(stmt)
         except Exception, inst:
           raise _get_exception(inst)
 
@@ -786,7 +786,7 @@ class Connection(object):
 
     # Retrieves metadata pertaining to foreign keys for specified schema (and/or table name)
     def foreign_keys(self, unique=True, schema_name=None, table_name=None):
-        """Input: connection - ifx_db.IFXConnection object
+        """Input: connection - IfxPy.IFXConnection object
            Return: sequence of FK metadata dicts for the specified table
         Example:
            FK metadata retrieved from 'PYTHONIC.ENGINE_EMAIL_ADDRESSES' table
@@ -809,14 +809,14 @@ class Connection(object):
             table_name = self.set_case(table_name)
 
         try:
-          stmt = ifx_db.foreign_keys(self.conn_handler, None, None, None, None, schema_name, table_name)
-          row = ifx_db.fetch_assoc(stmt)
+          stmt = IfxPy.foreign_keys(self.conn_handler, None, None, None, None, schema_name, table_name)
+          row = IfxPy.fetch_assoc(stmt)
           i = 0
           while (row):
               result.append( row )
               i += 1    
-              row = ifx_db.fetch_assoc(stmt)
-          ifx_db.free_result(stmt)
+              row = IfxPy.fetch_assoc(stmt)
+          IfxPy.free_result(stmt)
         except Exception, inst:
           raise _get_exception(inst)
 
@@ -824,7 +824,7 @@ class Connection(object):
     
     # Retrieves the columns for a specified schema (and/or table name and column name)
     def columns(self, schema_name=None, table_name=None, column_names=None):
-        """Input: connection - ifx_db.IFXConnection object
+        """Input: connection - IfxPy.IFXConnection object
            Return: sequence of column metadata dicts for the specified schema
         Example:
            Column metadata retrieved from schema 'PYTHONIC.FOO' table, column 'A'
@@ -848,14 +848,14 @@ class Connection(object):
           table_name = self.set_case(table_name)
 
         try:
-          stmt = ifx_db.columns(self.conn_handler, None, schema_name, table_name)
-          row = ifx_db.fetch_assoc(stmt)
+          stmt = IfxPy.columns(self.conn_handler, None, schema_name, table_name)
+          row = IfxPy.fetch_assoc(stmt)
           i = 0
           while (row):
             result.append( row )
             i += 1    
-            row = ifx_db.fetch_assoc(stmt)
-          ifx_db.free_result(stmt)
+            row = IfxPy.fetch_assoc(stmt)
+          IfxPy.free_result(stmt)
 
           col_names_lower = []
           if column_names is not None:
@@ -893,7 +893,7 @@ class Cursor(object):
         self.__description = []
         
         try:
-            num_columns = ifx_db.num_fields(self.stmt_handler)
+            num_columns = IfxPy.num_fields(self.stmt_handler)
             """ If the execute statement did not produce a result set return None.
             """
             if num_columns == False:
@@ -901,9 +901,9 @@ class Cursor(object):
                 return None
             for column_index in range(num_columns):
                 column_desc = []
-                column_desc.append(ifx_db.field_name(self.stmt_handler,
+                column_desc.append(IfxPy.field_name(self.stmt_handler,
                                                           column_index))
-                type = ifx_db.field_type(self.stmt_handler, column_index)
+                type = IfxPy.field_type(self.stmt_handler, column_index)
                 type = type.upper()
                 if STRING == type:
                     column_desc.append(STRING)
@@ -930,19 +930,19 @@ class Cursor(object):
                 elif ROWID == type:
                     column_desc.append(ROWID)
 
-                column_desc.append(ifx_db.field_display_size(
+                column_desc.append(IfxPy.field_display_size(
                                              self.stmt_handler, column_index))
 
-                column_desc.append(ifx_db.field_display_size(
+                column_desc.append(IfxPy.field_display_size(
                                              self.stmt_handler, column_index))
                 
-                column_desc.append(ifx_db.field_precision(
+                column_desc.append(IfxPy.field_precision(
                                              self.stmt_handler, column_index))
 
-                column_desc.append(ifx_db.field_scale(self.stmt_handler,
+                column_desc.append(IfxPy.field_scale(self.stmt_handler,
                                                                 column_index))
                                                                 
-                column_desc.append(ifx_db.field_nullable(
+                column_desc.append(IfxPy.field_nullable(
                                              self.stmt_handler, column_index))
                                              
                 self.__description.append(column_desc)
@@ -983,7 +983,7 @@ class Cursor(object):
     connection = property(__get_connection, None, None, "")
 
     def __init__(self, conn_handler, conn_object=None):
-        """Constructor for Cursor object. It takes ifx_db connection
+        """Constructor for Cursor object. It takes IfxPy connection
         handler as an argument.
         """
         
@@ -1013,7 +1013,7 @@ class Cursor(object):
             self.messages.append(ProgrammingError("Cursor cannot be closed; connection is no longer active."))
             raise self.messages[len(self.messages) - 1]
         try:
-            return_value = ifx_db.free_stmt(self.stmt_handler)
+            return_value = IfxPy.free_stmt(self.stmt_handler)
         except Exception, inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
@@ -1041,13 +1041,13 @@ class Cursor(object):
             parameters = tuple(buff)
             
             try:
-                result = ifx_db.callproc(self.conn_handler, procname,parameters)
+                result = IfxPy.callproc(self.conn_handler, procname,parameters)
             except Exception, inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         else:
             try:
-                result = ifx_db.callproc(self.conn_handler, procname)
+                result = IfxPy.callproc(self.conn_handler, procname)
             except Exception, inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
@@ -1083,25 +1083,25 @@ class Cursor(object):
     # Helper for preparing an SQL statement. 
     def _prepare_helper(self, operation, parameters=None):
         try:
-            ifx_db.free_stmt(self.stmt_handler)
+            IfxPy.free_stmt(self.stmt_handler)
         except:
             pass
 
         try:
-            self.stmt_handler = ifx_db.prepare(self.conn_handler, operation)
+            self.stmt_handler = IfxPy.prepare(self.conn_handler, operation)
         except Exception, inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
 
     # Helper for preparing an SQL statement.
     def _set_cursor_helper(self):
-        if (ifx_db.get_option(self.stmt_handler, ifx_db.SQL_ATTR_CURSOR_TYPE, 0) != ifx_db.SQL_CURSOR_FORWARD_ONLY):
+        if (IfxPy.get_option(self.stmt_handler, IfxPy.SQL_ATTR_CURSOR_TYPE, 0) != IfxPy.SQL_CURSOR_FORWARD_ONLY):
             self._is_scrollable_cursor = True
         else:
             self._is_scrollable_cursor = False
         self._result_set_produced = False
         try:
-            num_columns = ifx_db.num_fields(self.stmt_handler)
+            num_columns = IfxPy.num_fields(self.stmt_handler)
         except Exception, inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
@@ -1124,26 +1124,26 @@ class Cursor(object):
                 buff.append(param)
             parameters = tuple(buff)
             try:                
-                return_value = ifx_db.execute(self.stmt_handler, parameters)
+                return_value = IfxPy.execute(self.stmt_handler, parameters)
                 if not return_value:
-                    if ifx_db.conn_errormsg() is not None:
-                        self.messages.append(Error(str(ifx_db.conn_errormsg())))
+                    if IfxPy.conn_errormsg() is not None:
+                        self.messages.append(Error(str(IfxPy.conn_errormsg())))
                         raise self.messages[len(self.messages) - 1]
-                    if ifx_db.stmt_errormsg() is not None:
-                        self.messages.append(Error(str(ifx_db.stmt_errormsg())))
+                    if IfxPy.stmt_errormsg() is not None:
+                        self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                         raise self.messages[len(self.messages) - 1]
             except Exception, inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         else:
             try:
-                return_value = ifx_db.execute(self.stmt_handler)
+                return_value = IfxPy.execute(self.stmt_handler)
                 if not return_value:
-                    if ifx_db.conn_errormsg() is not None:
-                        self.messages.append(Error(str(ifx_db.conn_errormsg())))
+                    if IfxPy.conn_errormsg() is not None:
+                        self.messages.append(Error(str(IfxPy.conn_errormsg())))
                         raise self.messages[len(self.messages) - 1]
-                    if ifx_db.stmt_errormsg() is not None:
-                        self.messages.append(Error(str(ifx_db.stmt_errormsg())))
+                    if IfxPy.stmt_errormsg() is not None:
+                        self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                         raise self.messages[len(self.messages) - 1]
             except Exception, inst:
                 self.messages.append(_get_exception(inst))
@@ -1156,14 +1156,14 @@ class Cursor(object):
         self.__rowcount = -1
         if not self._result_set_produced:
             try:
-                counter = ifx_db.num_rows(self.stmt_handler)
+                counter = IfxPy.num_rows(self.stmt_handler)
             except Exception, inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
             self.__rowcount = counter
         elif self._is_scrollable_cursor:
             try:
-                counter = ifx_db.get_num_result(self.stmt_handler)
+                counter = IfxPy.get_num_result(self.stmt_handler)
             except Exception, inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
@@ -1183,19 +1183,19 @@ class Cursor(object):
         """
         operation = 'SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1'
         try:
-            stmt_handler = ifx_db.prepare(self.conn_handler, operation)
-            if ifx_db.execute(stmt_handler):
-                row = ifx_db.fetch_tuple(stmt_handler)
+            stmt_handler = IfxPy.prepare(self.conn_handler, operation)
+            if IfxPy.execute(stmt_handler):
+                row = IfxPy.fetch_tuple(stmt_handler)
                 if row[0] is not None:
                   identity_val = int(row[0])
                 else:
                   identity_val = None
             else:
-                if ifx_db.conn_errormsg() is not None:
-                    self.messages.append(Error(str(ifx_db.conn_errormsg())))
+                if IfxPy.conn_errormsg() is not None:
+                    self.messages.append(Error(str(IfxPy.conn_errormsg())))
                     raise self.messages[len(self.messages) - 1]
-                if ifx_db.stmt_errormsg() is not None:
-                    self.messages.append(Error(str(ifx_db.stmt_errormsg())))
+                if IfxPy.stmt_errormsg() is not None:
+                    self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                     raise self.messages[len(self.messages) - 1]
         except Exception, inst:
             self.messages.append(_get_exception(inst))
@@ -1262,19 +1262,19 @@ class Cursor(object):
         self.__rowcount = -1
         self._prepare_helper(operation)
         try:
-            autocommit = ifx_db.autocommit(self.conn_handler)
+            autocommit = IfxPy.autocommit(self.conn_handler)
             if autocommit !=  0:
-                ifx_db.autocommit(self.conn_handler, 0)
-            self.__rowcount = ifx_db.execute_many(self.stmt_handler, seq_parameters)
+                IfxPy.autocommit(self.conn_handler, 0)
+            self.__rowcount = IfxPy.execute_many(self.stmt_handler, seq_parameters)
             if autocommit != 0:
-                ifx_db.commit(self.conn_handler)
-                ifx_db.autocommit(self.conn_handler, autocommit)
+                IfxPy.commit(self.conn_handler)
+                IfxPy.autocommit(self.conn_handler, autocommit)
             if self.__rowcount == -1:
-                if ifx_db.conn_errormsg() is not None:
-                    self.messages.append(Error(str(ifx_db.conn_errormsg())))
+                if IfxPy.conn_errormsg() is not None:
+                    self.messages.append(Error(str(IfxPy.conn_errormsg())))
                     raise self.messages[len(self.messages) - 1]
-                if ifx_db.stmt_errormsg() is not None:
-                    self.messages.append(Error(str(ifx_db.stmt_errormsg())))
+                if IfxPy.stmt_errormsg() is not None:
+                    self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                     raise self.messages[len(self.messages) - 1]   
         except Exception, inst:
             self._set_rowcount()
@@ -1300,10 +1300,10 @@ class Cursor(object):
         while (fetch_size == -1) or \
               (fetch_size != -1 and rows_fetched < fetch_size):
             try:
-                row = ifx_db.fetch_tuple(self.stmt_handler)
+                row = IfxPy.fetch_tuple(self.stmt_handler)
             except Exception, inst:
-                if ifx_db.stmt_errormsg() is not None:
-                    self.messages.append(Error(str(ifx_db.stmt_errormsg())))
+                if IfxPy.stmt_errormsg() is not None:
+                    self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                 else:    
                     self.messages.append(_get_exception(inst))
                 if len(row_list) == 0:
@@ -1372,7 +1372,7 @@ class Cursor(object):
             # should be used to get next result set. 
             self.__description = None
             self._all_stmt_handlers.append(self.stmt_handler)
-            self.stmt_handler = ifx_db.next_result(self._all_stmt_handlers[0])
+            self.stmt_handler = IfxPy.next_result(self._all_stmt_handlers[0])
         except Exception, inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
@@ -1398,7 +1398,7 @@ class Cursor(object):
         row_list = None
         for index in range(len(row)):
             if row[index] is not None:
-                type = ifx_db.field_type(self.stmt_handler, index)
+                type = IfxPy.field_type(self.stmt_handler, index)
                 type = type.upper()
 
                 try:

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,11 +16,11 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_052)
 	  
   def run_test_052(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
-    ifx_db.autocommit(conn, 0)
+    IfxPy.autocommit(conn, 0)
       
-    ac = ifx_db.autocommit(conn)
+    ac = IfxPy.autocommit(conn)
       
     print ac
 

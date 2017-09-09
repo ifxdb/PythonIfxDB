@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,27 +16,27 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_157a)
 
   def run_test_157a(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
     print "Starting..."
     if conn:
       sql = "SELECT id, name, breed, weight FROM animals ORDER BY breed"
-      result = ifx_db.exec_immediate(conn, sql)
+      result = IfxPy.exec_immediate(conn, sql)
 
       try:
           i = 2
-          row = ifx_db.fetch_assoc(result, i)
+          row = IfxPy.fetch_assoc(result, i)
           while ( row ):
               if (server.DBMS_NAME[0:3] == 'Inf'):
                 print "%-5d %-16s %-32s %10s" % (row['id'], row['name'], row['breed'], row['weight'])
               else:
                 print "%-5d %-16s %-32s %10s" % (row['ID'], row['NAME'], row['BREED'], row['WEIGHT'])
               i = i + 2
-          row = ifx_db.fetch_assoc(result, i)
+          row = IfxPy.fetch_assoc(result, i)
       except:
-          print "SQLSTATE: %s" % ifx_db.stmt_error(result)
-          print "Message: %s" % ifx_db.stmt_errormsg(result)
+          print "SQLSTATE: %s" % IfxPy.stmt_error(result)
+          print "Message: %s" % IfxPy.stmt_errormsg(result)
 	
       print "DONE"
 

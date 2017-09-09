@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,20 +16,20 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_212)
 
   def run_test_212(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
-    result = ifx_db.exec_immediate(conn, "select * from sales")
+    result = IfxPy.exec_immediate(conn, "select * from sales")
     
     if (server.DBMS_NAME[0:3] == 'Inf'):
       i = "sales_person"
     else:
       i = "SALES_PERSON"
     
-    print "%s size %d" % (i, ifx_db.field_display_size(result,i))
+    print "%s size %d" % (i, IfxPy.field_display_size(result,i))
     
     i = 2
-    print "%d size %d" % (i, ifx_db.field_display_size(result,i))
+    print "%d size %d" % (i, IfxPy.field_display_size(result,i))
 
 #__END__
 #__LUW_EXPECTED__

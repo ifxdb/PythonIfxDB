@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,16 +16,16 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_152)
 
   def run_test_152(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
     
-    result = ifx_db.exec_immediate(conn, "select * from project")
+    result = IfxPy.exec_immediate(conn, "select * from project")
     
-    row = ifx_db.fetch_assoc(result)
+    row = IfxPy.fetch_assoc(result)
     while ( row ):
       #printf("%6s ",row['PROJNO'])
       #printf("%-24s ",row['PROJNAME'])
@@ -39,7 +39,7 @@ class IfxDbTestCase(unittest.TestCase):
       if (row['MAJPROJ'] == None):
         row['MAJPROJ'] = ''
       print "%6s %-24s %3s %6s%7s %10s %10s %6s" % (row['PROJNO'], row['PROJNAME'], row['DEPTNO'], row['RESPEMP'], row['PRSTAFF'], row['PRSTDATE'], row['PRENDATE'], row['MAJPROJ'])
-      row = ifx_db.fetch_assoc(result) 
+      row = IfxPy.fetch_assoc(result) 
 
 #__END__
 #__LUW_EXPECTED__

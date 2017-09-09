@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,27 +16,27 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_037)
 
   def run_test_037(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    serverinfo = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    serverinfo = IfxPy.server_info( conn )
 
-    result = ifx_db.exec_immediate(conn, "SELECT * FROM staff WHERE id < 101")
+    result = IfxPy.exec_immediate(conn, "SELECT * FROM staff WHERE id < 101")
     
-    row = ifx_db.fetch_row(result)
+    row = IfxPy.fetch_row(result)
     while ( row ):
       if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
-        result2 = ifx_db.prepare(conn, "SELECT * FROM staff WHERE id < 101", {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
+        result2 = IfxPy.prepare(conn, "SELECT * FROM staff WHERE id < 101", {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
       else:
-        result2 = ifx_db.prepare(conn, "SELECT * FROM staff WHERE id < 101")
-      ifx_db.execute(result2)
-      row2 = ifx_db.fetch_row(result2)
+        result2 = IfxPy.prepare(conn, "SELECT * FROM staff WHERE id < 101")
+      IfxPy.execute(result2)
+      row2 = IfxPy.fetch_row(result2)
       while ( row2 ):
-        print "%s : %s : %s : %s : %s" % (ifx_db.result(result2, 0), \
-                                          ifx_db.result(result2, 1), \
-                                          ifx_db.result(result2, 2), \
-                                          ifx_db.result(result2, 3), \
-                                          ifx_db.result(result2, 5))
-        row2 = ifx_db.fetch_row(result2)
-      row = ifx_db.fetch_row(result)
+        print "%s : %s : %s : %s : %s" % (IfxPy.result(result2, 0), \
+                                          IfxPy.result(result2, 1), \
+                                          IfxPy.result(result2, 2), \
+                                          IfxPy.result(result2, 3), \
+                                          IfxPy.result(result2, 5))
+        row2 = IfxPy.fetch_row(result2)
+      row = IfxPy.fetch_row(result)
 
 #__END__
 #__LUW_EXPECTED__

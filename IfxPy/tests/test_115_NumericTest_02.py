@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,56 +16,56 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_115)
 
   def run_test_115(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
     
     if conn:
       drop = "drop table numericliteral"
       try:
-        ifx_db.exec_immediate( conn, drop )
+        IfxPy.exec_immediate( conn, drop )
       except:
         pass
 
       create = "create table numericliteral ( id INTEGER, data VARCHAR(50) )"
-      ifx_db.exec_immediate(conn, create)
+      IfxPy.exec_immediate(conn, create)
 
       insert = "INSERT INTO numericliteral (id, data) values (12, 'NUMERIC LITERAL TEST')"
-      ifx_db.exec_immediate(conn, insert)
+      IfxPy.exec_immediate(conn, insert)
 
-      stmt = ifx_db.prepare(conn, "SELECT data FROM numericliteral")
-      ifx_db.execute(stmt)
+      stmt = IfxPy.prepare(conn, "SELECT data FROM numericliteral")
+      IfxPy.execute(stmt)
       
 #      NOTE: This is a workaround
 #      function fetch_object() to be implemented...
-#      row = ifx_db.fetch_object(stmt, 0)
+#      row = IfxPy.fetch_object(stmt, 0)
       
       class Row:
           pass
       
       row = Row()
-      ifx_db.fetch_row(stmt, 0)
+      IfxPy.fetch_row(stmt, 0)
       if (server.DBMS_NAME[0:3] != 'Inf'):
-        row.DATA = ifx_db.result(stmt, 'DATA')
+        row.DATA = IfxPy.result(stmt, 'DATA')
       else:
-        row.DATA = ifx_db.result(stmt, 'data')
+        row.DATA = IfxPy.result(stmt, 'data')
       print row.DATA
 
       insert = "UPDATE numericliteral SET data = '@@@@@@@@@@' WHERE id = '12'"
-      ifx_db.exec_immediate(conn, insert)
+      IfxPy.exec_immediate(conn, insert)
 
-      stmt = ifx_db.prepare(conn, "SELECT data FROM numericliteral")
-      ifx_db.execute(stmt)
+      stmt = IfxPy.prepare(conn, "SELECT data FROM numericliteral")
+      IfxPy.execute(stmt)
       
-#      row = ifx_db.fetch_object(stmt, 0)
-      ifx_db.fetch_row(stmt, 0)
+#      row = IfxPy.fetch_object(stmt, 0)
+      IfxPy.fetch_row(stmt, 0)
       if (server.DBMS_NAME[0:3] != 'Inf'):
-        row.DATA = ifx_db.result(stmt, 'DATA')
+        row.DATA = IfxPy.result(stmt, 'DATA')
       else:
-        row.DATA = ifx_db.result(stmt, 'data')
+        row.DATA = IfxPy.result(stmt, 'data')
       print row.DATA
     else:
       print "Connection failed."

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,21 +16,21 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_102)
 
   def run_test_102(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if (not conn):
-      print ifx_db.conn_errormsg()
+      print IfxPy.conn_errormsg()
     
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if ((server.DBMS_NAME[0:2] != "AS") and (server.DBMS_NAME != "DB2") and (server.DBMS_NAME[0:3] != "Inf")):
-      result = ifx_db.exec_immediate(conn, "VALUES(1)")
+      result = IfxPy.exec_immediate(conn, "VALUES(1)")
       #throw :unsupported unless result
       if (not result):
         raise Exception('Unsupported')
-      print ifx_db.num_fields(result)
+      print IfxPy.num_fields(result)
     else:
       print '1'
-    ifx_db.close(conn)
+    IfxPy.close(conn)
 
 #__END__
 #__LUW_EXPECTED__

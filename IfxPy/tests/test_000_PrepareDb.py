@@ -5,7 +5,7 @@
 #
 
 import unittest, sys, os
-import ifx_db
+import IfxPy
 #need to add this line below to each file to make the connect parameters available to all the test files
 import config
 from testfunctions import IfxDbTestFunctions
@@ -21,20 +21,20 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_000(self):
     # Make a connection
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
     # Get the server type
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
 
     # Drop the animal table, in case it exists
     drop = 'DROP TABLE animals'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the animal table
     create = 'CREATE TABLE animals (id INTEGER, breed VARCHAR(32), name CHAR(16), weight DECIMAL(7,2))'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the animal table
     animals = (\
     	(0, 'cat',        'Pook',         3.2),\
@@ -46,38 +46,38 @@ class IfxDbTestCase(unittest.TestCase):
 	(6, 'llama',      'Sweater',      150)\
 	)
     insert = 'INSERT INTO animals (id, breed, name, weight) VALUES (?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for animal in animals:
-        result = ifx_db.execute(stmt, animal)
+        result = IfxPy.execute(stmt, animal)
 
     # Drop the test view, in case it exists
     drop = 'DROP VIEW anime_cat'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create test view
-    ifx_db.exec_immediate(conn, """CREATE VIEW anime_cat AS
+    IfxPy.exec_immediate(conn, """CREATE VIEW anime_cat AS
       SELECT name, breed FROM animals
       WHERE id = 0""")
 
     # Drop the animal_pics table
     drop = 'DROP TABLE animal_pics'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the animal_pics table
     create = 'CREATE TABLE animal_pics (name VARCHAR(32), picture BLOB)'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the view table
     animals = (\
       ('Spook', 'spook.png'),\
       ('Helmut', 'pic1.jpg'),\
     )
     insert = 'INSERT INTO animal_pics (name, picture) VALUES (?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if (not stmt):
       print "Attempt to prepare statement failed."
       return 0
@@ -88,19 +88,19 @@ class IfxDbTestCase(unittest.TestCase):
       if (not picture):
         print "Could not retrieve picture '%s'." % animal[1]
         return 0
-      ifx_db.bind_param(stmt, 1, name, ifx_db.SQL_PARAM_INPUT)
-      ifx_db.bind_param(stmt, 2, picture, ifx_db.SQL_PARAM_INPUT)
-#      result = ifx_db.execute(stmt)
+      IfxPy.bind_param(stmt, 1, name, IfxPy.SQL_PARAM_INPUT)
+      IfxPy.bind_param(stmt, 2, picture, IfxPy.SQL_PARAM_INPUT)
+#      result = IfxPy.execute(stmt)
 
     # Drop the department table, in case it exists
     drop = 'DROP TABLE department'
     try:
-        result = ifx_db.exec_immediate(conn, drop) 
+        result = IfxPy.exec_immediate(conn, drop) 
     except:
         pass
     # Create the department table
     create = 'CREATE TABLE department (deptno CHAR(3) NOT NULL, deptname VARCHAR(29) NOT NULL, mgrno CHAR(6), admrdept CHAR(3) NOT NULL, location CHAR(16))'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the department table
     department = (\
       ('A00', 'SPIFFY COMPUTER SERVICE DIV.', '000010', 'A00', None),\
@@ -114,20 +114,20 @@ class IfxDbTestCase(unittest.TestCase):
       ('E21', 'SOFTWARE SUPPORT',             '000100', 'E01', None)\
     )
     insert = 'INSERT INTO department (deptno, deptname, mgrno, admrdept, location) VALUES (?, ?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for dept in department:
-        result = ifx_db.execute(stmt, dept)
+        result = IfxPy.execute(stmt, dept)
 
     # Drop the emp_act table, in case it exists
     drop = 'DROP TABLE emp_act'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the emp_act table
     create = 'CREATE TABLE emp_act (empno CHAR(6) NOT NULL, projno CHAR(6) NOT NULL, actno SMALLINT NOT NULL, emptime DECIMAL(5,2), emstdate DATE, emendate DATE)'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the emp_act table
     emp_act = (\
       ('000010', 'MA2100',   10,   0.50,  '1982-01-01',  '1982-11-01'),\
@@ -207,20 +207,20 @@ class IfxDbTestCase(unittest.TestCase):
       ('000020', 'PL2100',   30,   1.00,  '1982-01-01',  '1982-09-15')\
     )
     insert = 'INSERT INTO emp_act (empno, projno, actno, emptime, emstdate, emendate) VALUES (?, ?, ?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for emp in emp_act:
-        result = ifx_db.execute(stmt, emp)
+        result = IfxPy.execute(stmt, emp)
 
     # Drop the employee table, in case it exists
     drop = 'DROP TABLE employee'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the employee table
     create = 'CREATE TABLE employee (empno CHAR(6) NOT NULL, firstnme VARCHAR(12) NOT NULL, midinit CHAR(1) NOT NULL, lastname VARCHAR(15) NOT NULL, workdept CHAR(3), phoneno CHAR(4), hiredate DATE, job CHAR(8), edlevel SMALLINT NOT NULL, sex CHAR(1), birthdate DATE, salary DECIMAL(9,2), bonus DECIMAL(9,2), comm DECIMAL(9,2))'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the employee table
     employee = (
       ('000010', 'CHRISTINE', 'I', 'HAAS',       'A00', '3978', '1965-01-01', 'PRES',     18, 'F', '1933-08-24', 52750.00, 1000, 4220),
@@ -257,21 +257,21 @@ class IfxDbTestCase(unittest.TestCase):
       ('000340', 'JASON',     'R', 'GOUNOT',     'E21', '5698', '1947-05-05', 'FIELDREP', 16, 'M' ,'1926-05-17', 23840.00,  500, 1907)
     )
     insert = 'INSERT INTO employee (empno, firstnme, midinit, lastname, workdept, phoneno, hiredate, job, edlevel, sex, birthdate, salary, bonus, comm) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for emp in employee:
-        result = ifx_db.execute(stmt, emp)
+        result = IfxPy.execute(stmt, emp)
 
     # Drop the emp_photo table, in case it exists
     drop = 'DROP TABLE emp_photo'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the emp_photo table
     create = 'CREATE TABLE emp_photo (empno CHAR(6) NOT NULL, photo_format VARCHAR(10) NOT NULL, picture BLOB, PRIMARY KEY(empno, photo_format))'
     try:
-      result = ifx_db.exec_immediate(conn, create)
+      result = IfxPy.exec_immediate(conn, create)
     except:
       pass
     # Populate the emp_photo table
@@ -286,27 +286,27 @@ class IfxDbTestCase(unittest.TestCase):
       ('000190', 'png', 'spook.png')\
     )
     insert = 'INSERT INTO emp_photo (empno, photo_format, picture) VALUES (?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for photo in emp_photo:
         empno = photo[0]
         photo_format = photo[1]
         fileHandler = open(os.path.dirname(os.path.abspath(__file__)) + '/' + photo[2], 'rb')
         picture = fileHandler.read()
-        ifx_db.bind_param(stmt, 1, empno, ifx_db.SQL_PARAM_INPUT)
-        ifx_db.bind_param(stmt, 2, photo_format, ifx_db.SQL_PARAM_INPUT)
-        ifx_db.bind_param(stmt, 3, picture, ifx_db.SQL_PARAM_INPUT)
- #       result = ifx_db.execute(stmt)
+        IfxPy.bind_param(stmt, 1, empno, IfxPy.SQL_PARAM_INPUT)
+        IfxPy.bind_param(stmt, 2, photo_format, IfxPy.SQL_PARAM_INPUT)
+        IfxPy.bind_param(stmt, 3, picture, IfxPy.SQL_PARAM_INPUT)
+ #       result = IfxPy.execute(stmt)
 
     # Drop the org table, in case it exists
     drop = 'DROP TABLE org'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the org table
     create = 'CREATE TABLE org (deptnumb SMALLINT NOT NULL, deptname VARCHAR(14), manager SMALLINT, division VARCHAR(10), location VARCHAR(13))'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the org table
     org = (\
       (10, 'Head Office',    160, 'Corporate', 'New York'),\
@@ -319,20 +319,20 @@ class IfxDbTestCase(unittest.TestCase):
       (84, 'Mountain',       290, 'Western',   'Denver')\
     )
     insert = 'INSERT INTO org (deptnumb, deptname, manager, division, location) VALUES (?, ?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for orgpart in org:
-        result = ifx_db.execute(stmt, orgpart)
+        result = IfxPy.execute(stmt, orgpart)
 
     # Drop the project table, in case it exists
     drop = 'DROP TABLE project'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the project table
     create = 'CREATE TABLE project (projno CHAR(6) NOT NULL, projname VARCHAR(24) NOT NULL, deptno CHAR(3) NOT NULL, respemp CHAR(6) NOT NULL, prstaff DECIMAL(5,2), prstdate DATE, prendate DATE, majproj CHAR(6))'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the project table
     project = (\
       ('AD3100', 'ADMIN SERVICES',        'D01', '000010', 6.5, '1982-01-01', '1983-02-01', ''),\
@@ -357,20 +357,20 @@ class IfxDbTestCase(unittest.TestCase):
       ('PL2100', 'WELD LINE PLANNING',    'B01', '000020',   1, '1982-01-01', '1982-09-15', 'MA2100')\
     )
     insert = 'INSERT INTO project (projno, projname, deptno, respemp, prstaff, prstdate, prendate, majproj) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for proj in project:
-        result = ifx_db.execute(stmt, proj)
+        result = IfxPy.execute(stmt, proj)
 
     # Drop the sales table, in case it exists
     drop = 'DROP TABLE sales'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the sales table
     create = 'CREATE TABLE sales (sales_date DATE, sales_person VARCHAR(15), region VARCHAR(15), sales INT)'
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the sales table
     sales = (\
       ('1995-12-31', 'LUCCHESSI',   'Ontario-South',  1),\
@@ -416,21 +416,21 @@ class IfxDbTestCase(unittest.TestCase):
       ('1996-04-01', 'GOUNOT',      'Manitoba',       7)\
     )
     insert = 'INSERT INTO sales (sales_date, sales_person, region, sales) VALUES (?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for sale in sales:
-        result = ifx_db.execute(stmt, sale)
+        result = IfxPy.execute(stmt, sale)
 
     # Drop the stored procedure, in case it exists
     drop = 'DROP PROCEDURE match_animal'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
 
     # Create the stored procedure
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      result = ifx_db.exec_immediate(conn, """
+      result = IfxPy.exec_immediate(conn, """
       CREATE PROCEDURE match_animal(first_name VARCHAR(128), INOUT second_name VARCHAR(128), OUT animal_weight DOUBLE PRECISION )
        DEFINE match_name INT;
        LET match_name = 0;
@@ -449,7 +449,7 @@ class IfxDbTestCase(unittest.TestCase):
        END FOREACH;
       END PROCEDURE;""")
     else:
-      result = ifx_db.exec_immediate(conn, """
+      result = IfxPy.exec_immediate(conn, """
       CREATE PROCEDURE match_animal(IN first_name VARCHAR(128), INOUT second_name VARCHAR(128), OUT animal_weight DOUBLE)
       DYNAMIC RESULT SETS 1
       LANGUAGE SQL
@@ -486,12 +486,12 @@ class IfxDbTestCase(unittest.TestCase):
     # Drop the staff table, in case it exists
     drop = 'DROP TABLE staff'
     try:
-      result = ifx_db.exec_immediate(conn, drop)
+      result = IfxPy.exec_immediate(conn, drop)
     except:
       pass
     # Create the staff table
     create = 'CREATE TABLE staff (id SMALLINT NOT NULL, name VARCHAR(9), dept SMALLINT, job CHAR(5), years SMALLINT, salary DECIMAL(7,2), comm DECIMAL(7,2))';
-    result = ifx_db.exec_immediate(conn, create)
+    result = IfxPy.exec_immediate(conn, create)
     # Populate the staff table
     staff = (\
       (10, 'Sanders',    20, 'Mgr',   7,    18357.50, None),\
@@ -531,16 +531,16 @@ class IfxDbTestCase(unittest.TestCase):
       (350, 'Gafney',    84, 'Clerk', 5,    13030.50, 188.00)\
     )
     insert = 'INSERT INTO staff (id, name, dept, job, years, salary, comm) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    stmt = ifx_db.prepare(conn, insert)
+    stmt = IfxPy.prepare(conn, insert)
     if stmt:
       for emp in staff:
-        result = ifx_db.execute(stmt, emp)
+        result = IfxPy.execute(stmt, emp)
 
     try:
-      result = ifx_db.exec_immediate(conn, 'DROP TABLE t_string')
+      result = IfxPy.exec_immediate(conn, 'DROP TABLE t_string')
     except:
       pass
-    result = ifx_db.exec_immediate(conn, 'CREATE TABLE t_string(a INTEGER, b DOUBLE PRECISION, c VARCHAR(100))')
+    result = IfxPy.exec_immediate(conn, 'CREATE TABLE t_string(a INTEGER, b DOUBLE PRECISION, c VARCHAR(100))')
 
     print "Preperation complete"
 

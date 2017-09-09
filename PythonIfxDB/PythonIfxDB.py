@@ -1,5 +1,5 @@
 
-import ifx_db
+import IfxPy
 
 # in case of connection problem check the service port mapped to which ip
 # for example the port you configured is 9088 then
@@ -7,7 +7,7 @@ import ifx_db
 # netstat -a | findstr  9088
 #ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
 ConStr = "SERVER=ids1210;DATABASE=stores7;UID=informix;PWD=ximrofni;"
-conn = ifx_db.connect( ConStr, "", "")
+conn = IfxPy.connect( ConStr, "", "")
 
 
 SetupSqlSet = [
@@ -25,12 +25,12 @@ SetupSqlSet = [
 
 for sql in SetupSqlSet:
     print sql
-    stmt = ifx_db.exec_immediate(conn, sql)
+    stmt = IfxPy.exec_immediate(conn, sql)
 
 
 sql = "SELECT * FROM t1"
-stmt2 = ifx_db.exec_immediate(conn, sql)
-dictionary = ifx_db.fetch_both(stmt2)
+stmt2 = IfxPy.exec_immediate(conn, sql)
+dictionary = IfxPy.fetch_both(stmt2)
 
 rc = 0
 while dictionary != False:
@@ -41,9 +41,9 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = ifx_db.fetch_both(stmt2)
+    dictionary = IfxPy.fetch_both(stmt2)
 
-ifx_db.close(conn)
+IfxPy.close(conn)
 
 print "Done"
 

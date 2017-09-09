@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,14 +16,14 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_6755)
 
   def run_test_6755(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
     
     if conn:
       drop = 'DROP TABLE table_6755'
       result = ''
       try:
-        result = ifx_db.exec_immediate(conn, drop)
+        result = IfxPy.exec_immediate(conn, drop)
       except:
         pass
 
@@ -33,22 +33,22 @@ class IfxDbTestCase(unittest.TestCase):
       else:
         create = 'CREATE TABLE table_6755 (col1 VARCHAR(20), col2 CLOB(20))'
         insert = "INSERT INTO table_6755 VALUES ('database', 'database')"
-      result = ifx_db.exec_immediate(conn, create)
-      result = ifx_db.exec_immediate(conn, insert)
+      result = IfxPy.exec_immediate(conn, create)
+      result = IfxPy.exec_immediate(conn, insert)
       statement = "SELECT col1, col2 FROM table_6755"
     
-      result = ifx_db.prepare(conn, statement)
-      ifx_db.execute(result)
+      result = IfxPy.prepare(conn, statement)
+      IfxPy.execute(result)
     
-      row = ifx_db.fetch_tuple(result)
+      row = IfxPy.fetch_tuple(result)
       while ( row ):
         #printf("\"%s\" from VARCHAR is %d bytes long, \"%s\" from CLOB is %d bytes long.\n",
         #    row[0], row[0].length,
         #    row[1], row[1].length)
         print "\"%s\" from VARCHAR is %d bytes long, \"%s\" from CLOB is %d bytes long." % (row[0], len(row[0]), row[1], len(row[1]))
-        row = ifx_db.fetch_tuple(result)
+        row = IfxPy.fetch_tuple(result)
       
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

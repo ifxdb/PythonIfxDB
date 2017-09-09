@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,32 +16,32 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_180)
 
   def run_test_180(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     if conn:
       result = ''
       result2 = ''
       try:
-        result = ifx_db.exec_immediate(conn,"insert int0 t_string values(123,1.222333,'one to one')")
+        result = IfxPy.exec_immediate(conn,"insert int0 t_string values(123,1.222333,'one to one')")
       except:
         pass
       if result:
-        cols = ifx_db.num_fields(result)
+        cols = IfxPy.num_fields(result)
         print "col:", cols,", " 
-        rows = ifx_db.num_rows(result)
+        rows = IfxPy.num_rows(result)
         print "affected row:", rows
       else:
-        print ifx_db.stmt_errormsg()
+        print IfxPy.stmt_errormsg()
       try:
-        result = ifx_db.exec_immediate(conn,"delete from t_string where a=123")
+        result = IfxPy.exec_immediate(conn,"delete from t_string where a=123")
       except:
         pass
       if result:
-        cols = ifx_db.num_fields(result)
+        cols = IfxPy.num_fields(result)
         print "col:", cols,", "
-        rows = ifx_db.num_rows(result)
+        rows = IfxPy.num_rows(result)
         print "affected row:", rows
       else:
-        print ifx_db.stmt_errormsg()
+        print IfxPy.stmt_errormsg()
     
     else:
       print "no connection"

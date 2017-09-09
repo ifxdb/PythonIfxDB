@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,21 +16,21 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_232)
 
   def run_test_232(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    result = ifx_db.exec_immediate(conn, "select * from sales")
+    result = IfxPy.exec_immediate(conn, "select * from sales")
      
-    for i in range(0, ifx_db.num_fields(result) + 1):
-      field_name = ifx_db.field_name(result,i)
-      field_type = ifx_db.field_type(result, ifx_db.field_name(result,i))
-      print str(ifx_db.field_name(result, i)) + ":" + str(ifx_db.field_type(result, ifx_db.field_name(result, i)))
+    for i in range(0, IfxPy.num_fields(result) + 1):
+      field_name = IfxPy.field_name(result,i)
+      field_type = IfxPy.field_type(result, IfxPy.field_name(result,i))
+      print str(IfxPy.field_name(result, i)) + ":" + str(IfxPy.field_type(result, IfxPy.field_name(result, i)))
           
     print "-----"
     
-    t = ifx_db.field_type(result,99)
+    t = IfxPy.field_type(result,99)
     print t
     
-    t1 = ifx_db.field_type(result, "HELMUT")
+    t1 = IfxPy.field_type(result, "HELMUT")
     print t1
 
 #__END__

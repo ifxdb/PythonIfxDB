@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,13 +16,13 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_070)
 
   def run_test_070(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-      if (type(conn) == ifx_db.IFXConnection):
+      if (type(conn) == IfxPy.IFXConnection):
         print "Resource is a Ifx Connection"
       
-      rc = ifx_db.close(conn)
+      rc = IfxPy.close(conn)
       
       print rc
     else:

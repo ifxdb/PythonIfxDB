@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,59 +16,59 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_062)
 
   def run_test_062(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
     create = 'CREATE SCHEMA AUTHORIZATION t'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t1( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t2( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t3( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t4( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     if conn:
       schema = 't'
-      result = ifx_db.tables(conn,None,schema);    
+      result = IfxPy.tables(conn,None,schema);    
       i = 0
-      row = ifx_db.fetch_both(result)
+      row = IfxPy.fetch_both(result)
       while ( row ):
         str = row[1] + "/" + row[2] + "/" + row[3]
         if (i < 4):
           print str
         i = i + 1
-        row = ifx_db.fetch_both(result)
+        row = IfxPy.fetch_both(result)
 
-      ifx_db.exec_immediate(conn, 'DROP TABLE t.t1')
-      ifx_db.exec_immediate(conn, 'DROP TABLE t.t2')
-      ifx_db.exec_immediate(conn, 'DROP TABLE t.t3')
-      ifx_db.exec_immediate(conn, 'DROP TABLE t.t4')
+      IfxPy.exec_immediate(conn, 'DROP TABLE t.t1')
+      IfxPy.exec_immediate(conn, 'DROP TABLE t.t2')
+      IfxPy.exec_immediate(conn, 'DROP TABLE t.t3')
+      IfxPy.exec_immediate(conn, 'DROP TABLE t.t4')
 
       print "done!"
     else:
-      print "no connection: #{ifx_db.conn_errormsg}";    
+      print "no connection: #{IfxPy.conn_errormsg}";    
 
 #__END__
 #__LUW_EXPECTED__

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -18,18 +18,18 @@ class IfxDbTestCase(unittest.TestCase):
   def run_test_132(self):
     sql =  "SELECT id, breed, name, weight FROM animals WHERE id = ? AND name = ?"
     
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-      stmt = ifx_db.prepare(conn, sql)
+      stmt = IfxPy.prepare(conn, sql)
     
-      if (ifx_db.execute(stmt, (0, 'Pook'))):
-        row = ifx_db.fetch_tuple(stmt)
+      if (IfxPy.execute(stmt, (0, 'Pook'))):
+        row = IfxPy.fetch_tuple(stmt)
         while ( row ):
           #row.each { |child| print child }
           for i in row:
             print i
-          row = ifx_db.fetch_tuple(stmt)
+          row = IfxPy.fetch_tuple(stmt)
     else:
       print "Connection failed."
 

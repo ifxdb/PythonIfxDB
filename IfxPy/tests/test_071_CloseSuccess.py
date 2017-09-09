@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,28 +16,28 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_071)
 
   def run_test_071(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-      rc = ifx_db.close(conn)
+      rc = IfxPy.close(conn)
       if (rc == True):
-        print "ifx_db.close succeeded"
+        print "IfxPy.close succeeded"
       else:
-        print "ifx_db.close FAILED\n"
+        print "IfxPy.close FAILED\n"
     else:
-      print "%s" % ifx_db.conn_errormsg()
-      print ",sqlstate=%s" % ifx_db.conn_error()
-      print "%s" % ifx_db.conn_errormsg()
-      print "%s" % ifx_db.conn_errormsg()
-      print "%s" % ifx_db.conn_errormsg()
-      print "%s" % ifx_db.conn_errormsg()
+      print "%s" % IfxPy.conn_errormsg()
+      print ",sqlstate=%s" % IfxPy.conn_error()
+      print "%s" % IfxPy.conn_errormsg()
+      print "%s" % IfxPy.conn_errormsg()
+      print "%s" % IfxPy.conn_errormsg()
+      print "%s" % IfxPy.conn_errormsg()
 
 #__END__
 #__LUW_EXPECTED__
-#ifx_db.close succeeded
+#IfxPy.close succeeded
 #__ZOS_EXPECTED__
-#ifx_db.close succeeded
+#IfxPy.close succeeded
 #__SYSTEMI_EXPECTED__
-#ifx_db.close succeeded
+#IfxPy.close succeeded
 #__IDS_EXPECTED__
-#ifx_db.close succeeded
+#IfxPy.close succeeded

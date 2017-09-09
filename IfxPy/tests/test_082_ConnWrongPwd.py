@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -17,10 +17,10 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_082(self):
     try:
-      conn = ifx_db.connect(config.ConnStr, config.user, "z")
+      conn = IfxPy.connect(config.ConnStr, config.user, "z")
       print "??? No way."
     except:
-      err = ifx_db.conn_error()
+      err = IfxPy.conn_error()
       print err
 
 #__END__

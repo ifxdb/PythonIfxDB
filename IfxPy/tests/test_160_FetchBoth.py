@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,16 +16,16 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_160)
 
   def run_test_160(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
 
-    result = ifx_db.exec_immediate(conn, "select * from emp_act")
+    result = IfxPy.exec_immediate(conn, "select * from emp_act")
     
-    row = ifx_db.fetch_both(result)
+    row = IfxPy.fetch_both(result)
     while ( row ):
       #printf("%6s  ",row[0])
       #printf("%-6s ",row[1])
@@ -36,7 +36,7 @@ class IfxDbTestCase(unittest.TestCase):
       #printf("%6s ", row[0])
       #puts ""
       print "%6s  %-6s %3d %9s %10s %10s %6s " % (row[0], row[1], row[2], row['EMPTIME'], row['EMSTDATE'], row['EMENDATE'], row[0])
-      row = ifx_db.fetch_both(result)
+      row = IfxPy.fetch_both(result)
 
 #__END__
 #__LUW_EXPECTED__

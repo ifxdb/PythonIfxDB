@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,25 +16,25 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_6528)
 
   def checked_db2_execute(self, stmt):
-    ifx_db.execute(stmt)
-    row = ifx_db.fetch_tuple(stmt)
+    IfxPy.execute(stmt)
+    row = IfxPy.fetch_tuple(stmt)
     for i in row:
       print i
      
   def run_test_6528(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
     
     if conn:
       if (server.DBMS_NAME[0:3] == 'Inf'):
         sql = "SELECT TRIM(TRAILING FROM name) FROM animals WHERE breed = ?"
       else:
         sql = "SELECT RTRIM(name) FROM animals WHERE breed = ?"
-      stmt = ifx_db.prepare(conn, sql)
+      stmt = IfxPy.prepare(conn, sql)
       var = "cat"
-      ifx_db.bind_param(stmt, 1, var, ifx_db.SQL_PARAM_INPUT)
+      IfxPy.bind_param(stmt, 1, var, IfxPy.SQL_PARAM_INPUT)
       self.checked_db2_execute(stmt)
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

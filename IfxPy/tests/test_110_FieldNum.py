@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,20 +16,20 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_110)
 
   def run_test_110(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
     
     if conn:
-      stmt = ifx_db.exec_immediate(conn, "SELECT * FROM animals ORDER BY breed")
+      stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals ORDER BY breed")
     
-      num1 = ifx_db.field_num(stmt, "id")
-      num2 = ifx_db.field_num(stmt, "breed")
-      num3 = ifx_db.field_num(stmt, "name")
-      num4 = ifx_db.field_num(stmt, "weight")
-      num5 = ifx_db.field_num(stmt, "test")
-      num6 = ifx_db.field_num(stmt, 8)
-      num7 = ifx_db.field_num(stmt, 1)
-      num8 = ifx_db.field_num(stmt, "WEIGHT")
+      num1 = IfxPy.field_num(stmt, "id")
+      num2 = IfxPy.field_num(stmt, "breed")
+      num3 = IfxPy.field_num(stmt, "name")
+      num4 = IfxPy.field_num(stmt, "weight")
+      num5 = IfxPy.field_num(stmt, "test")
+      num6 = IfxPy.field_num(stmt, 8)
+      num7 = IfxPy.field_num(stmt, 1)
+      num8 = IfxPy.field_num(stmt, "WEIGHT")
       
       print "int(%d)" % num1
       print "int(%d)" % num2

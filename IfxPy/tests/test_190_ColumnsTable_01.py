@@ -6,7 +6,7 @@
 # NOTE: IDS requires that you pass the schema name (cannot pass None)
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -17,23 +17,23 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_190)
 
   def run_test_190(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
     if conn:
       if (server.DBMS_NAME[0:3] == 'Inf'):
-        result = ifx_db.columns(conn,None,config.user,"employee")
+        result = IfxPy.columns(conn,None,config.user,"employee")
       else:
-        result = ifx_db.columns(conn,None,None,"EMPLOYEE")
+        result = IfxPy.columns(conn,None,None,"EMPLOYEE")
 
-      row = ifx_db.fetch_tuple(result)
+      row = IfxPy.fetch_tuple(result)
       while ( row ):
         str = row[1] + "/" + row[3]
         print str
-        row = ifx_db.fetch_tuple(result)
+        row = IfxPy.fetch_tuple(result)
       print "done!"
     else:
-      print "no connection:", ifx_db.conn_errormsg()
+      print "no connection:", IfxPy.conn_errormsg()
 
 #__END__
 #__LUW_EXPECTED__

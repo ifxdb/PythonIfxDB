@@ -8,7 +8,7 @@ We will be getting to **pip install** soon, for the time being you may download 
 #### Python 2.7x 
 | **Platform** | **Py Version** |     **Location**          | **MD5 hash**
 |:-------------|:---------------|:--------------------------|:--------------------------------
-| `ARM`        |   2.7.13       |  27x/ARM/ifx_db.so.tar    | de66bb3c74412d45156a61854b600c5f
+| `ARM`        |   2.7.13       |  27x/ARM/IfxPy.so.tar    | de66bb3c74412d45156a61854b600c5f
 | `Win64`      |                |      Coming soon          |
 | `Linux64`    |                |      Coming soon          |
 
@@ -24,10 +24,10 @@ We will be getting to **pip install** soon, for the time being you may download 
 
 ###  Linux Checking Hash
 ```bash
-cd node-ifx_db
-md5sum ./ifx_db.so.tar
+cd node-IfxPy
+md5sum ./IfxPy.so.tar
 
-tar -xvf ifx_db.so.tar
+tar -xvf IfxPy.so.tar
 ```
 
 
@@ -36,7 +36,7 @@ tar -xvf ifx_db.so.tar
 
 * [certutil](https://technet.microsoft.com/library/cc732443.aspx)
 ```bash
-certutil -hashfile ifx_db.dll.7z  MD5
+certutil -hashfile IfxPy.dll.7z  MD5
 # use 7zip to unzip it 
 ```
 

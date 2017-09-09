@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,34 +16,34 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_111)
 
   def run_test_111(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
     if conn:
-      ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
+      IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
 
       insert = "INSERT INTO animals values (7, 'cat', 'Benji', 5.1)"
-      ifx_db.exec_immediate(conn, insert)
+      IfxPy.exec_immediate(conn, insert)
       
-      stmt = ifx_db.exec_immediate(conn, "SELECT breed, COUNT(breed) AS number FROM animals GROUP BY breed ORDER BY breed")
+      stmt = IfxPy.exec_immediate(conn, "SELECT breed, COUNT(breed) AS number FROM animals GROUP BY breed ORDER BY breed")
     
       if (server.DBMS_NAME[0:3] == 'Inf'):
-        num1 = ifx_db.field_num(stmt, "id")
-        num2 = ifx_db.field_num(stmt, "breed")
-        num3 = ifx_db.field_num(stmt, "number")
-        num4 = ifx_db.field_num(stmt, "NUMBER")
-        num5 = ifx_db.field_num(stmt, "bREED")
-        num6 = ifx_db.field_num(stmt, 8)
-        num7 = ifx_db.field_num(stmt, 1)
-        num8 = ifx_db.field_num(stmt, "WEIGHT")
+        num1 = IfxPy.field_num(stmt, "id")
+        num2 = IfxPy.field_num(stmt, "breed")
+        num3 = IfxPy.field_num(stmt, "number")
+        num4 = IfxPy.field_num(stmt, "NUMBER")
+        num5 = IfxPy.field_num(stmt, "bREED")
+        num6 = IfxPy.field_num(stmt, 8)
+        num7 = IfxPy.field_num(stmt, 1)
+        num8 = IfxPy.field_num(stmt, "WEIGHT")
       else:
-        num1 = ifx_db.field_num(stmt, "ID")
-        num2 = ifx_db.field_num(stmt, "BREED")
-        num3 = ifx_db.field_num(stmt, "NUMBER")
-        num4 = ifx_db.field_num(stmt, "number")
-        num5 = ifx_db.field_num(stmt, "Breed")
-        num6 = ifx_db.field_num(stmt, 8)
-        num7 = ifx_db.field_num(stmt, 1)
-        num8 = ifx_db.field_num(stmt, "weight")
+        num1 = IfxPy.field_num(stmt, "ID")
+        num2 = IfxPy.field_num(stmt, "BREED")
+        num3 = IfxPy.field_num(stmt, "NUMBER")
+        num4 = IfxPy.field_num(stmt, "number")
+        num5 = IfxPy.field_num(stmt, "Breed")
+        num6 = IfxPy.field_num(stmt, 8)
+        num7 = IfxPy.field_num(stmt, 1)
+        num8 = IfxPy.field_num(stmt, "weight")
   
       print "%s" % num1
       print "int(%d)" % num2
@@ -55,7 +55,7 @@ class IfxDbTestCase(unittest.TestCase):
       print "int(%d)" % num7
       print "%s" % num8
 
-      ifx_db.rollback(conn)
+      IfxPy.rollback(conn)
     else:
       print "Connection failed."
 

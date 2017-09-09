@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,17 +16,17 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_124)
 
   def run_test_124(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
   
     if conn:
-       result = ifx_db.exec_immediate(conn, "select * from staff, employee, org where employee.lastname in ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT') order by org.location,employee.lastname,staff.id")
-       cols = ifx_db.num_fields(result)
+       result = IfxPy.exec_immediate(conn, "select * from staff, employee, org where employee.lastname in ('HAAS','THOMPSON', 'KWAN', 'GEYER', 'STERN', 'PULASKI', 'HENDERSON', 'SPENSER', 'LUCCHESSI', 'OCONNELL', 'QUINTANA', 'NICHOLLS', 'ADAMSON', 'PIANKA', 'YOSHIMURA', 'SCOUTTEN', 'WALKER', 'BROWN', 'JONES', 'LUTZ', 'JEFFERSON', 'MARINO', 'SMITH', 'JOHNSON', 'PEREZ', 'SCHNEIDER', 'PARKER', 'SMITH', 'SETRIGHT', 'MEHTA', 'LEE', 'GOUNOT') order by org.location,employee.lastname,staff.id")
+       cols = IfxPy.num_fields(result)
        j = 0
-       row = ifx_db.fetch_both(result)
+       row = IfxPy.fetch_both(result)
        while ( row ):
           for i in range(0, cols):
-             field = ifx_db.field_name(result, i)
-             value = row[ifx_db.field_name(result, i)]
+             field = IfxPy.field_name(result, i)
+             value = row[IfxPy.field_name(result, i)]
              if (value == None): 
                 value = ''
              print "%s:%s" % (field, value)
@@ -35,12 +35,12 @@ class IfxDbTestCase(unittest.TestCase):
           if (j == 10):
             break
        
-          row = ifx_db.fetch_both(result)
+          row = IfxPy.fetch_both(result)
        
-       ifx_db.close(conn)
+       IfxPy.close(conn)
        print "done"
     else:
-       print ifx_db.conn_errormsg()
+       print IfxPy.conn_errormsg()
 #__END__
 #__LUW_EXPECTED__
 #ID:10

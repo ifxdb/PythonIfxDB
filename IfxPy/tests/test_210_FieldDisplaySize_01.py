@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,16 +16,16 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_210)
 
   def run_test_210(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    result = ifx_db.exec_immediate(conn, "select * from staff")
-    cols = ifx_db.num_fields(result)
+    result = IfxPy.exec_immediate(conn, "select * from staff")
+    cols = IfxPy.num_fields(result)
     
     for i in range(0, cols):
-      size = ifx_db.field_display_size(result,i)
+      size = IfxPy.field_display_size(result,i)
       print "col:%d and size: %d" % (i, size)
     
-    ifx_db.close(conn)
+    IfxPy.close(conn)
 
 #__END__
 #__LUW_EXPECTED__

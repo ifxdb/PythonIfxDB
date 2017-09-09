@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -17,7 +17,7 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_004(self):
     try:
-      conn = ifx_db.connect("sample", "not_a_user", "inv_pass")
+      conn = IfxPy.connect("sample", "not_a_user", "inv_pass")
     except:
       print "connect failed, test succeeded"
       return -1

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,59 +16,59 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_065)
 
   def run_test_065(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
     create = 'CREATE SCHEMA AUTHORIZATION t'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t1( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t2( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
       
     create = 'CREATE TABLE t.t3( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
     create = 'CREATE TABLE t.t4( c1 integer, c2 varchar(40))'
     try:
-      result = ifx_db.exec_immediate(conn, create) 
+      result = IfxPy.exec_immediate(conn, create) 
     except:
       pass
     
-    result = ifx_db.tables(conn, None, '%', "t3")
-    columns = ifx_db.num_fields(result)
+    result = IfxPy.tables(conn, None, '%', "t3")
+    columns = IfxPy.num_fields(result)
     
     for i in range(0, columns):
-      print "%s, " % ifx_db.field_name(result, i)
+      print "%s, " % IfxPy.field_name(result, i)
     print "\n\n"
    
-    row = ifx_db.fetch_tuple(result) 
+    row = IfxPy.fetch_tuple(result) 
     while ( row ):
       final = ", " + row[1] + ", " + row[2] + ", " + row[3] + ", , ";
-      row = ifx_db.fetch_tuple(result)
+      row = IfxPy.fetch_tuple(result)
 
     print final
     
-    ifx_db.free_result(result)
+    IfxPy.free_result(result)
 
-    ifx_db.exec_immediate(conn, 'DROP TABLE t.t1')
-    ifx_db.exec_immediate(conn, 'DROP TABLE t.t2')
-    ifx_db.exec_immediate(conn, 'DROP TABLE t.t3')
-    ifx_db.exec_immediate(conn, 'DROP TABLE t.t4')
+    IfxPy.exec_immediate(conn, 'DROP TABLE t.t1')
+    IfxPy.exec_immediate(conn, 'DROP TABLE t.t2')
+    IfxPy.exec_immediate(conn, 'DROP TABLE t.t3')
+    IfxPy.exec_immediate(conn, 'DROP TABLE t.t4')
 
 #__END__
 #__IDS_EXPECTED__

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -18,64 +18,64 @@ class IfxDbTestCase(unittest.TestCase):
   def run_test_053(self):
     print "Client attributes passed through conection string:"
 
-    options1 = {ifx_db.SQL_ATTR_INFO_USERID: 'db2inst1'}
-    conn1 = ifx_db.connect(config.ConnStr, config.user, config.password, options1)
-    val = ifx_db.get_option(conn1, ifx_db.SQL_ATTR_INFO_USERID, 1)
+    options1 = {IfxPy.SQL_ATTR_INFO_USERID: 'db2inst1'}
+    conn1 = IfxPy.connect(config.ConnStr, config.user, config.password, options1)
+    val = IfxPy.get_option(conn1, IfxPy.SQL_ATTR_INFO_USERID, 1)
     print val
 
-    options2 = {ifx_db.SQL_ATTR_INFO_ACCTSTR: 'account'}
-    conn2 = ifx_db.connect(config.ConnStr, config.user, config.password, options2)
-    val = ifx_db.get_option(conn2, ifx_db.SQL_ATTR_INFO_ACCTSTR, 1)
+    options2 = {IfxPy.SQL_ATTR_INFO_ACCTSTR: 'account'}
+    conn2 = IfxPy.connect(config.ConnStr, config.user, config.password, options2)
+    val = IfxPy.get_option(conn2, IfxPy.SQL_ATTR_INFO_ACCTSTR, 1)
     print val
 
-    options3 = {ifx_db.SQL_ATTR_INFO_APPLNAME: 'myapp'}
-    conn3 = ifx_db.connect(config.ConnStr, config.user, config.password, options3)
-    val = ifx_db.get_option(conn3, ifx_db.SQL_ATTR_INFO_APPLNAME, 1)
+    options3 = {IfxPy.SQL_ATTR_INFO_APPLNAME: 'myapp'}
+    conn3 = IfxPy.connect(config.ConnStr, config.user, config.password, options3)
+    val = IfxPy.get_option(conn3, IfxPy.SQL_ATTR_INFO_APPLNAME, 1)
     print val
 
-    options4 = {ifx_db.SQL_ATTR_INFO_WRKSTNNAME: 'workstation'}
-    conn4 = ifx_db.connect(config.ConnStr, config.user, config.password, options4)
-    val = ifx_db.get_option(conn4, ifx_db.SQL_ATTR_INFO_WRKSTNNAME, 1)
+    options4 = {IfxPy.SQL_ATTR_INFO_WRKSTNNAME: 'workstation'}
+    conn4 = IfxPy.connect(config.ConnStr, config.user, config.password, options4)
+    val = IfxPy.get_option(conn4, IfxPy.SQL_ATTR_INFO_WRKSTNNAME, 1)
     print val
 
-    options5 = {ifx_db.SQL_ATTR_INFO_USERID: 'kfb',
-                ifx_db.SQL_ATTR_INFO_WRKSTNNAME: 'kfbwork',
-                ifx_db.SQL_ATTR_INFO_ACCTSTR: 'kfbacc',
-                ifx_db.SQL_ATTR_INFO_APPLNAME: 'kfbapp'}
-    conn5 = ifx_db.connect(config.ConnStr, config.user, config.password, options5)
-    val = ifx_db.get_option(conn5, ifx_db.SQL_ATTR_INFO_USERID, 1)
+    options5 = {IfxPy.SQL_ATTR_INFO_USERID: 'kfb',
+                IfxPy.SQL_ATTR_INFO_WRKSTNNAME: 'kfbwork',
+                IfxPy.SQL_ATTR_INFO_ACCTSTR: 'kfbacc',
+                IfxPy.SQL_ATTR_INFO_APPLNAME: 'kfbapp'}
+    conn5 = IfxPy.connect(config.ConnStr, config.user, config.password, options5)
+    val = IfxPy.get_option(conn5, IfxPy.SQL_ATTR_INFO_USERID, 1)
     print val
-    val = ifx_db.get_option(conn5, ifx_db.SQL_ATTR_INFO_ACCTSTR, 1)
+    val = IfxPy.get_option(conn5, IfxPy.SQL_ATTR_INFO_ACCTSTR, 1)
     print val
-    val = ifx_db.get_option(conn5, ifx_db.SQL_ATTR_INFO_APPLNAME, 1)
+    val = IfxPy.get_option(conn5, IfxPy.SQL_ATTR_INFO_APPLNAME, 1)
     print val
-    val = ifx_db.get_option(conn5, ifx_db.SQL_ATTR_INFO_WRKSTNNAME, 1)
+    val = IfxPy.get_option(conn5, IfxPy.SQL_ATTR_INFO_WRKSTNNAME, 1)
     print val
 
     print "Client attributes passed post-conection:"
 
-    options5 = {ifx_db.SQL_ATTR_INFO_USERID: 'db2inst1'}
-    conn5 = ifx_db.connect(config.ConnStr, config.user, config.password)
-    rc = ifx_db.set_option(conn5, options5, 1)
-    val = ifx_db.get_option(conn5, ifx_db.SQL_ATTR_INFO_USERID, 1)
+    options5 = {IfxPy.SQL_ATTR_INFO_USERID: 'db2inst1'}
+    conn5 = IfxPy.connect(config.ConnStr, config.user, config.password)
+    rc = IfxPy.set_option(conn5, options5, 1)
+    val = IfxPy.get_option(conn5, IfxPy.SQL_ATTR_INFO_USERID, 1)
     print val
 
-    options6 = {ifx_db.SQL_ATTR_INFO_ACCTSTR: 'account'}
-    conn6 = ifx_db.connect(config.ConnStr, config.user, config.password)
-    rc = ifx_db.set_option(conn6, options6, 1)
-    val = ifx_db.get_option(conn6, ifx_db.SQL_ATTR_INFO_ACCTSTR, 1)
+    options6 = {IfxPy.SQL_ATTR_INFO_ACCTSTR: 'account'}
+    conn6 = IfxPy.connect(config.ConnStr, config.user, config.password)
+    rc = IfxPy.set_option(conn6, options6, 1)
+    val = IfxPy.get_option(conn6, IfxPy.SQL_ATTR_INFO_ACCTSTR, 1)
     print val
 
-    options7 = {ifx_db.SQL_ATTR_INFO_APPLNAME: 'myapp'}
-    conn7 = ifx_db.connect(config.ConnStr, config.user, config.password)
-    rc = ifx_db.set_option(conn7, options7, 1)
-    val = ifx_db.get_option(conn7, ifx_db.SQL_ATTR_INFO_APPLNAME, 1)
+    options7 = {IfxPy.SQL_ATTR_INFO_APPLNAME: 'myapp'}
+    conn7 = IfxPy.connect(config.ConnStr, config.user, config.password)
+    rc = IfxPy.set_option(conn7, options7, 1)
+    val = IfxPy.get_option(conn7, IfxPy.SQL_ATTR_INFO_APPLNAME, 1)
     print val
 
-    options8 = {ifx_db.SQL_ATTR_INFO_WRKSTNNAME: 'workstation'}
-    conn8 = ifx_db.connect(config.ConnStr, config.user, config.password)
-    rc = ifx_db.set_option(conn8, options8, 1)
-    val = ifx_db.get_option(conn8, ifx_db.SQL_ATTR_INFO_WRKSTNNAME, 1)
+    options8 = {IfxPy.SQL_ATTR_INFO_WRKSTNNAME: 'workstation'}
+    conn8 = IfxPy.connect(config.ConnStr, config.user, config.password)
+    rc = IfxPy.set_option(conn8, options8, 1)
+    val = IfxPy.get_option(conn8, IfxPy.SQL_ATTR_INFO_WRKSTNNAME, 1)
     print val
 
 #__END__

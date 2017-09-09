@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,27 +16,27 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_161)
 
   def run_test_161(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
 
-    result = ifx_db.exec_immediate(conn, "select * from emp_act order by projno desc")
-    row = ifx_db.fetch_both(result)
+    result = IfxPy.exec_immediate(conn, "select * from emp_act order by projno desc")
+    row = IfxPy.fetch_both(result)
     count = 1
     while ( row ):
       print "Record",count,": %6s  %-6s %3d %9s %10s %10s %6s " % (row[0], row[1], row[2], row['EMPTIME'], row['EMSTDATE'], row['EMENDATE'], row[0])
       
-      result2 = ifx_db.exec_immediate(conn,"select * from employee where employee.empno='" + row['EMPNO'] + "'")
-      row2 = ifx_db.fetch_both(result2)
+      result2 = IfxPy.exec_immediate(conn,"select * from employee where employee.empno='" + row['EMPNO'] + "'")
+      row2 = IfxPy.fetch_both(result2)
       if row2:        
          print ">>%s,%s,%s,%s,%s,%s,%s" % (row2['EMPNO'], row2['FIRSTNME'],row2['MIDINIT'], row2[3], row2[3], row2[5], row2[6])
       count = count + 1
       if (count > 10):
           break
-      row = ifx_db.fetch_both(result)
+      row = IfxPy.fetch_both(result)
 #__END__
 #__LUW_EXPECTED__
 #Record 1 : 000020  PL2100  30      1.00 1982-01-01 1982-09-15 000020 

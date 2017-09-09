@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,21 +16,21 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_159)
 
   def run_test_159(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
 
-    result = ifx_db.exec_immediate(conn, "select name,job from staff")
+    result = IfxPy.exec_immediate(conn, "select name,job from staff")
     i = 1
-    row = ifx_db.fetch_assoc(result)
+    row = IfxPy.fetch_assoc(result)
     while ( row ):
       #printf("%3d %10s %10s\n",i, row['NAME'], row['JOB'])
       print "%3d %10s %10s" % (i, row['NAME'], row['JOB'])
       i += 1
-      row = ifx_db.fetch_assoc(result)
+      row = IfxPy.fetch_assoc(result)
 
 #__END__
 #__LUW_EXPECTED__

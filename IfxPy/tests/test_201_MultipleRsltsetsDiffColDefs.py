@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,9 +16,9 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_201)
 
   def run_test_201(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    serverinfo = ifx_db.server_info( conn )
+    serverinfo = IfxPy.server_info( conn )
     server = serverinfo.DBMS_NAME[0:3]
 	
     procedure = """CREATE FUNCTION multiResults ()
@@ -41,20 +41,20 @@ class IfxDbTestCase(unittest.TestCase):
     
     if conn:
         try:
-            ifx_db.exec_immediate(conn, 'DROP PROCEDURE multiResults')
+            IfxPy.exec_immediate(conn, 'DROP PROCEDURE multiResults')
         except:
             pass
-        ifx_db.exec_immediate(conn, procedure)
-        stmt = ifx_db.exec_immediate(conn, 'CALL multiResults()')
+        IfxPy.exec_immediate(conn, procedure)
+        stmt = IfxPy.exec_immediate(conn, 'CALL multiResults()')
     
         print "Fetching first result set"
-        row = ifx_db.fetch_tuple(stmt)
+        row = IfxPy.fetch_tuple(stmt)
         while ( row ):
            for i in row:
                 print str(i).strip()
-           row = ifx_db.fetch_tuple(stmt)
+           row = IfxPy.fetch_tuple(stmt)
        
-        ifx_db.close(conn)
+        IfxPy.close(conn)
     else:
        print "Connection failed."
 

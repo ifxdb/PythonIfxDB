@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -17,19 +17,19 @@ class IfxDbTestCase(unittest.TestCase):
 
   def run_test_264(self):
     # Make a connection
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
     if conn:
-       server = ifx_db.server_info( conn )
+       server = IfxPy.server_info( conn )
        if (server.DBMS_NAME[0:3] == 'Inf'):
-          op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-          ifx_db.set_option(conn, op, 1)
+          op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+          IfxPy.set_option(conn, op, 1)
 
        # Drop the tab_bigint table, in case it exists
        drop = 'DROP TABLE tab_bigint'
        result = ''
        try:
-         result = ifx_db.exec_immediate(conn, drop)
+         result = IfxPy.exec_immediate(conn, drop)
        except:
          pass
        # Create the tab_bigint table
@@ -37,15 +37,15 @@ class IfxDbTestCase(unittest.TestCase):
           create = "CREATE TABLE tab_bigint (col1 INT8, col2 INT8, col3 INT8, col4 INT8)"
        else:
           create = "CREATE TABLE tab_bigint (col1 BIGINT, col2 BIGINT, col3 BIGINT, col4 BIGINT)"
-       result = ifx_db.exec_immediate(conn, create)
+       result = IfxPy.exec_immediate(conn, create)
 
        insert = "INSERT INTO tab_bigint values (-9223372036854775807, 9223372036854775807, 0, NULL)"
-       res = ifx_db.exec_immediate(conn, insert)
-       print "Number of inserted rows:", ifx_db.num_rows(res)
+       res = IfxPy.exec_immediate(conn, insert)
+       print "Number of inserted rows:", IfxPy.num_rows(res)
 
-       stmt = ifx_db.prepare(conn, "SELECT * FROM tab_bigint")
-       ifx_db.execute(stmt)
-       data = ifx_db.fetch_both(stmt)
+       stmt = IfxPy.prepare(conn, "SELECT * FROM tab_bigint")
+       IfxPy.execute(stmt)
+       data = IfxPy.fetch_both(stmt)
        while ( data ):
          print data[0]
          print data[1]
@@ -54,19 +54,19 @@ class IfxDbTestCase(unittest.TestCase):
          print type(data[0]) is long
          print type(data[1]) is long 
          print type(data[2]) is long
-         data = ifx_db.fetch_both(stmt)
+         data = IfxPy.fetch_both(stmt)
 
-       # test ifx_db.result for fetch of bigint
-       stmt1 = ifx_db.prepare(conn, "SELECT col2 FROM tab_bigint")
-       ifx_db.execute(stmt1)
-       ifx_db.fetch_row(stmt1, 0)
+       # test IfxPy.result for fetch of bigint
+       stmt1 = IfxPy.prepare(conn, "SELECT col2 FROM tab_bigint")
+       IfxPy.execute(stmt1)
+       IfxPy.fetch_row(stmt1, 0)
        if (server.DBMS_NAME[0:3] != 'Inf'):
-         row1 = ifx_db.result(stmt1, 'COL2')
+         row1 = IfxPy.result(stmt1, 'COL2')
        else:
-         row1 = ifx_db.result(stmt1, 'col2')
+         row1 = IfxPy.result(stmt1, 'col2')
        print row1
        
-       ifx_db.close(conn)
+       IfxPy.close(conn)
 
 #__END__
 #__LUW_EXPECTED__

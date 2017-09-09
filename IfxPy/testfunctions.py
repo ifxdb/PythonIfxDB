@@ -34,14 +34,14 @@ import re
 import glob
 import inspect
 
-import ifx_db
+import IfxPy
 import config
 
 class IfxDbTestFunctions(unittest.TestCase):
-  #prepconn = ifx_db.connect(config.database, config.user, config.password)
-  prepconn = ifx_db.connect(config.ConnStr, "", "")
-  server = ifx_db.server_info(prepconn)
-  ifx_db.close(prepconn)
+  #prepconn = IfxPy.connect(config.database, config.user, config.password)
+  prepconn = IfxPy.connect(config.ConnStr, "", "")
+  server = IfxPy.server_info(prepconn)
+  IfxPy.close(prepconn)
   
   # See the tests.py comments for this function.
   def setUp(self):

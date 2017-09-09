@@ -12,7 +12,7 @@
 #       will return no rows.
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -23,12 +23,12 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_023)
 
   def run_test_023(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
     if (conn != 0):
-      stmt = ifx_db.column_privileges(conn, None, config.user, 'animals')
-      row = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.column_privileges(conn, None, config.user, 'animals')
+      row = IfxPy.fetch_tuple(stmt)
       if row:
         print row[0]
         print row[1]
@@ -38,9 +38,9 @@ class IfxDbTestCase(unittest.TestCase):
         print row[5]
         print row[6]
         print row[7]
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
-      print ifx_db.conn_errormsg()
+      print IfxPy.conn_errormsg()
       print "Connection failed\n\n"
 
 #__END__

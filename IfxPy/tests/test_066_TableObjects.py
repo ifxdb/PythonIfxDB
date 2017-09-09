@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,20 +16,20 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_066)
 
   def run_test_066(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
 
-    result = ifx_db.tables(conn, None, config.user.lower(), 'animals')
+    result = IfxPy.tables(conn, None, config.user.lower(), 'animals')
       
 #    NOTE: This is a workaround
 #    function fetch_object() to be implemented...
-#    row = ifx_db.fetch_object(result)
+#    row = IfxPy.fetch_object(result)
 #    JS: check .lower() functionatily  
   
     class Row:
         pass
 
-    data = ifx_db.fetch_assoc(result)
+    data = IfxPy.fetch_assoc(result)
     while ( data ):
       row = Row()
       row.table_schem = data['TABLE_SCHEM']
@@ -41,13 +41,13 @@ class IfxDbTestCase(unittest.TestCase):
       print "Name:    %s" % row.table_name
       print "Type:    %s" % row.table_type
       print "Remarks: %s\n" % row.remarks
-#      row = ifx_db.fetch_object(result)
-      data = ifx_db.fetch_assoc(result)
+#      row = IfxPy.fetch_object(result)
+      data = IfxPy.fetch_assoc(result)
 
-    result = ifx_db.tables(conn, None, config.user.lower(), 'animal_pics')
+    result = IfxPy.tables(conn, None, config.user.lower(), 'animal_pics')
     
-#    row = ifx_db.fetch_object(result)
-    data = ifx_db.fetch_assoc(result)
+#    row = IfxPy.fetch_object(result)
+    data = IfxPy.fetch_assoc(result)
     while (data ):
       row = Row()
       row.table_schem = data['TABLE_SCHEM']
@@ -59,12 +59,12 @@ class IfxDbTestCase(unittest.TestCase):
       print "Name:    %s" % row.table_name
       print "Type:    %s" % row.table_type
       print "Remarks: %s\n" % row.remarks
-      data = ifx_db.fetch_assoc(result)
+      data = IfxPy.fetch_assoc(result)
       
-    result = ifx_db.tables(conn, None, config.user.lower(), 'anime_cat')
+    result = IfxPy.tables(conn, None, config.user.lower(), 'anime_cat')
     
-#    row = ifx_db.fetch_object(result)
-    data = ifx_db.fetch_assoc(result)
+#    row = IfxPy.fetch_object(result)
+    data = IfxPy.fetch_assoc(result)
     while ( data ): 
       row = Row()
       row.table_schem = data['TABLE_SCHEM']
@@ -76,11 +76,11 @@ class IfxDbTestCase(unittest.TestCase):
       print "Name:    %s" % row.table_name
       print "Type:    %s" % row.table_type
       print "Remarks: %s\n" % row.remarks
-#      row = ifx_db.fetch_object(result)
-      data = ifx_db.fetch_assoc(result)
+#      row = IfxPy.fetch_object(result)
+      data = IfxPy.fetch_assoc(result)
     
-    ifx_db.free_result(result)
-    ifx_db.close(conn)
+    IfxPy.free_result(result)
+    IfxPy.close(conn)
 
 #__END__
 #__LUW_EXPECTED__

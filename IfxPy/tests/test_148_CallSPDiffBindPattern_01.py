@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,34 +16,34 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_148)
 
   def run_test_148(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
       ##### Set up #####
-      serverinfo = ifx_db.server_info( conn )
+      serverinfo = IfxPy.server_info( conn )
       server = serverinfo.DBMS_NAME[0:3]
       try:
           sql = "DROP TABLE sptb"
-          ifx_db.exec_immediate(conn, sql)
+          IfxPy.exec_immediate(conn, sql)
       except:
           pass
       
       try:
           sql = "DROP PROCEDURE sp"
-          ifx_db.exec_immediate(conn, sql)
+          IfxPy.exec_immediate(conn, sql)
       except:
           pass
       
       sql = "CREATE TABLE sptb (c1 INTEGER, c2 FLOAT, c3 VARCHAR(10), c4 INT8, c5 VARCHAR(20))"
       
-      ifx_db.exec_immediate(conn, sql)
+      IfxPy.exec_immediate(conn, sql)
       
       sql = "INSERT INTO sptb (c1, c2, c3, c4, c5) VALUES (1, 5.01, 'varchar', 3271982, 'varchar data')"
-      ifx_db.exec_immediate(conn, sql)
+      IfxPy.exec_immediate(conn, sql)
       
       sql = """CREATE PROCEDURE sp(OUT out1 INTEGER, OUT out2 FLOAT, OUT out3 VARCHAR(10), OUT out4 INT8, OUT out5 VARCHAR(20));
                  SELECT c1, c2, c3, c4, c5 INTO out1, out2, out3, out4, out5 FROM sptb; END PROCEDURE;"""
-      ifx_db.exec_immediate(conn, sql)
+      IfxPy.exec_immediate(conn, sql)
       #############################
 
       ##### Run the test #####
@@ -54,7 +54,7 @@ class IfxDbTestCase(unittest.TestCase):
       out4 = 0
       out5 = ""
 
-      stmt, out1, out2, out3, out4, out5 = ifx_db.callproc(conn, 'sp', (out1, out2, out3, out4, out5))
+      stmt, out1, out2, out3, out4, out5 = IfxPy.callproc(conn, 'sp', (out1, out2, out3, out4, out5))
 
       print "out 1:"
       print out1

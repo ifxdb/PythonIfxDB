@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,14 +16,14 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_011)
 
   def run_test_011(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
     if conn:
-      ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
-      stmt = ifx_db.exec_immediate(conn, "DELETE FROM animals WHERE weight > 10.0")
-      print "Number of affected rows: %d" % ifx_db.num_rows( stmt )
-      ifx_db.rollback(conn)
-      ifx_db.close(conn)
+      IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
+      stmt = IfxPy.exec_immediate(conn, "DELETE FROM animals WHERE weight > 10.0")
+      print "Number of affected rows: %d" % IfxPy.num_rows( stmt )
+      IfxPy.rollback(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

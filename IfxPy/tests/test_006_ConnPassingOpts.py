@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -17,34 +17,34 @@ class IfxDbTestCase(unittest.TestCase):
 	  
   def run_test_006(self):    
 
-    options1 = {ifx_db.SQL_ATTR_CURSOR_TYPE:  ifx_db.SQL_CURSOR_KEYSET_DRIVEN}
-    options2 = {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_FORWARD_ONLY}
+    options1 = {IfxPy.SQL_ATTR_CURSOR_TYPE:  IfxPy.SQL_CURSOR_KEYSET_DRIVEN}
+    options2 = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_FORWARD_ONLY}
       
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
   
     if conn:
-      serverinfo = ifx_db.server_info( conn )
+      serverinfo = IfxPy.server_info( conn )
 
       if (serverinfo.DBMS_NAME[0:3] == 'Inf'):
         options1 = options2
 
-      stmt = ifx_db.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", options2)
-      ifx_db.execute(stmt)
-      data = ifx_db.fetch_both(stmt)
+      stmt = IfxPy.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", options2)
+      IfxPy.execute(stmt)
+      data = IfxPy.fetch_both(stmt)
       while ( data ):
         print data[0]
-        data = ifx_db.fetch_both(stmt)
+        data = IfxPy.fetch_both(stmt)
       
       print ""
 
-      stmt = ifx_db.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", options1)
-      ifx_db.execute(stmt)
-      data = ifx_db.fetch_both(stmt)
+      stmt = IfxPy.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", options1)
+      IfxPy.execute(stmt)
+      data = IfxPy.fetch_both(stmt)
       while ( data ):
         print data[0]
-        data = ifx_db.fetch_both(stmt)
+        data = IfxPy.fetch_both(stmt)
     
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

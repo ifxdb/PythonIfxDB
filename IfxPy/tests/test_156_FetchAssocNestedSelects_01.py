@@ -9,7 +9,7 @@
 # increase the application heap size.
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -20,16 +20,16 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_156)
 
   def run_test_156(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
 
-    result = ifx_db.exec_immediate(conn, "select * from staff")
+    result = IfxPy.exec_immediate(conn, "select * from staff")
 
-    row = ifx_db.fetch_assoc(result)      
+    row = IfxPy.fetch_assoc(result)      
     count = 1
     while ( row ): 
         if (row['YEARS'] == None):
@@ -37,15 +37,15 @@ class IfxDbTestCase(unittest.TestCase):
         if (row['COMM'] == None):
             row['COMM'] = ''
         print row['ID'],row['NAME'],row['JOB'],row['YEARS'], row['SALARY'], row['COMM']
-        row = ifx_db.fetch_assoc(result)
+        row = IfxPy.fetch_assoc(result)
   
-    result2 = ifx_db.exec_immediate(conn,"select * from department where substr(deptno,1,1) in ('A','B','C','D','E')")
-    row2 = ifx_db.fetch_assoc(result2)
+    result2 = IfxPy.exec_immediate(conn,"select * from department where substr(deptno,1,1) in ('A','B','C','D','E')")
+    row2 = IfxPy.fetch_assoc(result2)
     while ( row2 ):    
         if (row2['MGRNO'] == None):
             row2['MGRNO'] = ''
         print row2['DEPTNO'], row2['DEPTNAME'], row2['MGRNO'], row2['ADMRDEPT'], row2['LOCATION']
-        row2 = ifx_db.fetch_assoc(result2)
+        row2 = IfxPy.fetch_assoc(result2)
 
 #__END__
 #__LUW_EXPECTED__

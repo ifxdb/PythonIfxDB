@@ -5,7 +5,7 @@
 #
 
 import unittest, sys, datetime
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,53 +16,53 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_InsertRetrieveDateTimeTypeColumn)
 
   def run_test_InsertRetrieveDateTimeTypeColumn(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
       drop = 'DROP TABLE tab_datetime'
       result = ''
       try:
-        result = ifx_db.exec_immediate(conn, drop)
+        result = IfxPy.exec_immediate(conn, drop)
       except:
         pass
       t_val = datetime.time(10, 42, 34)
       d_val = datetime.date(1981, 7, 8)
       #ts_val = datetime.datetime.today()
       ts_val = datetime.datetime(1981, 7, 8, 10, 42, 34, 10)
-      server = ifx_db.server_info( conn )
+      server = IfxPy.server_info( conn )
       if (server.DBMS_NAME[0:3] == 'Inf'):
         statement = "CREATE TABLE tab_datetime (col1 DATETIME HOUR TO SECOND, col2 DATE, col3 DATETIME YEAR TO FRACTION(5))"
-        result = ifx_db.exec_immediate(conn, statement)
+        result = IfxPy.exec_immediate(conn, statement)
         statement = "INSERT INTO tab_datetime (col1, col2, col3) values (?, ?, ?)"
-        stmt = ifx_db.prepare(conn, statement)
-        result = ifx_db.execute(stmt, (t_val, d_val, ts_val))
+        stmt = IfxPy.prepare(conn, statement)
+        result = IfxPy.execute(stmt, (t_val, d_val, ts_val))
       else:
         statement = "CREATE TABLE tab_datetime (col1 TIME, col2 DATE, col3 TIMESTAMP)"
-        result = ifx_db.exec_immediate(conn, statement)
+        result = IfxPy.exec_immediate(conn, statement)
         statement = "INSERT INTO tab_datetime (col1, col2, col3) values (?, ?, ?)"
-        stmt = ifx_db.prepare(conn, statement)
-        result = ifx_db.execute(stmt, (t_val, d_val, ts_val))
+        stmt = IfxPy.prepare(conn, statement)
+        result = IfxPy.execute(stmt, (t_val, d_val, ts_val))
 
       statement = "SELECT * FROM tab_datetime"
-      result = ifx_db.exec_immediate(conn, statement)
+      result = IfxPy.exec_immediate(conn, statement)
       
-      for i in range(0, ifx_db.num_fields(result)):
-        print str(i) + ":" + ifx_db.field_type(result,i)
+      for i in range(0, IfxPy.num_fields(result)):
+        print str(i) + ":" + IfxPy.field_type(result,i)
 
       statement = "SELECT * FROM tab_datetime"
-      stmt = ifx_db.prepare(conn, statement)
-      rc = ifx_db.execute(stmt)
-      result = ifx_db.fetch_row(stmt)
+      stmt = IfxPy.prepare(conn, statement)
+      rc = IfxPy.execute(stmt)
+      result = IfxPy.fetch_row(stmt)
       while ( result ):
-        row0 = ifx_db.result(stmt, 0)
-        row1 = ifx_db.result(stmt, 1)
-        row2 = ifx_db.result(stmt, 2)
+        row0 = IfxPy.result(stmt, 0)
+        row1 = IfxPy.result(stmt, 1)
+        row2 = IfxPy.result(stmt, 2)
         print type(row0), row0
         print type(row1), row1
         print type(row2), row2
-        result = ifx_db.fetch_row(stmt)
+        result = IfxPy.fetch_row(stmt)
       
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,24 +16,24 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_036)
       
   def run_test_036(self):      
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
-    result = ifx_db.exec_immediate(conn, "select * from staff")
+    result = IfxPy.exec_immediate(conn, "select * from staff")
     i=0
-    row = ifx_db.fetch_row(result)
+    row = IfxPy.fetch_row(result)
     
     while ( row ):
-       result2 = ifx_db.exec_immediate(conn, "select * from staff")
+       result2 = IfxPy.exec_immediate(conn, "select * from staff")
        j=0
-       row2 = ifx_db.fetch_row(result2) 
+       row2 = IfxPy.fetch_row(result2) 
        while ( row2 ):
           print "%d)%d," % (i, j)
           j+=1
-          row2 = ifx_db.fetch_row(result2)
+          row2 = IfxPy.fetch_row(result2)
        print "%d, " % i
        i+=1
-       row = ifx_db.fetch_row(result)
-    ifx_db.close(conn)
+       row = IfxPy.fetch_row(result)
+    IfxPy.close(conn)
 
 #__END__
 #__LUW_EXPECTED__

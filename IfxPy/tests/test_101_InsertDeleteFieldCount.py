@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,19 +16,19 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_101)
 
   def run_test_101(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     if conn:
-      result = ifx_db.exec_immediate(conn,"insert into t_string values(123,1.222333,'one to one')")
+      result = IfxPy.exec_immediate(conn,"insert into t_string values(123,1.222333,'one to one')")
       if result:
-        cols = ifx_db.num_fields(result)
+        cols = IfxPy.num_fields(result)
         print "col: %d" % cols
-        rows = ifx_db.num_rows(result)
+        rows = IfxPy.num_rows(result)
         print "affected row: %d" % rows
-      result = ifx_db.exec_immediate(conn,"delete from t_string where a=123")
+      result = IfxPy.exec_immediate(conn,"delete from t_string where a=123")
       if result:
-        cols = ifx_db.num_fields(result)
+        cols = IfxPy.num_fields(result)
         print "col: %d" % cols
-        rows = ifx_db.num_rows(result)
+        rows = IfxPy.num_rows(result)
         print "affected row: %d" % rows
     else:
       print "no connection";    

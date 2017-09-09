@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,12 +16,12 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_123)
 
   def run_test_123(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
-    server = ifx_db.server_info( conn )
+    server = IfxPy.server_info( conn )
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-      ifx_db.set_option(conn, op, 1)
+      op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+      IfxPy.set_option(conn, op, 1)
   
     arr = [\
     	    "HAAS",\
@@ -59,21 +59,21 @@ class IfxDbTestCase(unittest.TestCase):
 	]
 
     if conn:
-      result = ifx_db.exec_immediate(conn, "select staff.id, employee.lastname from staff, employee order by employee.lastname,staff.id")
-      cols = ifx_db.num_fields(result)
+      result = IfxPy.exec_immediate(conn, "select staff.id, employee.lastname from staff, employee order by employee.lastname,staff.id")
+      cols = IfxPy.num_fields(result)
       j = 0
-      row = ifx_db.fetch_both(result)
+      row = IfxPy.fetch_both(result)
       while ( row ):
         for i in range(0, cols):
-          #print "#{ifx_db.field_name(result,i)}:" % (ifx_db.field_name(result, i), row[ifx_db.field_name(result, i)])
-          #puts row[ifx_db.field_name(result,i)]
-          print "%s:%s" % (ifx_db.field_name(result, i), row[ifx_db.field_name(result, i)])
+          #print "#{IfxPy.field_name(result,i)}:" % (IfxPy.field_name(result, i), row[IfxPy.field_name(result, i)])
+          #puts row[IfxPy.field_name(result,i)]
+          print "%s:%s" % (IfxPy.field_name(result, i), row[IfxPy.field_name(result, i)])
         print "---------";    
         j += 1
-        row = ifx_db.fetch_both(result)
-      ifx_db.close(conn)
+        row = IfxPy.fetch_both(result)
+      IfxPy.close(conn)
     else:
-      print ifx_db.conn_errormsg()
+      print IfxPy.conn_errormsg()
 
 #__END__
 #__LUW_EXPECTED__

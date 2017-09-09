@@ -28,8 +28,8 @@
     <Compile Include="IfxPy.py" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ifx_db\ifx_db.vcxproj">
-      <Name>ifx_db</Name>
+    <ProjectReference Include="..\IfxPy\IfxPy.vcxproj">
+      <Name>IfxPy</Name>
       <Project>{e44b2e88-c3d7-4595-bf9e-6f06ab4d001f}</Project>
       <Private>True</Private>
     </ProjectReference>

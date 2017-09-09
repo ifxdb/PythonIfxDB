@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,9 +16,9 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expectf(self.run_test_300)
 
   def run_test_300(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    server = ifx_db.server_info(conn)
+    server = IfxPy.server_info(conn)
     
     if server:
       print "DBMS_NAME: string(%d) \"%s\"" % (len(server.DBMS_NAME), server.DBMS_NAME)
@@ -46,7 +46,7 @@ class IfxDbTestCase(unittest.TestCase):
       print "MAX_TABLE_NAME_LEN: int(%d)" % server.MAX_TABLE_NAME_LEN
       print "NON_NULLABLE_COLUMNS:", server.NON_NULLABLE_COLUMNS
     
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Error."
 

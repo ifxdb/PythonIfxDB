@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,21 +16,21 @@ class IfxDbTestCase(unittest.TestCase):
      obj.assert_expect(self.run_test_031)
 
   def run_test_031(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
     if conn:
-      stmt = ifx_db.exec_immediate(conn, "SELECT id, breed, name, weight FROM animals WHERE id = 0")
+      stmt = IfxPy.exec_immediate(conn, "SELECT id, breed, name, weight FROM animals WHERE id = 0")
         
-      while (ifx_db.fetch_row(stmt)):
-        id = ifx_db.result(stmt, 0)
+      while (IfxPy.fetch_row(stmt)):
+        id = IfxPy.result(stmt, 0)
         print "int(%d)" % id
-        breed = ifx_db.result(stmt, 1)
+        breed = IfxPy.result(stmt, 1)
         print "string(%d) \"%s\"" % (len(breed), breed)
-        name = ifx_db.result(stmt, 2)
+        name = IfxPy.result(stmt, 2)
         print "string(%d) \"%s\"" % (len(name), name)
-        weight = ifx_db.result(stmt, 3)
+        weight = IfxPy.result(stmt, 3)
         print "string(%d) \"%s\"" % (len(str(weight)), weight)
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

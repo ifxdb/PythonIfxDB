@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,31 +16,31 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_021)
 
   def run_test_021(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
     if conn:
-      stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")
-      res = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
+      res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
       print rows
         
-      ifx_db.autocommit(conn, 0)
-      ac = ifx_db.autocommit(conn)
+      IfxPy.autocommit(conn, 0)
+      ac = IfxPy.autocommit(conn)
       if ac != 0:
-        print "Cannot set ifx_db.AUTOCOMMIT_OFF\nCannot run test"
+        print "Cannot set IfxPy.AUTOCOMMIT_OFF\nCannot run test"
         #continue
         
-      ifx_db.exec_immediate(conn, "DELETE FROM animals")
+      IfxPy.exec_immediate(conn, "DELETE FROM animals")
         
-      stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")
-      res = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
+      res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
       print rows
         
-      ifx_db.commit(conn)
+      IfxPy.commit(conn)
       
-      stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")
-      res = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
+      res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
       print rows
 
@@ -55,12 +55,12 @@ class IfxDbTestCase(unittest.TestCase):
         (6, 'llama',      'Sweater',      150)
       )
       insert = 'INSERT INTO animals (id, breed, name, weight) VALUES (?, ?, ?, ?)'
-      stmt = ifx_db.prepare(conn, insert)
+      stmt = IfxPy.prepare(conn, insert)
       if stmt:
         for animal in animals:
-          result = ifx_db.execute(stmt, animal)
-      ifx_db.commit(conn)
-      ifx_db.close(conn)
+          result = IfxPy.execute(stmt, animal)
+      IfxPy.commit(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
       

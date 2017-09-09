@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,8 +16,8 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_146)
 
   def run_test_146(self):      
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
     
     if conn:
       name = "Peaches"
@@ -27,7 +27,7 @@ class IfxDbTestCase(unittest.TestCase):
       print "Values of bound parameters _before_ CALL:"
       print "  1: %s 2: %s 3: %d\n" % (name, second_name, weight)
      	
-      stmt, name, second_name, weight = ifx_db.callproc(conn, 'match_animal', (name, second_name, weight))
+      stmt, name, second_name, weight = IfxPy.callproc(conn, 'match_animal', (name, second_name, weight))
     
       if stmt is not None:
         print "Values of bound parameters _after_ CALL:"

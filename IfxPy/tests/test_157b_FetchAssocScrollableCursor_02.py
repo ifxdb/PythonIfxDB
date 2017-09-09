@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,18 +16,18 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_157b)
 
   def run_test_157b(self):
-    conn = ifx_db.connect(config.ConnStr + 'ENABLESCROLLABLECURSORS=1', config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr + 'ENABLESCROLLABLECURSORS=1', config.user, config.password)
+    server = IfxPy.server_info( conn )
 
     if conn:
       sql = "SELECT id, name, breed, weight FROM animals ORDER BY breed"
       if (server.DBMS_NAME[0:3] != 'Inf'):
-        stmt = ifx_db.prepare(conn, sql, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
+        stmt = IfxPy.prepare(conn, sql, {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
       else:
-        stmt = ifx_db.prepare(conn, sql, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_STATIC})
-      result = ifx_db.execute(stmt)
+        stmt = IfxPy.prepare(conn, sql, {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_STATIC})
+      result = IfxPy.execute(stmt)
       i = 2
-      row = ifx_db.fetch_assoc(stmt, i)
+      row = IfxPy.fetch_assoc(stmt, i)
       while ( row ):
         if (server.DBMS_NAME[0:3] == 'Inf'):
           #printf("%-5d %-16s %-32s %10s\n", row['id'], row['name'], row['breed'], row['weight'])
@@ -36,7 +36,7 @@ class IfxDbTestCase(unittest.TestCase):
           #printf("%-5d %-16s %-32s %10s\n", row['ID'], row['NAME'], row['BREED'], row['WEIGHT'])
           print "%-5d %-16s %-32s %10s" % (row['ID'], row['NAME'], row['BREED'], row['WEIGHT'])
         i = i + 2
-        row = ifx_db.fetch_assoc(stmt, i)
+        row = IfxPy.fetch_assoc(stmt, i)
 
 #__END__
 #__LUW_EXPECTED__

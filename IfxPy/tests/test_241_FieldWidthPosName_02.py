@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,19 +16,19 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_241)
 
   def run_test_241(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    result = ifx_db.exec_immediate(conn, "select * from sales")
-    result2 = ifx_db.exec_immediate(conn, "select * from staff")
-    result3 = ifx_db.exec_immediate(conn, "select * from emp_photo")
+    result = IfxPy.exec_immediate(conn, "select * from sales")
+    result2 = IfxPy.exec_immediate(conn, "select * from staff")
+    result3 = IfxPy.exec_immediate(conn, "select * from emp_photo")
     
-    for i in range(0, ifx_db.num_fields(result)):
-      print str(ifx_db.field_width(result,i))
+    for i in range(0, IfxPy.num_fields(result)):
+      print str(IfxPy.field_width(result,i))
     
     print "\n-----"
     
-    for i in range(0, ifx_db.num_fields(result2)):
-      print str(ifx_db.field_width(result2,ifx_db.field_name(result2,i)))
+    for i in range(0, IfxPy.num_fields(result2)):
+      print str(IfxPy.field_width(result2,IfxPy.field_name(result2,i)))
 
 #__END__
 #__LUW_EXPECTED__

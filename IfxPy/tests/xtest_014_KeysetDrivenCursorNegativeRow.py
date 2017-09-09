@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,29 +16,29 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_014)
 
   def run_test_014(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    serverinfo = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    serverinfo = IfxPy.server_info( conn )
 
     query = 'SELECT * FROM animals ORDER BY name'
 
     if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
-      stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
+      stmt = IfxPy.prepare(conn, query, {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
     else:
-      stmt = ifx_db.prepare(conn, query)
-    ifx_db.execute(stmt)
-    data = ifx_db.fetch_both( stmt )
+      stmt = IfxPy.prepare(conn, query)
+    IfxPy.execute(stmt)
+    data = IfxPy.fetch_both( stmt )
     while ( data ):
       print "%s : %s : %s : %s\n" % (data[0], data[1], data[2], data[3])
-      data = ifx_db.fetch_both( stmt )
+      data = IfxPy.fetch_both( stmt )
     try:
-      stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE:  ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
-      ifx_db.execute(stmt)
-      rc = ifx_db.fetch_row(stmt, -1)
+      stmt = IfxPy.prepare(conn, query, {IfxPy.SQL_ATTR_CURSOR_TYPE:  IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
+      IfxPy.execute(stmt)
+      rc = IfxPy.fetch_row(stmt, -1)
       print "Fetch row -1: %s" % str(rc)
     except:
       print "Requested row number must be a positive value"
 
-    ifx_db.close(conn)
+    IfxPy.close(conn)
 
 #__END__
 #__LUW_EXPECTED__

@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,32 +16,32 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_121)
 
   def run_test_121(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    server = ifx_db.server_info( conn )
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    server = IfxPy.server_info( conn )
     
     if conn:
-      ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
+      IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
 
       insert = "INSERT INTO animals values (7, 'cat', 'Benji', 5.1)"
-      ifx_db.exec_immediate(conn, insert)
+      IfxPy.exec_immediate(conn, insert)
         
-      stmt = ifx_db.exec_immediate(conn, "SELECT breed, COUNT(breed) AS number FROM animals GROUP BY breed ORDER BY breed")
+      stmt = IfxPy.exec_immediate(conn, "SELECT breed, COUNT(breed) AS number FROM animals GROUP BY breed ORDER BY breed")
     
-      name1 = ifx_db.field_name(stmt, 0)
-      name2 = ifx_db.field_name(stmt, 1)
-      name3 = ifx_db.field_name(stmt, 2)
-      name4 = ifx_db.field_name(stmt, 3)
+      name1 = IfxPy.field_name(stmt, 0)
+      name2 = IfxPy.field_name(stmt, 1)
+      name3 = IfxPy.field_name(stmt, 2)
+      name4 = IfxPy.field_name(stmt, 3)
       
       if (server.DBMS_NAME[0:3] == 'Inf'):
-        name5 = ifx_db.field_name(stmt, "breed")
-        name6 = ifx_db.field_name(stmt, 7)
-        name7 = ifx_db.field_name(stmt, '"nUMBER"')
-        name8 = ifx_db.field_name(stmt, "number")
+        name5 = IfxPy.field_name(stmt, "breed")
+        name6 = IfxPy.field_name(stmt, 7)
+        name7 = IfxPy.field_name(stmt, '"nUMBER"')
+        name8 = IfxPy.field_name(stmt, "number")
       else:
-        name5 = ifx_db.field_name(stmt, "BREED")
-        name6 = ifx_db.field_name(stmt, 7)
-        name7 = ifx_db.field_name(stmt, '"Number"')
-        name8 = ifx_db.field_name(stmt, "NUMBER")
+        name5 = IfxPy.field_name(stmt, "BREED")
+        name6 = IfxPy.field_name(stmt, 7)
+        name7 = IfxPy.field_name(stmt, '"Number"')
+        name8 = IfxPy.field_name(stmt, "NUMBER")
       
       print "string(%d) \"%s\"" % (len(name1), name1)
       print "string(%d) \"%s\"" % (len(name2), name2)
@@ -53,7 +53,7 @@ class IfxDbTestCase(unittest.TestCase):
       print "%s" % name7
       print "string(%d) \"%s\"" % (len(name8), name8)
 
-      ifx_db.rollback(conn)
+      IfxPy.rollback(conn)
     else:
       print "Connection failed."
 

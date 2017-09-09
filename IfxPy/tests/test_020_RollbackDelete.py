@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,35 +16,35 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_020)
 
   def run_test_020(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
     if conn:
         
-      stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")
-      res = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
+      res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
       print rows
       
-      ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
-      ac = ifx_db.autocommit(conn)
+      IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
+      ac = IfxPy.autocommit(conn)
       if ac != 0:
-        print "Cannot set ifx_db.SQL_AUTOCOMMIT_OFF\nCannot run test"
+        print "Cannot set IfxPy.SQL_AUTOCOMMIT_OFF\nCannot run test"
         #continue 
       
-      ifx_db.exec_immediate(conn, "DELETE FROM animals")
+      IfxPy.exec_immediate(conn, "DELETE FROM animals")
       
-      stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")
-      res = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
+      res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
       print rows
        
-      ifx_db.rollback(conn)
+      IfxPy.rollback(conn)
        
-      stmt = ifx_db.exec_immediate(conn, "SELECT count(*) FROM animals")
-      res = ifx_db.fetch_tuple(stmt)
+      stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
+      res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
       print rows
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
       print "Connection failed."
 

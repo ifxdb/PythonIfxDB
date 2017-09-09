@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,25 +16,25 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_6561)
 
   def run_test_6561(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if conn:
-      ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
+      IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
 
-      stmt = ifx_db.exec_immediate(conn, "INSERT INTO animals (id, breed, name, weight) VALUES (null, null, null, null)")
+      stmt = IfxPy.exec_immediate(conn, "INSERT INTO animals (id, breed, name, weight) VALUES (null, null, null, null)")
       statement = "SELECT count(id) FROM animals"
-      result = ifx_db.exec_immediate(conn, statement)
-      if ( (not result) and ifx_db.stmt_error() ):
-        print "ERROR: %s" % (ifx_db.stmt_errormsg(), )
+      result = IfxPy.exec_immediate(conn, statement)
+      if ( (not result) and IfxPy.stmt_error() ):
+        print "ERROR: %s" % (IfxPy.stmt_errormsg(), )
 
-      row = ifx_db.fetch_tuple(result)
+      row = IfxPy.fetch_tuple(result)
       while ( row ):
         for i in row:
             print i
-        row = ifx_db.fetch_tuple(result)
+        row = IfxPy.fetch_tuple(result)
     
-      ifx_db.rollback(conn)
-      ifx_db.close(conn)
+      IfxPy.rollback(conn)
+      IfxPy.close(conn)
       
     else:
       print "Connection failed."

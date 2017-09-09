@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,11 +16,11 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_008)
 
   def run_test_008(self):
-    op = {ifx_db.ATTR_CASE: ifx_db.CASE_NATURAL}
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password, op)
-    server = ifx_db.server_info( conn )
-    result = ifx_db.columns(conn,None,None,"employee")
-    row = ifx_db.fetch_both(result)
+    op = {IfxPy.ATTR_CASE: IfxPy.CASE_NATURAL}
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password, op)
+    server = IfxPy.server_info( conn )
+    result = IfxPy.columns(conn,None,None,"employee")
+    row = IfxPy.fetch_both(result)
     value1 = None
     value2 = None
     value3 = None
@@ -38,10 +38,10 @@ class IfxDbTestCase(unittest.TestCase):
     print value3
     print value4
 
-    op = {ifx_db.ATTR_CASE: ifx_db.CASE_UPPER}
-    ifx_db.set_option(conn, op, 1)
-    result = ifx_db.columns(conn,None,None,"employee")
-    row = ifx_db.fetch_both(result)
+    op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
+    IfxPy.set_option(conn, op, 1)
+    result = IfxPy.columns(conn,None,None,"employee")
+    row = IfxPy.fetch_both(result)
     value1 = None
     value2 = None
     value3 = None
@@ -59,10 +59,10 @@ class IfxDbTestCase(unittest.TestCase):
     print value3
     print value4
     
-    op = {ifx_db.ATTR_CASE: ifx_db.CASE_LOWER}
-    ifx_db.set_option(conn, op, 1)
-    result = ifx_db.columns(conn,None,None,"employee")
-    row = ifx_db.fetch_both(result)
+    op = {IfxPy.ATTR_CASE: IfxPy.CASE_LOWER}
+    IfxPy.set_option(conn, op, 1)
+    result = IfxPy.columns(conn,None,None,"employee")
+    row = IfxPy.fetch_both(result)
     value1 = None
     value2 = None
     value3 = None

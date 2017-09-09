@@ -1,9 +1,9 @@
-import ifx_db
+import IfxPy
 
 ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;PROTOCOL=onsoctcp;SERVICE=9088;UID=TestUser1;PWD=MySimplePass1;"
 
 # netstat -a | findstr  9088
-conn = ifx_db.connect( ConStr, "", "")
+conn = IfxPy.connect( ConStr, "", "")
 
 SetupSqlSet = [
     "drop table t1;", 
@@ -19,12 +19,12 @@ SetupSqlSet = [
 
 for sql in SetupSqlSet:
     print sql
-    stmt = ifx_db.exec_immediate(conn, sql)
+    stmt = IfxPy.exec_immediate(conn, sql)
 
 
 sql = "SELECT * FROM t1"
-stmt = ifx_db.exec_immediate(conn, sql)
-dictionary = ifx_db.fetch_both(stmt)
+stmt = IfxPy.exec_immediate(conn, sql)
+dictionary = IfxPy.fetch_both(stmt)
 
 rc = 0
 while dictionary != False:
@@ -35,8 +35,8 @@ while dictionary != False:
     print "c3 is : ", dictionary["c3"]
     print "c4 is : ", dictionary[3]
     print " "
-    dictionary = ifx_db.fetch_both(stmt)
+    dictionary = IfxPy.fetch_both(stmt)
 
-ifx_db.close(conn)
+IfxPy.close(conn)
 
 print "Done"

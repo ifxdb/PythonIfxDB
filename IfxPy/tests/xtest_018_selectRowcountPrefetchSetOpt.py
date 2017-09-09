@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,39 +16,39 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_018)
 
   def run_test_018(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
-    ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_ON)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
+    IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_ON)
     if conn:
-      stmt = ifx_db.prepare(conn, "SELECT * from animals WHERE weight < 10.0" )
-      ifx_db.set_option(stmt, {ifx_db.SQL_ATTR_ROWCOUNT_PREFETCH : ifx_db.SQL_ROWCOUNT_PREFETCH_ON}, 2)
-      result = ifx_db.execute(stmt)
+      stmt = IfxPy.prepare(conn, "SELECT * from animals WHERE weight < 10.0" )
+      IfxPy.set_option(stmt, {IfxPy.SQL_ATTR_ROWCOUNT_PREFETCH : IfxPy.SQL_ROWCOUNT_PREFETCH_ON}, 2)
+      result = IfxPy.execute(stmt)
       if result:
-        rows = ifx_db.num_rows(stmt)
+        rows = IfxPy.num_rows(stmt)
         print "affected row:", rows
-        ifx_db.free_result(stmt)
+        IfxPy.free_result(stmt)
       else:
-        print ifx_db.stmt_errormsg()
+        print IfxPy.stmt_errormsg()
 
-      ifx_db.set_option(stmt, {ifx_db.SQL_ATTR_ROWCOUNT_PREFETCH : ifx_db.SQL_ROWCOUNT_PREFETCH_OFF}, 2)
-      result = ifx_db.execute(stmt)
+      IfxPy.set_option(stmt, {IfxPy.SQL_ATTR_ROWCOUNT_PREFETCH : IfxPy.SQL_ROWCOUNT_PREFETCH_OFF}, 2)
+      result = IfxPy.execute(stmt)
       if result:
-        rows = ifx_db.num_rows(stmt)
+        rows = IfxPy.num_rows(stmt)
         print "affected row:", rows
-        ifx_db.free_result(stmt)
+        IfxPy.free_result(stmt)
       else:
-        print ifx_db.stmt_errormsg()
+        print IfxPy.stmt_errormsg()
 
-      ifx_db.set_option(stmt, {ifx_db.SQL_ATTR_ROWCOUNT_PREFETCH : ifx_db.SQL_ROWCOUNT_PREFETCH_ON}, 2)
-      result = ifx_db.execute(stmt)
+      IfxPy.set_option(stmt, {IfxPy.SQL_ATTR_ROWCOUNT_PREFETCH : IfxPy.SQL_ROWCOUNT_PREFETCH_ON}, 2)
+      result = IfxPy.execute(stmt)
       if result:
-        rows = ifx_db.num_rows(stmt)
+        rows = IfxPy.num_rows(stmt)
         print "affected row:", rows
       else:
-        print ifx_db.stmt_errormsg()
+        print IfxPy.stmt_errormsg()
 
-      ifx_db.close(conn)
+      IfxPy.close(conn)
     else:
-      print "no connection:", ifx_db.conn_errormsg()
+      print "no connection:", IfxPy.conn_errormsg()
 
 #__END__
 #__LUW_EXPECTED__

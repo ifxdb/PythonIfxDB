@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -20,9 +20,9 @@ class IfxDbTestCase(unittest.TestCase):
     badpass = "invalid_password"
     dsn = "DATABASE=" + config.ConnStr + ";UID=" + baduser + ";PWD=" + badpass + ";"
     try:
-      conn = ifx_db.connect(dsn, "", "")
-      print "odd, ifx_db.connect succeeded with an invalid user / password"
-      ifx_db.close(conn)
+      conn = IfxPy.connect(dsn, "", "")
+      print "odd, IfxPy.connect succeeded with an invalid user / password"
+      IfxPy.close(conn)
     except: 
       print "Ooops"
 

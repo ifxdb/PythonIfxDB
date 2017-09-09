@@ -5,7 +5,7 @@
 #
 
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,29 +16,29 @@ class IfxDbTestCase(unittest.TestCase):
     obj.assert_expect(self.run_test_143)
 
   def run_test_143(self):
-    conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+    conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
-    ifx_db.autocommit(conn, ifx_db.SQL_AUTOCOMMIT_OFF)
+    IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
 
     insert1 = "INSERT INTO animals (id, breed, name, weight) VALUES (NULL, 'ghost', NULL, ?)"
     select = 'SELECT id, breed, name, weight FROM animals WHERE weight IS NULL'
     
     if conn:
-      stmt = ifx_db.prepare(conn, insert1)
+      stmt = IfxPy.prepare(conn, insert1)
     
       animal = None
-      ifx_db.bind_param(stmt, 1, animal)
+      IfxPy.bind_param(stmt, 1, animal)
     
-      if ifx_db.execute(stmt):
-        stmt = ifx_db.exec_immediate(conn, select)
-        row = ifx_db.fetch_tuple(stmt)
+      if IfxPy.execute(stmt):
+        stmt = IfxPy.exec_immediate(conn, select)
+        row = IfxPy.fetch_tuple(stmt)
         while ( row ):
           #row.each { |child| print child }
           for i in row:
             print i
-          row = ifx_db.fetch_tuple(stmt)
+          row = IfxPy.fetch_tuple(stmt)
 
-      ifx_db.rollback(conn)
+      IfxPy.rollback(conn)
     else:
       print "Connection failed."
 

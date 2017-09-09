@@ -6,7 +6,7 @@
 
 from decimal import Decimal
 import unittest, sys
-import ifx_db
+import IfxPy
 import config
 from testfunctions import IfxDbTestFunctions
 
@@ -16,24 +16,24 @@ class IfxDbTestCase(unittest.TestCase):
 		obj.assert_expect(self.run_test_decimal)
 	
 	def run_test_decimal(self):
-		conn = ifx_db.connect(config.ConnStr, config.user, config.password)
+		conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 		
 		if conn:
-			serverinfo = ifx_db.server_info( conn )
+			serverinfo = IfxPy.server_info( conn )
 			
 			drop = "DROP TABLE STOCKSHARE"
 			try:
-				result = ifx_db.exec_immediate(conn,drop)
+				result = IfxPy.exec_immediate(conn,drop)
 			except:
 				pass
 			
 			# Create the table stockprice
 			create = "CREATE TABLE STOCKSHARE (id SMALLINT NOT NULL, company VARCHAR(30), stockshare DECIMAL(7, 2))"
-			result = ifx_db.exec_immediate(conn, create)
+			result = IfxPy.exec_immediate(conn, create)
 			
 			# Insert Directly
 			insert = "INSERT INTO STOCKSHARE (id, company, stockshare) VALUES (10, 'Megadeth', 100.002)"
-			result = ifx_db.exec_immediate(conn, insert)
+			result = IfxPy.exec_immediate(conn, insert)
 			
 			# Prepare and Insert in the stockprice table
 			stockprice = (\
@@ -44,19 +44,19 @@ class IfxDbTestCase(unittest.TestCase):
 					(60, "Kaerci", Decimal("100.976"))\
 					)
 			insert = 'INSERT INTO STOCKSHARE (id, company, stockshare) VALUES (?,?,?)'
-			stmt = ifx_db.prepare(conn,insert)
+			stmt = IfxPy.prepare(conn,insert)
 			if stmt:
 				for company in stockprice:
-					result = ifx_db.execute(stmt,company)
+					result = IfxPy.execute(stmt,company)
 			
 			id = 70
 			company = 'Nirvana'
 			stockshare = Decimal("100.1234")
 			try:
-				ifx_db.bind_param(stmt, 1, id)
-				ifx_db.bind_param(stmt, 2, company)
-				ifx_db.bind_param(stmt, 3, stockshare)
-				error = ifx_db.execute(stmt);
+				IfxPy.bind_param(stmt, 1, id)
+				IfxPy.bind_param(stmt, 2, company)
+				IfxPy.bind_param(stmt, 3, stockshare)
+				error = IfxPy.execute(stmt);
 			except:
 				excp = sys.exc_info()
 				# slot 1 contains error message
@@ -65,22 +65,22 @@ class IfxDbTestCase(unittest.TestCase):
 			# Select the result from the table and
 			query = 'SELECT * FROM STOCKSHARE ORDER BY id'
 			if (serverinfo.DBMS_NAME[0:3] != 'Inf'):
-				stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE: ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
+				stmt = IfxPy.prepare(conn, query, {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
 			else:
-				stmt = ifx_db.prepare(conn, query)
-			ifx_db.execute(stmt)
-			data = ifx_db.fetch_both( stmt )
+				stmt = IfxPy.prepare(conn, query)
+			IfxPy.execute(stmt)
+			data = IfxPy.fetch_both( stmt )
 			while ( data ):
 				print "%s : %s : %s\n" % (data[0], data[1], data[2])
-				data = ifx_db.fetch_both( stmt )
+				data = IfxPy.fetch_both( stmt )
 			try:
-				stmt = ifx_db.prepare(conn, query, {ifx_db.SQL_ATTR_CURSOR_TYPE:  ifx_db.SQL_CURSOR_KEYSET_DRIVEN})
-				ifx_db.execute(stmt)
-				rc = ifx_db.fetch_row(stmt, -1)
+				stmt = IfxPy.prepare(conn, query, {IfxPy.SQL_ATTR_CURSOR_TYPE:  IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
+				IfxPy.execute(stmt)
+				rc = IfxPy.fetch_row(stmt, -1)
 				print "Fetch Row -1:%s " %str(rc)
 			except:
 				print "Requested row number must be a positive value"
-			ifx_db.close(conn)
+			IfxPy.close(conn)
 		else:
 			print "Connection failed."
 

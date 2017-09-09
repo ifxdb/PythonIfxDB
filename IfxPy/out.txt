@@ -1,5 +1,0 @@
-Detected 64-bit Python
-running build
-running build_ext
-building 'IfxPy' extension
-error: Unable to find vcvarsall.bat

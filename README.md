@@ -111,8 +111,9 @@ Try a sample
 cd C:\work\IfxPy\try
 copy  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 copy Sample1.py Sample.py
-# edit connection information
 set PATH=C:\Informix\bin;%PATH%
+
+# Edit Sample.py connection information, and then run
 python Sample.py
 ```
 
@@ -225,11 +226,10 @@ rm IfxPy.so
 cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
 # cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
-```
-* Edit connection string
-* Set Informix Client SDK Runtime Environment
 
-```
+# Set Informix Client SDK Runtime Environment
+
+# Edit Sample.py connection information, and then run
 python Sample.py
 ```
 ## Set Informix Client SDK Runtime Environment 

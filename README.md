@@ -1,6 +1,6 @@
-##### Copyright 2017 OpenIfx and Informix
+##### Copyright 2017 OpenInformix
 
-### Licensed under the Apache License, Version 2.0
+##### Licensed under the Apache License, Version 2.0
 
 ## IfxPy
 Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database. The **Advanced native extension module** is the heart piece of driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with Python code by focusing on application API level compatibility.  
@@ -10,7 +10,7 @@ The driver has been well tested across all major platforms such as **ARM**, **Li
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 **FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. You may build the drive from its source code on your environment to pick latest changes.  
-* [prebuilt](https://github.com/OpenIfx/IfxPy/)
+* [prebuilt](https://github.com/OpenInformix/IfxPy/)
 
 #### IfxPy (Advanced native extension module)
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
@@ -51,7 +51,7 @@ cd C:\work
 or
 cd /work 
 
-git clone https://github.com/OpenIfx/IfxPy.git
+git clone https://github.com/OpenInformix/IfxPy.git
 ```
 
 ##### Build Shell Environment 
@@ -131,7 +131,7 @@ python Sample.py
 ##### FYI: Unicode encoding
 The python interpreter used should match with operating system default Unicode encoding. 
 Some of the Linux flavors, python interpreter is available with UCS2/UTF16 and also UCS4/UTF32.
-If the OS default for Unicode is UTF32 then the OpenIfx driver will work if the python interpreter is also using the Unicode UCS4/UTF32.  
+If the OS default for Unicode is UTF32 then the OpenInformix driver will work if the python interpreter is also using the Unicode UCS4/UTF32.  
 
 
 ###### To check which Unicode encoding your python interpreter is using.
@@ -175,10 +175,10 @@ $ sudo make
 
 ##### Clone the informix python driver source code
 ```bash
-mkdir /work/OpenIfx
-cd /work/OpenIfx
+mkdir /work/OpenInformix
+cd /work/OpenInformix
 
-git clone https://github.com/OpenIfx/IfxPy.git
+git clone https://github.com/OpenInformix/IfxPy.git
 ```
 
 ##### Set Env for driver build 
@@ -192,7 +192,7 @@ export MY_PY_DIR=/work/dev/Python
 
 #### Fire the driver build
 ```bash
-cd /work/OpenIfx/IfxPy/IfxPy
+cd /work/OpenInformix/IfxPy/IfxPy
 rm -rf build
 
 python setup.py build > out.txt 2>&1
@@ -211,21 +211,21 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (IfxPy.so) to your Python module directory
 # For example:
-cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 
 # if ARM
-# cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+# cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 ```
 
 ####  Quick Try
 ```bash
-cd /work/OpenIfx/try/
+cd /work/OpenInformix/try/
 cp Sample1.py Sample.py
 
 rm IfxPy.so
-cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
-# cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+# cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 
 # Set Informix Client SDK Runtime Environment
 
@@ -253,7 +253,7 @@ SET PATH=C:\informix\bin;%PATH%
 ##### Specify connection information
 ```bash
 # cd C:\work\IfxPy\IfxPy
-cd /work/OpenIfx/IfxPy/IfxPy
+cd /work/OpenInformix/IfxPy/IfxPy
 cp   config.py.sample   config.py
 ```
 Then Modify the connection properties specified in config.py
@@ -261,9 +261,9 @@ Then Modify the connection properties specified in config.py
 ##### Run all tests
 ```bash
 # copy C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
-cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
-# cp /work/OpenIfx/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+# cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 
 python tests.py
 ```

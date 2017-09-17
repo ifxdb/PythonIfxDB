@@ -117,6 +117,7 @@ python Sample.py
 
 
 ## Linux Build 
+--------------
 ##### Prerequisite:
 * [Python 2.7 or above](https://www.python.org/downloads)
 * [Python 3.4 or above](https://www.python.org/downloads)
@@ -146,6 +147,7 @@ If the OS default for Unicode is UTF32 then the OpenInformix driver will work if
 ```
 
 #### Build Python from its source code
+--------------------------------------
 By any chance if you don’t have the right python interpreter or you don’t have the development environment for building native library then you may have to build python from its source. Python can be built from it source by using the following steps.  
 
 Determine the Unicode encoding needed for your python interpreter. Most of the Linux platforms are by default UCS4/UTF32, the following step is to build python for UCS4/UTF32 Unicode encoded string.
@@ -170,6 +172,8 @@ $ sudo make
 # install is not needed for driver build thouhg 
 # $ sudo altinstall
 ```
+#### Build Informix Python driver
+---------------------------------
 
 ##### Clone the informix python driver source code
 ```bash
@@ -181,9 +185,8 @@ git clone https://github.com/OpenInformix/IfxPy.git
 
 ##### Set Env for driver build 
 ```bash
-# Say you have installed Informix CSDK or IDS server at /work/informix
-# You have installed or unzip Python 2.7 at /work/dev/Python
-
+# sudo ln -s /home/informix/1210UC9 /work/informix
+# Assuming 'CSDK' is installed at /work/informix
 export CSDK_HOME=/work/informix
 export MY_PY_DIR=/work/dev/Python
 ```
@@ -216,8 +219,9 @@ cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 ```
 
 ####  Quick test of the local build
+-----------------------------------
 
-Get a sample code
+#### Get a sample code
 ```bash
 cd /work/try/
 cp /work/t1/IfxPy/Examples/Sample1.py Sample.py
@@ -307,7 +311,7 @@ $ 2to3 -w *.py
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;PROTOCOL=onsoctcp;UID=informix;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")
@@ -345,7 +349,7 @@ Sets the result set pointer to the next row or requested row. Use this function 
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;PROTOCOL=onsoctcp;UID=informix;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")

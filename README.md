@@ -3,6 +3,7 @@
 ##### Licensed under the Apache License, Version 2.0
 
 ## IfxPy
+--------
 Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database. The **Advanced native extension module** is the heart piece of driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with Python code by focusing on application API level compatibility.  
 
 The driver has been well tested across all major platforms such as **ARM**, **Linux**, and **Windows**; and it has been certified to work with **Raspberry Pi** too.  
@@ -30,10 +31,11 @@ Most of IfxPy driver (Advanced native extension module) functionality is fully f
  
 ##### Future Roadmap
 * Django
-* SQLAlchemy 
+* SQLAlchemy
 
 
 ## Windows build
+----------------
 ##### Prerequisite:
 * [Python 2.7 or above](https://www.python.org/downloads/)
 * [Python 3.4 or above](https://www.python.org/downloads/)
@@ -245,24 +247,29 @@ vi Sample.py
 # Edit Sample.py connection information, and then run
 python Sample.py
 ```
-## Set Informix Client SDK Runtime Environment 
-----------------------------------------------
+
+
+
+
+## Run tests
+------------
+
+#### Set Informix Client SDK Runtime Environment 
 **FYI**: Make sure to set Informix Client SDK Runtime Environment before running applications
 
-#### Linux
+##### Linux
 ```bash
 export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
 export PATH=$INFORMIXDIR/bin:$PATH
 ```
 
-#### Windows
+##### Windows
 ```bat
 # say you have installed CSDK at C:\informix then
 SET PATH=C:\informix\bin;%PATH%
 ```
 
 
-## Run tests
 ##### Specify connection information
 ```bash
 # cd C:\work\IfxPy\IfxPy
@@ -304,7 +311,8 @@ $ 2to3 -w *.py
 
 
 
-## Example 
+## Example
+----------
 
 #### Connecting to Informix database
 **FYI**: Make sure to set Informix Client SDK Runtime Environment before running the application
@@ -400,10 +408,12 @@ print "Done"
 ```
 
 ### Python Database API Specification
+-------------------------------------
 [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/)  
   
 
-### Informix Advance Python Driver APIs
+### Advanced native extension module APIs
+-----------------------------------------
 * IfxPy.connect:  
 Connect to the database.  
 

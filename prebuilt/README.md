@@ -9,7 +9,7 @@ We will be getting to **pip install** soon, for the time being you may download 
 | **Platform** | **Py Version** |     **Location**          | **MD5 hash**
 |:-------------|:---------------|:--------------------------|:--------------------------------
 | `ARM`        |   2.7.13       |  27x/ARM/IfxPy.so.tar     | 74e2e45e9b9052ad373d0b9ea4a6410a
-| `Win64`      |                |      Coming soon          |
+| `Win64`      |                |  27x/Win64/IfxPy.zip      | 29fd9fdb62986a48a6d1e8416aab7c2d
 | `Linux64`    |                | 27x/Linux64/IfxPy.so.tar  | 1f2885bf2f86fd1677e0a0286d8ef4c6
 
 
@@ -38,7 +38,7 @@ tar -xvf IfxPy.so.tar
 
 * [certutil](https://technet.microsoft.com/library/cc732443.aspx)
 ```bash
-certutil -hashfile IfxPy.dll.7z  MD5
+certutil -hashfile IfxPy.zip  MD5
 # use 7zip to unzip it 
 ```
 

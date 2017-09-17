@@ -11,7 +11,7 @@ The driver has been well tested across all major platforms such as **ARM**, **Li
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 **FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. You may build the drive from its source code on your environment to pick latest changes.  
-* [prebuilt](https://github.com/OpenInformix/IfxPy/)
+* [prebuilt](https://github.com/OpenInformix/IfxPy/tree/master/prebuilt)
 
 #### IfxPy (Advanced native extension module)
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  

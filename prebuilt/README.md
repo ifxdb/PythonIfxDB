@@ -8,7 +8,7 @@ We will be getting to **pip install** soon, for the time being you may download 
 #### Python 2.7x 
 | **Platform** | **Py Version** |     **Location**          | **MD5 hash**
 |:-------------|:---------------|:--------------------------|:--------------------------------
-| `ARM`        |   2.7.13       |  27x/ARM/IfxPy.so.tar    | de66bb3c74412d45156a61854b600c5f
+| `ARM`        |   2.7.13       |  27x/ARM/IfxPy.so.tar    | 74e2e45e9b9052ad373d0b9ea4a6410a
 | `Win64`      |                |      Coming soon          |
 | `Linux64`    |                |      Coming soon          |
 

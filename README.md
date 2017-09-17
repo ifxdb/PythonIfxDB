@@ -48,8 +48,6 @@ Let's assume **C:\work** is the location when we clone the IfxPy repository.
 
 ```bat
 cd C:\work
-or
-cd /work 
 
 git clone https://github.com/OpenInformix/IfxPy.git
 ```
@@ -175,8 +173,8 @@ $ sudo make
 
 ##### Clone the informix python driver source code
 ```bash
-mkdir /work/OpenInformix
-cd /work/OpenInformix
+mkdir /work/t1
+cd /work/t1
 
 git clone https://github.com/OpenInformix/IfxPy.git
 ```
@@ -192,7 +190,7 @@ export MY_PY_DIR=/work/dev/Python
 
 #### Fire the driver build
 ```bash
-cd /work/OpenInformix/IfxPy/IfxPy
+cd /work/t1/IfxPy/IfxPy
 rm -rf build
 
 python setup.py build > out.txt 2>&1
@@ -211,24 +209,35 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (IfxPy.so) to your Python module directory
 # For example:
-cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 
 # if ARM
-# cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 ```
 
-####  Quick Try
+####  Quick test of the local build
+
+Get a sample code
 ```bash
-cd /work/OpenInformix/try/
-cp Sample1.py Sample.py
+cd /work/try/
+cp /work/t1/IfxPy/Examples/Sample1.py Sample.py
 
 rm IfxPy.so
-cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
-# cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+```
 
-# Set Informix Client SDK Runtime Environment
+#### Set runtime environment to pick Informix Client SDK libraries
+```bash
+export INFORMIXDIR=/work/informix
+export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
+export PATH=$INFORMIXDIR/bin:$PATH
+```
 
+#### Run the sample
+```bash
+vi Sample.py
 # Edit Sample.py connection information, and then run
 python Sample.py
 ```
@@ -253,7 +262,7 @@ SET PATH=C:\informix\bin;%PATH%
 ##### Specify connection information
 ```bash
 # cd C:\work\IfxPy\IfxPy
-cd /work/OpenInformix/IfxPy/IfxPy
+cd /work/t1/IfxPy/IfxPy
 cp   config.py.sample   config.py
 ```
 Then Modify the connection properties specified in config.py
@@ -261,9 +270,9 @@ Then Modify the connection properties specified in config.py
 ##### Run all tests
 ```bash
 # copy C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
-cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # if ARM then
-# cp /work/OpenInformix/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 
 python tests.py
 ```

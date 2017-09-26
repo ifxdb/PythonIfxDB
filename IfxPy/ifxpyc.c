@@ -11310,7 +11310,7 @@ static PyMethodDef IfxPy_Methods[] = {
     { "columns", (PyCFunction)IfxPy_columns, METH_VARARGS, "Returns a result set listing the columns and associated metadata for a table" },
     { "commit", (PyCFunction)IfxPy_commit, METH_VARARGS, "Commits a transaction" },
     { "cursor_type", (PyCFunction)IfxPy_cursor_type, METH_VARARGS, "Returns the cursor type used by a statement resource" },
-    { "execute_many", (PyCFunction)IfxPy_execute_many, METH_VARARGS, "Execute SQL with multiple rows." }, // sat
+    { "execute_many", (PyCFunction)IfxPy_execute_many, METH_VARARGS, "Execute SQL with multiple rows." }, // TODO
     { "field_display_size", (PyCFunction)IfxPy_field_display_size, METH_VARARGS, "Returns the maximum number of bytes required to display a column" },
     { "field_name", (PyCFunction)IfxPy_field_name, METH_VARARGS, "Returns the name of the column in the result set" },
     { "field_nullable", (PyCFunction)IfxPy_field_nullable, METH_VARARGS, "Returns indicated column can contain nulls or not" },

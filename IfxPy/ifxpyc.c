@@ -1682,7 +1682,6 @@ static void _python_IfxPy_clear_conn_err_cache(void)
 
 /*!#
 * IfxPy.connect
-* IfxPy.pconnect
 * IfxPy.autocommit
 * IfxPy.bind_param
 * IfxPy.close
@@ -1870,7 +1869,6 @@ static void _python_clear_local_var(PyObject *dbNameObj, SQLWCHAR *dbName, PyObj
 *
 * ====connection
 *    A valid database connection resource variable as returned from connect()
-* or pconnect().
 *
 * ====value
 *    One of the following constants:
@@ -4719,7 +4717,7 @@ static PyObject *IfxPy_tables(PyObject *self, PyObject *args)
 *
 * ====connection
 *        A valid database connection resource variable as returned from
-* IfxPy.connect() or IfxPy.pconnect().
+* IfxPy.connect() 
 *
 * ===Return Values
 *
@@ -4847,7 +4845,7 @@ static int _python_IfxPy_do_prepare(SQLHANDLE hdbc, SQLWCHAR *stmt, int stmt_siz
 * ====connection
 *
 *        A valid database connection resource variable as returned from
-* IfxPy.connect() or IfxPy.pconnect().
+* IfxPy.connect() 
 *
 * ====statement
 *
@@ -5173,7 +5171,7 @@ static PyObject *_python_IfxPy_prepare_helper(conn_handle *conn_res, PyObject *p
 * ====connection
 *
 *        A valid database connection resource variable as returned from
-*        IfxPy.connect() or IfxPy.pconnect().
+*        IfxPy.connect() 
 *
 * ====statement
 *
@@ -7700,7 +7698,7 @@ static PyObject *IfxPy_cursor_type(PyObject *self, PyObject *args)
 *
 * ====connection
 *        A valid database connection resource variable as returned from
-* IfxPy.connect() or IfxPy.pconnect().
+* IfxPy.connect() 
 *
 * ===Return Values
 *

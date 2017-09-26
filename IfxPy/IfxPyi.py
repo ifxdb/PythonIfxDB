@@ -420,55 +420,53 @@ def _get_exception(inst):
         return NotSupportedError(message)
     return DatabaseError(message)
 
-def _server_connect(dsn, user='', password='', host=''):
+def _server_connect(ConStr, user='', password='', host=''):
     """This method create connection with server
     """
     
-    if dsn is None:
-        raise InterfaceError("dsn value should not be None")
+    if ConStr is None:
+        raise InterfaceError("ConStr value should not be None")
     
-    if (not isinstance(dsn, basestring)) | \
+    if (not isinstance(ConStr, basestring)) | \
        (not isinstance(user, basestring)) | \
        (not isinstance(password, basestring)) | \
        (not isinstance(host, basestring)):
         raise InterfaceError("Arguments should be of type string or unicode")
     
-    # If the dsn does not contain port and protocal adding database
+    # If the ConStr does not contain port and protocal adding database
     # and hostname is no good.  Add these when required, that is,
-    # if there is a '=' in the dsn.  Else the dsn string is taken to be
-    # a DSN entry.
-    if dsn.find('=') != -1:
-        if dsn[len(dsn) - 1] != ';':
-            dsn = dsn + ";"
-        if host != '' and dsn.find('HOSTNAME=') == -1:
-            dsn = dsn + "HOSTNAME=" + host + ";"
-    else:
-        dsn = "DSN=" + dsn + ";"
+    # if there is a '=' in the ConStr.  Else the ConStr string is taken to be
+    # a ConStr entry.
+    if ConStr.find('=') != -1:
+        if ConStr[len(ConStr) - 1] != ';':
+            ConStr = ConStr + ";"
+        if host != '' and ConStr.find('HOSTNAME=') == -1:
+            ConStr = ConStr + "HOSTNAME=" + host + ";"
 
     # attach = true is not valid against IDS. And attach is not needed for connect currently.
-    #if dsn.find('attach=') == -1:
-        #dsn = dsn + "attach=true;"
-    if user != '' and dsn.find('UID=') == -1:
-        dsn = dsn + "UID=" + user + ";"
-    if password != '' and dsn.find('PWD=') == -1:
-        dsn = dsn + "PWD=" + password + ";"
+    #if ConStr.find('attach=') == -1:
+        #ConStr = ConStr + "attach=true;"
+    if user != '' and ConStr.find('UID=') == -1:
+        ConStr = ConStr + "UID=" + user + ";"
+    if password != '' and ConStr.find('PWD=') == -1:
+        ConStr = ConStr + "PWD=" + password + ";"
     try:    
-        conn = IfxPy.connect(dsn, '', '')
+        conn = IfxPy.connect(ConStr, '', '')
     except Exception, inst:
         raise _get_exception(inst)
     
     return conn
     
   
-def connect(dsn, user='', password='', host='', database='', conn_options=None):
+def connect(ConStr, user='', password='', host='', database='', conn_options=None):
     """This method creates a non persistent connection to the database. It returns
         a ifx_pydb.Connection object.
     """
     
-    if dsn is None:
-        raise InterfaceError("connect expects a not None dsn value") 
+    if ConStr is None:
+        raise InterfaceError("connect expects a not None ConStr value") 
     
-    if (not isinstance(dsn, basestring)) | \
+    if (not isinstance(ConStr, basestring)) | \
        (not isinstance(user, basestring)) | \
        (not isinstance(password, basestring)) | \
        (not isinstance(host, basestring)) | \
@@ -484,26 +482,24 @@ def connect(dsn, user='', password='', host='', database='', conn_options=None):
     else:
         conn_options = {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_OFF}
 
-    # If the dsn does not contain port and protocal adding database
+    # If the ConStr does not contain port and protocal adding database
     # and hostname is no good.  Add these when required, that is,
-    # if there is a '=' in the dsn.  Else the dsn string is taken to be
-    # a DSN entry.
-    if dsn.find('=') != -1:
-        if dsn[len(dsn) - 1] != ';':
-            dsn = dsn + ";"
-        if database != '' and dsn.find('DATABASE=') == -1:
-            dsn = dsn + "DATABASE=" + database + ";"
-        if host != '' and dsn.find('HOSTNAME=') == -1:
-            dsn = dsn + "HOSTNAME=" + host + ";"
-    else:
-        dsn = "DSN=" + dsn + ";"
+    # if there is a '=' in the ConStr.  Else the ConStr string is taken to be
+    # a ConStr entry.
+    if ConStr.find('=') != -1:
+        if ConStr[len(ConStr) - 1] != ';':
+            ConStr = ConStr + ";"
+        if database != '' and ConStr.find('DATABASE=') == -1:
+            ConStr = ConStr + "DATABASE=" + database + ";"
+        if host != '' and ConStr.find('HOSTNAME=') == -1:
+            ConStr = ConStr + "HOSTNAME=" + host + ";"
 
-    if user != '' and dsn.find('UID=') == -1:
-        dsn = dsn + "UID=" + user + ";"
-    if password != '' and dsn.find('PWD=') == -1:
-        dsn = dsn + "PWD=" + password + ";"
+    if user != '' and ConStr.find('UID=') == -1:
+        ConStr = ConStr + "UID=" + user + ";"
+    if password != '' and ConStr.find('PWD=') == -1:
+        ConStr = ConStr + "PWD=" + password + ";"
     try:    
-        conn = IfxPy.connect(dsn, '', '', conn_options)
+        conn = IfxPy.connect(ConStr, '', '', conn_options)
         IfxPy.set_option(conn, {SQL_ATTR_CURRENT_SCHEMA : user}, 1)
     except Exception, inst:
         raise _get_exception(inst)

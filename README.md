@@ -17,6 +17,7 @@ FYI: When you download the prebuilt, clone or zip the repository and then take t
 #### [IfxPy (Advanced native extension module)](./README.IfxPyAPI.md)
 
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
+Please see the **[README.IfxPyAPI.md](./README.IfxPyAPI.md)** for the documentation. 
 
 #### IfxPyi (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
@@ -27,8 +28,6 @@ Most of IfxPy driver (Advanced native extension module) functionality is fully f
 **Known Problems**: Large Object Support, Stored Procedures.
 
 ##### Coming soon
-* Examples 
-* Documentation 
 * PyPI (pit install)
  
 ##### Future Roadmap

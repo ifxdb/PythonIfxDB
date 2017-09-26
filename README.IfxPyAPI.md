@@ -1,6 +1,5 @@
-API description of IfxPy driver is given below. If you want to access the same for IfxPyi wrapper, please visit [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/)
 
-# API Description for the IfxPy driver #
+## API Description for the Informix IfxPy driver (Advanced native extension module) #
 
 Table of Contents
 -----------------

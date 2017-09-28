@@ -14,10 +14,10 @@ The development activities of the driver are powered by passion, dedication and 
 * [prebuilt](https://github.com/OpenInformix/IfxPy/tree/master/prebuilt)  
 FYI: When you download the prebuilt, clone or zip the repository and then take the prebuilt binary. The usage of wget, curl etc may not get right binary content from github.
 
-#### [IfxPy (Advanced native extension module)](./README.IfxPyAPI.md)
+#### [IfxPy (Advanced native extension module)](https://github.com/OpenInformix/IfxPy/wiki)
 
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
-Please see the **[README.IfxPyAPI.md](./README.IfxPyAPI.md)** for the documentation. 
+Please see the **[IfxPy Wiki](https://github.com/OpenInformix/IfxPy/wiki)** for the documentation. 
 
 #### IfxPyi (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
@@ -413,7 +413,7 @@ print "Done"
 [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/)  
   
 
-### [Advanced native extension module APIs](./README.IfxPyAPI.md)
+### [Advanced native extension module APIs](https://github.com/OpenInformix/IfxPy/wiki)
 -------------------------------------------
 * IfxPy.connect:  
 Connect to the database.  

@@ -1,7 +1,7 @@
 
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;PROTOCOL=onsoctcp;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")

@@ -14,16 +14,16 @@ The development activities of the driver are powered by passion, dedication and 
 * [prebuilt](https://github.com/OpenInformix/IfxPy/tree/master/prebuilt)  
 FYI: When you download the prebuilt, clone or zip the repository and then take the prebuilt binary. The usage of wget, curl etc may not get right binary content from github.
 
-#### [IfxPy (Advanced native extension module)](https://github.com/OpenInformix/IfxPy/wiki)
-
-This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
+#### [IfxPy: (Advanced Native Extension Module)](https://github.com/OpenInformix/IfxPy/wiki)
+The Advanced Native Extension Module is the heart of the driver which is completely written in C language for better efficiency and performance while maintaining cross platform support.  
 Please see the **[IfxPy Wiki](https://github.com/OpenInformix/IfxPy/wiki)** for the documentation. 
 
-#### IfxPyDbi (coming soon)
-This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
+#### [IfxPyDbi: Python Database API Specification v2.0 support](http://www.python.org/dev/peps/pep-0249/)
+Support for the Python DB API have been created on top of the native layer by focusing on application layer compatibility; then the application source code is generally more portable across databases.
+
 
 ### Project status: Beta 
-Most of IfxPy driver (Advanced native extension module) functionality is fully functional; we are in the process of adding documentation, examples and pip install. We will get to RC soon.  
+The driver runtime is mostly functional; we are in the process of adding documentation, examples and pip install. We will get to RC soon.  
 
 **Known Problems**: Large Object Support, Stored Procedures.
 
@@ -196,6 +196,26 @@ print ("Done")
 
 ```
 
+#### DB API Example: inserts many records at a time
+See the working sample of this module (DbAPI_Sample_executemany.py) in the Examples folder.  
+
+```python
+#-- -- -- -- --
+#-- -- -- -- --
+cur.execute('create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ')
+days = [ (1, 'Sunday',  101, 201),
+         (2, 'Monday',  102, 202),
+         (3, 'Tuesday', 103, 203),
+         (4, 'Wednesday', 104, 204),
+         (5, 'Thursday', 105, 205),
+         (6, 'Friday', 106, 206),
+         (7, 'Saturday', 1027, 207),
+       ]
+cur.executemany('INSERT INTO t1 VALUES (?,?,?,?)', days)
+conn.commit ()
+#-- -- -- -- --
+#-- -- -- -- --
+```
 
 
 ### [Advanced native extension module APIs](https://github.com/OpenInformix/IfxPy/wiki)

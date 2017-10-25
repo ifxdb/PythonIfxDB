@@ -41,78 +41,34 @@ The driver source code is platform neutral; you may build the driver on any plat
 
 * [Windows Build](./LocalBuildWindows.md)
 * [Linux Build](./LocalBuildLinux.md)
+* [Run tests after the build](RunTests.md)
 
+## Runtime Environment
+----------------------
+The Informix Python driver has dependency on **Informix Client SDK version 4.10 xC2 or above**. Make sure to set Informix Client SDK runtime environment before running the applications.  
 
-
-## Run tests
-------------
-
-#### Set Informix Client SDK Runtime Environment 
-**FYI**: Make sure to set Informix Client SDK Runtime Environment before running applications
-
+Say **INFORMIXDIR** is the location where you have installed Informix Client SDK.
 ##### Linux
 ```bash
 export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
-export PATH=$INFORMIXDIR/bin:$PATH
 ```
 
 ##### Windows
 ```bat
-# say you have installed CSDK at C:\informix then
-SET PATH=C:\informix\bin;%PATH%
+SET PATH=C:\%INFORMIXDIR%\bin;%PATH%
 ```
 
 
-##### Specify connection information
-```bash
-# cd C:\work\IfxPy\IfxPy
-cd /work/t1/IfxPy/IfxPy
-cp   config.py.sample   config.py
-```
-Then Modify the connection properties specified in config.py
+## Examples
+-----------
 
-##### Run all tests
-```bash
-# copy C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
-cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
-# if ARM then
-# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+#### Connection to the database
+The basic connectivity to Informix database.
 
-python tests.py
-```
-
-##### Run a single test
-A single test can be run by specifying test name in the **SINGLE_PYTHON_TEST** environment variable.
-```bash
-# For example:
-SET    SINGLE_PYTHON_TEST=test_001_ConnDb.py
-# or
-export SINGLE_PYTHON_TEST=test_001_ConnDb.py
-
-python tests.py
-```
-
-
-#### Run tests with Python 3.x
-```
-The source files in the 'tests' directory were written for Python 2.
-To be able to run the tests suite with Python 3 you need to convert the files to Python 3 format.
-You can use the '2to3' Python utility in the 'IfxPy/tests' directory, for example:
-$ cd /work/IfxPy/IfxPy/IfxPy/tests
-$ 2to3 -w *.py
-```
-
-
-
-## Example
-----------
-
-#### Connecting to Informix database
-**FYI**: Make sure to set Informix Client SDK Runtime Environment before running the application
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;PROTOCOL=onsoctcp;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")
@@ -124,14 +80,8 @@ IfxPy.close(conn)
 ```
 
 
-### Preliminary diagnostic tips 
-##### Cconnection problem
-+ check the service port mapped to which IP etc
-- for example the port you configured is 9088 then
-- netstat -a | findstr  9088
-
-
 #### Simple Query 
+The driver APIs used in this example are from the set of **Advanced native extension module APIs**  
 
 ##### FYI: IfxPy fetch functions
 * IfxPy.fetch_tuple()  
@@ -150,7 +100,7 @@ Sets the result set pointer to the next row or requested row. Use this function 
 ```python
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;PROTOCOL=onsoctcp;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
 
 # netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")
@@ -205,7 +155,8 @@ print "Done"
 The Advanced Native Extension Module is the heart of the driver which is completely written in C language for better efficiency and performance. The Python Database API Specification v2.0 APIs have been created on top of this native layer by focusing on application layer compatibility. Then the application source code is generally more portable across databases.
 
 
-#### Example (using DB API v2) 
+#### Example by using Python DB API
+The driver APIs used in this example are from the set of **Python Database API Specification v2.0 APIs**
 
 ```python
 

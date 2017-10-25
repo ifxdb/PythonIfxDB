@@ -1,7 +1,7 @@
 
-import IfxPyi as dbapi2
+import IfxPyDbi as dbapi2
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxxx;"
 
 # netstat -a | findstr  9088
 conn = dbapi2.connect( ConStr, "", "")

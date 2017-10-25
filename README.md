@@ -19,7 +19,7 @@ FYI: When you download the prebuilt, clone or zip the repository and then take t
 This set of API contains advanced features defined by Informix. This database extension module is written in C language for better efficiency and performance while maintaining cross platform support.  
 Please see the **[IfxPy Wiki](https://github.com/OpenInformix/IfxPy/wiki)** for the documentation. 
 
-#### IfxPyi (coming soon)
+#### IfxPyDbi (coming soon)
 This set of API implements [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/).
 
 ### Project status: Beta 
@@ -160,7 +160,7 @@ The driver APIs used in this example are from the set of **Python Database API S
 
 ```python
 
-import IfxPyi as dbapi2
+import IfxPyDbi as dbapi2
 
 ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
 

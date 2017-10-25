@@ -89,7 +89,7 @@ ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 ```
 
 ##### Copy the dirver native lib
-The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **IfxPyi.py**
+The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **IfxPyDbi.py**
 
 ```bash
 # Copy Informix python package (IfxPy.so) to your Python module directory

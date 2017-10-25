@@ -55,7 +55,8 @@ export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}
 
 ##### Windows
 ```bat
-SET PATH=C:\%INFORMIXDIR%\bin;%PATH%
+# c:\informix
+SET PATH=%INFORMIXDIR%\bin;%PATH%
 ```
 
 

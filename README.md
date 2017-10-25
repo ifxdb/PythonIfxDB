@@ -197,7 +197,7 @@ print ("Done")
 ```
 
 #### DB API Example: inserts many records at a time
-See the working sample of this module (DbAPI_Sample_executemany.py) in the Examples folder.  
+See the working sample of this module **DbAPI_Sample_executemany.py** in the Examples folder.  
 
 ```python
 #-- -- -- -- --
@@ -213,6 +213,26 @@ days = [ (1, 'Sunday',  101, 201),
        ]
 cur.executemany('INSERT INTO t1 VALUES (?,?,?,?)', days)
 conn.commit ()
+#-- -- -- -- --
+#-- -- -- -- --
+```
+
+#### DB API Example: params
+See the working sample of this module **DbAPI_Sample_Params.py** in the Examples folder.  
+```python
+#-- -- -- -- --
+#-- -- -- -- --
+c1_val = 4
+cur.execute("UPDATE t1 SET c2 = 'Wednesday!' WHERE c1 = (?)", (c1_val,))
+conn.commit()
+
+c3_val = 1004
+cur.execute("UPDATE t1 SET c3 = (?) WHERE c1 = 4", (c3_val,))
+conn.commit()
+
+cur.execute("select * FROM t1 WHERE c1 = ?", (c1_val,))
+row = cur.fetchone()
+print ( "value = ", row)
 #-- -- -- -- --
 #-- -- -- -- --
 ```

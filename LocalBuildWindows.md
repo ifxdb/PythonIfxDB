@@ -92,7 +92,11 @@ C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7
 For the time being, you may manually copy Informix python package (IfxPy.pyd) to your Python module directory.
 
 ```bat
+rem if Python 2.7
 COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
+
+rem if Python 3.x
+COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6\IfxPy.cp36-win_amd64.pyd
 ```
 
 Try a sample

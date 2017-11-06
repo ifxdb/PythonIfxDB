@@ -73,7 +73,7 @@ SET MY_PY_DIR=C:\Dev\Anaconda3
 
 
 ### Starting the build 
-On successful build the Informix native driver module (**IfxPy.pyd**) should have built at 
+On successful build the Informix native driver module (**IfxPy.pyd**) should have built at  
 C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7  (if Python 2.7 on Win64 then)   
 C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6  (if Python 3.6 on Win64 then)   
 ```bash

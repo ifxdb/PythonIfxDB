@@ -30,6 +30,7 @@ This module implements the Python DB API Specification v2.0 for Informix databas
 
 import types, string, time, datetime, decimal, sys
 import weakref
+from builtins import str
 
 if sys.version_info >= (3, ):
    buffer = memoryview
@@ -427,10 +428,10 @@ def _server_connect(ConStr, user='', password='', host=''):
     if ConStr is None:
         raise InterfaceError("ConStr value should not be None")
     
-    if (not isinstance(ConStr, basestring)) | \
-       (not isinstance(user, basestring)) | \
-       (not isinstance(password, basestring)) | \
-       (not isinstance(host, basestring)):
+    if (not isinstance(ConStr, str)) | \
+       (not isinstance(user, str)) | \
+       (not isinstance(password, str)) | \
+       (not isinstance(host, str)):
         raise InterfaceError("Arguments should be of type string or unicode")
     
     # If the ConStr does not contain port and protocal adding database
@@ -452,7 +453,7 @@ def _server_connect(ConStr, user='', password='', host=''):
         ConStr = ConStr + "PWD=" + password + ";"
     try:    
         conn = IfxPy.connect(ConStr, '', '')
-    except Exception, inst:
+    except Exception as inst:
         raise _get_exception(inst)
     
     return conn
@@ -466,11 +467,11 @@ def connect(ConStr, user='', password='', host='', database='', conn_options=Non
     if ConStr is None:
         raise InterfaceError("connect expects a not None ConStr value") 
     
-    if (not isinstance(ConStr, basestring)) | \
-       (not isinstance(user, basestring)) | \
-       (not isinstance(password, basestring)) | \
-       (not isinstance(host, basestring)) | \
-       (not isinstance(database, basestring)):
+    if (not isinstance(ConStr, str)) | \
+       (not isinstance(user, str)) | \
+       (not isinstance(password, str)) | \
+       (not isinstance(host, str)) | \
+       (not isinstance(database, str)):
         raise InterfaceError("connect expects the first five arguments to"
                                                       " be of type string or unicode")
     if conn_options is not None:
@@ -501,7 +502,7 @@ def connect(ConStr, user='', password='', host='', database='', conn_options=Non
     try:    
         conn = IfxPy.connect(ConStr, '', '', conn_options)
         #IfxPy.set_option(conn, {SQL_ATTR_CURRENT_SCHEMA : user}, 1)
-    except Exception, inst:
+    except Exception as inst:
         raise _get_exception(inst)
 
     return Connection(conn)
@@ -554,7 +555,7 @@ class Connection(object):
                                      "connection is no longer active.")
             else:
                 return_value = IfxPy.close(self.conn_handler)
-        except Exception, inst:
+        except Exception as inst:
             raise _get_exception(inst)
         self.conn_handler = None
         for index in range(len(self._cursor_list)):
@@ -573,7 +574,7 @@ class Connection(object):
         """
         try:
             return_value = IfxPy.commit(self.conn_handler)
-        except Exception, inst:
+        except Exception as inst:
             raise _get_exception(inst)
         return return_value
 
@@ -584,7 +585,7 @@ class Connection(object):
         """
         try:
             return_value = IfxPy.rollback(self.conn_handler)
-        except Exception, inst:
+        except Exception as inst:
             raise _get_exception(inst)
         return return_value
 
@@ -621,7 +622,7 @@ class Connection(object):
             self.FIX_RETURN_TYPE = 1
           else:
             self.FIX_RETURN_TYPE = 0
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
         return self.FIX_RETURN_TYPE
 
@@ -635,7 +636,7 @@ class Connection(object):
             is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_ON}, 1)
           else:
             is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_AUTOCOMMIT : SQL_AUTOCOMMIT_OFF}, 1)
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
         return is_set
 
@@ -647,7 +648,7 @@ class Connection(object):
     #     self.current_schema = schema_name
     #     try:
     #       is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_CURRENT_SCHEMA : schema_name}, 1)
-    #     except Exception, inst:
+    #     except Exception as inst:
     #       raise _get_exception(inst)
     #     return is_set
 
@@ -659,7 +660,7 @@ class Connection(object):
     #       conn_schema = IfxPy.get_option(self.conn_handler, SQL_ATTR_CURRENT_SCHEMA, 1)
     #       if conn_schema is not None and conn_schema != '':
     #         self.current_schema = conn_schema
-    #     except Exception, inst:
+    #     except Exception as inst:
     #       raise _get_exception(inst)
     #     return self.current_schema
 
@@ -672,7 +673,7 @@ class Connection(object):
           server_info = []
           server_info.append(self.dbms_name)
           server_info.append(self.dbms_ver)
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
         return tuple(server_info)
     
@@ -700,7 +701,7 @@ class Connection(object):
               i += 1    
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
 
         return result
@@ -738,7 +739,7 @@ class Connection(object):
               i += 1    
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
 
         return result        
@@ -772,7 +773,7 @@ class Connection(object):
               i += 1    
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
 
         return result        
@@ -810,7 +811,7 @@ class Connection(object):
               i += 1    
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
 
         return result        
@@ -861,7 +862,7 @@ class Connection(object):
                   column['COLUMN_NAME'] = column['COLUMN_NAME'].lower()
                   include_columns.append(column)
               result = include_columns
-        except Exception, inst:
+        except Exception as inst:
           raise _get_exception(inst)
 
         return result
@@ -939,7 +940,7 @@ class Cursor(object):
                                              self.stmt_handler, column_index))
                                              
                 self.__description.append(column_desc)
-        except Exception, inst:
+        except Exception as inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
 
@@ -1007,7 +1008,7 @@ class Cursor(object):
             raise self.messages[len(self.messages) - 1]
         try:
             return_value = IfxPy.free_stmt(self.stmt_handler)
-        except Exception, inst:
+        except Exception as inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
         self.stmt_handler = None
@@ -1035,13 +1036,13 @@ class Cursor(object):
             
             try:
                 result = IfxPy.callproc(self.conn_handler, procname,parameters)
-            except Exception, inst:
+            except Exception as inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         else:
             try:
                 result = IfxPy.callproc(self.conn_handler, procname)
-            except Exception, inst:
+            except Exception as inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         return result
@@ -1054,7 +1055,7 @@ class Cursor(object):
 
         """
         self.messages = []
-        if not isinstance(procname, basestring):
+        if not isinstance(procname, str):
             self.messages.append(InterfaceError("callproc expects the first argument to be of type String or Unicode."))
             raise self.messages[len(self.messages) - 1]
         if parameters is not None:
@@ -1082,7 +1083,7 @@ class Cursor(object):
 
         try:
             self.stmt_handler = IfxPy.prepare(self.conn_handler, operation)
-        except Exception, inst:
+        except Exception as inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
 
@@ -1095,7 +1096,7 @@ class Cursor(object):
         self._result_set_produced = False
         try:
             num_columns = IfxPy.num_fields(self.stmt_handler)
-        except Exception, inst:
+        except Exception as inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
         if not num_columns:
@@ -1125,7 +1126,7 @@ class Cursor(object):
                     if IfxPy.stmt_errormsg() is not None:
                         self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                         raise self.messages[len(self.messages) - 1]
-            except Exception, inst:
+            except Exception as inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         else:
@@ -1138,7 +1139,7 @@ class Cursor(object):
                     if IfxPy.stmt_errormsg() is not None:
                         self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                         raise self.messages[len(self.messages) - 1]
-            except Exception, inst:
+            except Exception as inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         return return_value
@@ -1150,14 +1151,14 @@ class Cursor(object):
         if not self._result_set_produced:
             try:
                 counter = IfxPy.num_rows(self.stmt_handler)
-            except Exception, inst:
+            except Exception as inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
             self.__rowcount = counter
         elif self._is_scrollable_cursor:
             try:
                 counter = IfxPy.get_num_result(self.stmt_handler)
-            except Exception, inst:
+            except Exception as inst:
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
             if counter >= 0:
@@ -1190,7 +1191,7 @@ class Cursor(object):
                 if IfxPy.stmt_errormsg() is not None:
                     self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                     raise self.messages[len(self.messages) - 1]
-        except Exception, inst:
+        except Exception as inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
         return identity_val
@@ -1204,7 +1205,7 @@ class Cursor(object):
         the SQL statement as arguments.
         """
         self.messages = []
-        if not isinstance(operation, basestring):
+        if not isinstance(operation, str):
             self.messages.append(InterfaceError("execute expects the first argument [%s] to be of type String or Unicode." % operation ))
             raise self.messages[len(self.messages) - 1]
         if parameters is not None:
@@ -1226,7 +1227,7 @@ class Cursor(object):
         parameter markers in the SQL statement as its argument.
         """
         self.messages = []
-        if not isinstance(operation, basestring):
+        if not isinstance(operation, str):
             self.messages.append(InterfaceError("executemany expects the first argument to be of type String or Unicode."))
             raise self.messages[len(self.messages) - 1]
         if seq_parameters is None:
@@ -1269,7 +1270,7 @@ class Cursor(object):
                 if IfxPy.stmt_errormsg() is not None:
                     self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                     raise self.messages[len(self.messages) - 1]   
-        except Exception, inst:
+        except Exception as inst:
             self._set_rowcount()
             self.messages.append(Error(inst))
             raise self.messages[len(self.messages) - 1]
@@ -1294,7 +1295,7 @@ class Cursor(object):
               (fetch_size != -1 and rows_fetched < fetch_size):
             try:
                 row = IfxPy.fetch_tuple(self.stmt_handler)
-            except Exception, inst:
+            except Exception as inst:
                 if IfxPy.stmt_errormsg() is not None:
                     self.messages.append(Error(str(IfxPy.stmt_errormsg())))
                 else:    
@@ -1366,7 +1367,7 @@ class Cursor(object):
             self.__description = None
             self._all_stmt_handlers.append(self.stmt_handler)
             self.stmt_handler = IfxPy.next_result(self._all_stmt_handlers[0])
-        except Exception, inst:
+        except Exception as inst:
             self.messages.append(_get_exception(inst))
             raise self.messages[len(self.messages) - 1]
 
@@ -1405,7 +1406,7 @@ class Cursor(object):
                             row_list = list(row)
                         row_list[index] = decimal.Decimal(str(row[index]).replace(",", "."))    
 
-                except Exception, inst:
+                except Exception as inst:
                     self.messages.append(DataError("Data type format error: "+ str(inst)))
                     raise self.messages[len(self.messages) - 1]
         if row_list is None:

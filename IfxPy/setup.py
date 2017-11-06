@@ -1,11 +1,12 @@
 import os
 import sys
 import struct
+from setuptools import setup
+from distutils.core import Extension
 
-from distutils.core import setup, Extension
 
 PACKAGE = 'IfxPy'
-VERSION = '2.0.7'
+VERSION = '3.0.1'
 LICENSE = 'Apache License 2.0'
 
 machine_bits =  8 * struct.calcsize("P")

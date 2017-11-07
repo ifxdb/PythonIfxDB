@@ -2,7 +2,6 @@
 ----------------
 ##### Prerequisite:
 * [Python 2.7 or above](https://www.python.org/downloads/) or [Python 3.4 or above](https://www.python.org/downloads/)
-* clone the IfxPy source code
 * Informix client SDK 410xC2 or above
 * Set environment variable **CSDK_HOME** and **MY_PY_DIR**
 * If Python 2.7 then Visual Studio 2008 or above
@@ -73,13 +72,13 @@ SET MY_PY_DIR=C:\Dev\Anaconda3
 
 
 ### Starting the build 
-On successful build the Informix native driver module (**IfxPy.pyd**) should have built at  
-C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7  (if Python 2.7 on Win64 then)   
-C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6  (if Python 3.6 on Win64 then)   
 ```bash
 cd C:\work\IfxPy\IfxPy
 python setup.py build > out.txt 2>&1
 ```
+On successful build the Informix native driver module (**IfxPy.pyd**) should have built at  
+C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7  (if Python 2.7 on Win64 then)   
+C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6  (if Python 3.6 on Win64 then)   
 
 
 #### Other Build Options
@@ -101,8 +100,8 @@ python setup.py bdist_wheel
 # YOu may use pip intall to install the driver from the whl file
 #  it will get distributed to your <Python Install Directory>\Lib\site-packages\
 # pip install  dist\IfxPy-<driver version>-cp36-cp36m-win_amd64.whl
-# Eg:
-# pip install  dist\IfxPy-3.0.1-cp36-cp36m-win_amd64.whl
+# For example:
+pip install  dist\IfxPy-3.0.1-cp36-cp36m-win_amd64.whl
 ```
 
 

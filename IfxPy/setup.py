@@ -57,6 +57,8 @@ else:
         sources = ['ifxpyc.c'])
 
 
+# Supporting both Python 2 and Python 3 with Setuptools
+# http://setuptools.readthedocs.io/en/latest/python3.html
 extra = {}
 if sys.version_info >= (3, ):
     extra['use_2to3'] = True

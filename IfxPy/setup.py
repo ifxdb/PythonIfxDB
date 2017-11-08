@@ -8,6 +8,11 @@ from distutils.core import Extension
 PACKAGE = 'IfxPy'
 VERSION = '3.0.1'
 LICENSE = 'Apache License 2.0'
+IfxPyLongDescription='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
+PyModules = ['config', 'IfxPyDbi', 'testfunctions', 'tests']
+package_data = { 'tests': [ '*.png', '*.jpg']}
+data_files = [ ('', ['./README.rst']),
+               ('', ['./LICENSE.txt']) ]
 
 machine_bits =  8 * struct.calcsize("P")
 is64Bit = True
@@ -22,25 +27,29 @@ else:
     sys.stdout.write("Detected 32-bit Python\n")
 
 if('win32' in sys.platform):
-    ext_module_IfxPyn = Extension('IfxPy',
+    IfxPyNative_ext_module = Extension('IfxPy',
         include_dirs = [py_home + '\\include', csdk_home + '\\incl\\cli'],
         libraries = ['iclit09b'],
         library_dirs = [ py_home + '\libs', csdk_home + '\lib'],
         sources = ['ifxpyc.c'])
 else:
-    ext_module_IfxPyn = Extension('IfxPy',
+    IfxPyNative_ext_module = Extension('IfxPy',
         include_dirs = [ py_home,  py_home + '/Include', csdk_home +'/incl/cli'],
         libraries = ['ifdmr', 'thcli'],
         library_dirs = [ csdk_home + '/lib/cli', py_home + '/Lib'],
         sources = ['ifxpyc.c'])
 
-long_description='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
+
+extra = {}
+if sys.version_info >= (3, ):
+    extra['use_2to3'] = True
+
 
 setup (name    = PACKAGE, 
        version = VERSION,
        license = LICENSE,
-       description      = 'Python DB driver for Informix',
-       long_description = long_description,
+       description      = 'Informix native Python driver',
+       long_description = IfxPyLongDescription,
        
        # The project's main homepage.
        #url='https://github.com/OpenInformix/IfxPy',
@@ -75,7 +84,10 @@ setup (name    = PACKAGE,
        # What does your project relate to?
        keywords='Informix Python Enterprise TimeSeries IoT',
 
-
-       ext_modules = [ext_module_IfxPyn]
+       ext_modules = [IfxPyNative_ext_module],
+       py_modules   = PyModules,
+       package_data = package_data,
+       data_files   = data_files,
+       include_package_data = True,
+       **extra
       )
-

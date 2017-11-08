@@ -15,8 +15,8 @@ IfxPyLongDescription='Informix native Python driver is a high performing data ac
 
 # Specifying the files to distribute
 # https://docs.python.org/3.4/distutils/sourcedist.html#manifest
-# PyModules = ['config', 'IfxPyDbi', 'testfunctions', 'tests']
-PyModules = ['IfxPyDbi']
+# IfxPy_modules = ['config', 'IfxPyDbi', 'testfunctions', 'tests']
+IfxPy_modules = ['IfxPyDbi']
 
 
 #package_data = { 'IfxPyPkg': [ 'data/IfxPyPackageData1.txt', 'data/IfxPyPackageData2.txt']}
@@ -44,13 +44,13 @@ else:
     sys.stdout.write("Detected 32-bit Python\n")
 
 if('win32' in sys.platform):
-    IfxPyNative_ext_module = Extension('IfxPy',
+    IfxPyNative_ext_modules = Extension('IfxPy',
         include_dirs = [py_home + '\\include', csdk_home + '\\incl\\cli'],
         libraries = ['iclit09b'],
         library_dirs = [ py_home + '\libs', csdk_home + '\lib'],
         sources = ['ifxpyc.c'])
 else:
-    IfxPyNative_ext_module = Extension('IfxPy',
+    IfxPyNative_ext_modules = Extension('IfxPy',
         include_dirs = [ py_home,  py_home + '/Include', csdk_home +'/incl/cli'],
         libraries = ['ifdmr', 'thcli'],
         library_dirs = [ csdk_home + '/lib/cli', py_home + '/Lib'],
@@ -101,8 +101,8 @@ setup (name    = PACKAGE,
        # What does your project relate to?
        keywords='Informix Python Enterprise TimeSeries IoT',
 
-       ext_modules = [IfxPyNative_ext_module],
-       py_modules   = PyModules,
+       ext_modules = [IfxPyNative_ext_modules],
+       py_modules   = IfxPy_modules,
     #    package_data = package_data,
     #    data_files   = data_files,
     #    include_package_data = True,

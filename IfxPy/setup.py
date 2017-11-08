@@ -4,15 +4,32 @@ import struct
 from setuptools import setup
 from distutils.core import Extension
 
+# Writing the Setup Script
+# https://docs.python.org/3.4/distutils/setupscript.html#distutils-installing-scripts
+
 
 PACKAGE = 'IfxPy'
 VERSION = '3.0.1'
 LICENSE = 'Apache License 2.0'
 IfxPyLongDescription='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
-PyModules = ['config', 'IfxPyDbi', 'testfunctions', 'tests']
-package_data = { 'tests': [ '*.png', '*.jpg']}
-data_files = [ ('', ['./README.rst']),
-               ('', ['./LICENSE.txt']) ]
+
+# Specifying the files to distribute
+# https://docs.python.org/3.4/distutils/sourcedist.html#manifest
+# PyModules = ['config', 'IfxPyDbi', 'testfunctions', 'tests']
+PyModules = ['IfxPyDbi']
+
+
+#package_data = { 'IfxPyPkg': [ 'data/IfxPyPackageData1.txt', 'data/IfxPyPackageData2.txt']}
+# package_data = { 'IfxPyPkgData': [ 'data/*.txt'] }
+
+# Installing Additional Files
+# https://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
+# data_files = [ ('IfxPySample', ['./README.rst']),
+#                ('IfxPySample', ['../Examples/Sample1.py']),
+#                ('IfxPySample', ['../Examples/DbAPI_Sample1.py']),
+#                ('IfxPySample', ['../Examples/DbAPI_Sample_executemany.py']),
+#                ('IfxPySample', ['../Examples/DbAPI_Sample_Params.py']),
+#                ('IfxPySample', ['./LICENSE.txt']) ]
 
 machine_bits =  8 * struct.calcsize("P")
 is64Bit = True
@@ -86,8 +103,8 @@ setup (name    = PACKAGE,
 
        ext_modules = [IfxPyNative_ext_module],
        py_modules   = PyModules,
-       package_data = package_data,
-       data_files   = data_files,
-       include_package_data = True,
+    #    package_data = package_data,
+    #    data_files   = data_files,
+    #    include_package_data = True,
        **extra
       )

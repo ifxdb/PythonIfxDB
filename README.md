@@ -1,4 +1,3 @@
-##### Copyright 2017 OpenInformix
 
 ##### Licensed under the Apache License, Version 2.0
 

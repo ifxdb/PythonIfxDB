@@ -3,6 +3,7 @@
 ##### Prerequisite:
 * [Python 2.7 or above](https://www.python.org/downloads)
 * [Python 3.4 or above](https://www.python.org/downloads)
+* setuptools (pip/pip3 install setuptools)
 * Informix client SDK 410xC2 or above
 * Set environment variable CSDK_HOME and MY_PY_DIR
 * Operating System Unicode encoding should match with your python interpreter encoding. 
@@ -35,12 +36,22 @@ By any chance if you don’t have the right python interpreter or you don’t ha
 Determine the Unicode encoding needed for your python interpreter. Most of the Linux platforms are by default UCS4/UTF32, the following step is to build python for UCS4/UTF32 Unicode encoded string.
 
 ##### [Download and extract python source code](https://www.python.org/downloads)
+This instruction is for both Python 2.7 and Python 3.x build.  The commented Python 3.x build instruction is good for building it from source.
 ```bash
 cd /work/dev
-# rm ./Python
-# sudo rm -rf ./Python-2.7.13
+
+rm ./Python
+sudo rm -rf ./Python-2.7.13
+# sudo rm -rf ./Python-3.5.2
+
+wget https://www.python.org/ftp/python/2.7.14/Python-2.7.13.tgz
+# wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz
+
 tar zxvf Python-2.7.13.tgz
+# tar zxvf Python-3.5.2.tgz
+
 ln -s  ./Python-2.7.13  ./Python
+# ln -s  ./Python-3.5.2  ./Python
 
 cd /work/dev/Python
 sudo ./configure --enable-unicode=ucs4
@@ -51,7 +62,8 @@ $ cd /work/dev/Python
 $ sudo ./configure --enable-unicode=ucs4
 $ sudo make
 
-# install is not needed for driver build thouhg 
+# /work/dev/Python to be added to the path
+# install is not needed for driver build thouhg
 # $ sudo altinstall
 ```
 #### Build Informix Python driver
@@ -78,11 +90,15 @@ export MY_PY_DIR=/work/dev/Python
 cd /work/t1/IfxPy/IfxPy
 rm -rf build
 
+# which python
+# /work/dev/Python/python
 python setup.py build > out.txt 2>&1
 
 # if all go well, then Informix native python driver will be at
-# if x86 Linux with 64bit build then
-ls -l build/lib.linux-x86_64-2.7/IfxPy.so
+
+# if Linux x86_64bit build then
+ls -l ./build/lib.linux-x86_64-2.7/IfxPy.so
+# ls -l ./build/lib.linux-x86_64-3.5/IfxPy.cpython-35m-x86_64-linux-gnu.so
 
 # Similarly if ARM then 
 ls -l build/lib.linux-armv7l-2.7/IfxPy.so

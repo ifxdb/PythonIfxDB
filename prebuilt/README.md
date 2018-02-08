@@ -1,8 +1,7 @@
-
-
 ### Information about the prebuilt driver binaries
-
 We will be getting to **pip install** soon, for the time being you may download prebuilt native driver binary from prebuilt folder. These binaries may not be built with latest source code on the repository. 
+
+FYI: When you download the prebuilt, clone or zip the repository and then take the prebuilt binary. The usage of wget, curl etc may not get right binary content from github.
 
 
 #### Python 2.7x 
@@ -18,18 +17,35 @@ We will be getting to **pip install** soon, for the time being you may download 
 |:-------------|:---------------|:--------------------------|:--------------------------------
 | `Arm`        |                |     Coming soon           | 
 | `Win64`      |                |     Coming soon           |
-| `Linux64`    |                |     Coming soon           |
+| `Linux64`    |                |     35x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar          | a3df1448f43b7576dadd89336f407e82
 
 
 
-###  Linux Checking Hash
+###  Checking Hash on Linux
+#### Python 2.7x: 
 ```bash
+# Linux x86_64
 cd /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/
-# cd /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/
-tar -cvf IfxPy.so.tar ./IfxPy.so
 
+# ARM
+cd /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/
+
+tar -cvf IfxPy.so.tar ./IfxPy.so
 md5sum ./IfxPy.so.tar
-tar -xvf IfxPy.so.tar
+# tar -xvf IfxPy.so.tar
+```
+
+#### Python 3x
+```bash
+# Linux x86_64 (the Python version used for this example is 3.5.2)
+cd /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-3.5/
+
+tar -cvf IfxPy.cpython-35m-x86_64-linux-gnu.so.tar ./IfxPy.cpython-35m-x86_64-linux-gnu.so
+md5sum ./IfxPy.cpython-35m-x86_64-linux-gnu.so.tar
+
+# copy the tar to IfxPy/prebuilt/35x/Linux64
+# To extract download the tar and then
+# tar -xvf IfxPy.cpython-35m-x86_64-linux-gnu.so.tar
 ```
 
 

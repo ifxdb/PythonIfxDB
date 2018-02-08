@@ -17,7 +17,7 @@ FYI: When you download the prebuilt, clone or zip the repository and then take t
 |:-------------|:---------------|:--------------------------|:--------------------------------
 | `Arm`        |                |     Coming soon           | 
 | `Win64`      |                |     Coming soon           |
-| `Linux64`    |                |     35x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar          | a3df1448f43b7576dadd89336f407e82
+| `Linux64`    |  3.5.2         |     35x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar          | a3df1448f43b7576dadd89336f407e82
 
 
 
@@ -37,7 +37,7 @@ md5sum ./IfxPy.so.tar
 
 #### Python 3x
 ```bash
-# Linux x86_64 (the Python version used for this example is 3.5.2)
+# Linux x86_64 
 cd /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-3.5/
 
 tar -cvf IfxPy.cpython-35m-x86_64-linux-gnu.so.tar ./IfxPy.cpython-35m-x86_64-linux-gnu.so

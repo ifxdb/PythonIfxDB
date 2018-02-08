@@ -90,7 +90,8 @@ export MY_PY_DIR=/work/dev/Python
 cd /work/t1/IfxPy/IfxPy
 rm -rf build
 
-# which python
+# '/work/dev/Python' has added to the path, then
+# $ which python
 # /work/dev/Python/python
 python setup.py build > out.txt 2>&1
 
@@ -125,7 +126,11 @@ cd /work/try/
 cp /work/t1/IfxPy/Examples/Sample1.py Sample.py
 
 rm IfxPy.so
+# rm *.so
+
 cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-3.5/IfxPy.cpython-35m-x86_64-linux-gnu.so .
+
 # if ARM then
 # cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 ```
@@ -139,6 +144,10 @@ export PATH=$INFORMIXDIR/bin:$PATH
 
 #### Run the sample
 ```bash
+# '/work/dev/Python' has added to the path, then
+# $ which python
+# /work/dev/Python/python
+
 vi Sample.py
 # Edit Sample.py connection information, and then run
 python Sample.py

@@ -126,7 +126,7 @@ cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 # cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
 
 # Python 3.x on ARMv7 
-# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so .
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so  ./IfxPy.so
 ```
 
 ####  Quick test of the local build

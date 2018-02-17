@@ -91,18 +91,26 @@ cd /work/t1/IfxPy/IfxPy
 rm -rf build
 
 # '/work/dev/Python' has added to the path, then
+# export PATH=/work/dev/Python:$PATH
 # $ which python
 # /work/dev/Python/python
+# pip install setuptools
 python setup.py build > out.txt 2>&1
+#python3 setup.py build > out.txt 2>&1
 
 # if all go well, then Informix native python driver will be at
 
-# if Linux x86_64bit build then
+# if Linux x86_64bit with Python 2.7 build then
 ls -l ./build/lib.linux-x86_64-2.7/IfxPy.so
+
+# if ARM v7 with Python 2.7 then 
+ls -l build/lib.linux-armv7l-2.7/IfxPy.so
+
+# if Linux x86_64bit with Python 3.x build then
 # ls -l ./build/lib.linux-x86_64-3.5/IfxPy.cpython-35m-x86_64-linux-gnu.so
 
-# Similarly if ARM then 
-ls -l build/lib.linux-armv7l-2.7/IfxPy.so
+# on armv7 with Python 3.x
+# ls -l ls ./build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so
 ```
 
 ##### Copy the dirver native lib
@@ -111,10 +119,14 @@ The native lib is good enough to get advance features working. The **Python Data
 ```bash
 # Copy Informix python package (IfxPy.so) to your Python module directory
 # For example:
+# Python 2.7 on linux-x86_64
 cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 
-# if ARM
+# Python 2.7 ARMv7 
 # cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+
+# Python 3.x on ARMv7 
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so .
 ```
 
 ####  Quick test of the local build
@@ -128,11 +140,17 @@ cp /work/t1/IfxPy/Examples/Sample1.py Sample.py
 rm IfxPy.so
 # rm *.so
 
+# Python 2.7 on linux-x86_64
 cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
+
+# Python 3.x on linux-x86_64
 # cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-3.5/IfxPy.cpython-35m-x86_64-linux-gnu.so .
 
 # if ARM then
 # cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-2.7/IfxPy.so .
+
+# Python 3.x on ARM v7
+# cp /work/t1/IfxPy/IfxPy/build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so ./IfxPy.so
 ```
 
 #### Set runtime environment to pick Informix Client SDK libraries

@@ -98,10 +98,12 @@ Sets the result set pointer to the next row or requested row. Use this function 
 
 
 ```python
+
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxx;"
+ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxxx;"
 
+# netstat -a | findstr  9088
 conn = IfxPy.connect( ConStr, "", "")
 
 SetupSqlSet = [
@@ -117,14 +119,13 @@ SetupSqlSet = [
 
 try:
     sql = "drop table t1;"
-    print sql
+    print ( sql )
     stmt = IfxPy.exec_immediate(conn, sql)
 except:
-    print 'FYI: drop table failed'
-
+    print ('FYI: drop table failed')
 	
 for sql in SetupSqlSet:
-    print sql
+    print (sql)
     stmt = IfxPy.exec_immediate(conn, sql)
 
 
@@ -135,17 +136,17 @@ dictionary = IfxPy.fetch_both(stmt)
 rc = 0
 while dictionary != False:
     rc = rc + 1
-    print "--  Record {0} --".format(rc)
-    print "c1 is : ",  dictionary[0]
-    print "c2 is : ", dictionary[1]
-    print "c3 is : ", dictionary["c3"]
-    print "c4 is : ", dictionary[3]
-    print " "
+    print ("--  Record {0} --".format(rc))
+    print ("c1 is : ",  dictionary[0])
+    print ("c2 is : ", dictionary[1])
+    print ("c3 is : ", dictionary["c3"])
+    print ("c4 is : ", dictionary[3])
+    print (" ")
     dictionary = IfxPy.fetch_both(stmt)
 
 IfxPy.close(conn)
 
-print "Done"
+print ("Done")
 
 ```
 

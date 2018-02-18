@@ -18,8 +18,8 @@ cd C:\work
 git clone https://github.com/OpenInformix/IfxPy.git
 ```
 
-### Build Shell Environment
----------------------------
+### Shell Environment needed for the build
+-------------------------------------------
 Set **CSDK_HOME** and **MY_PY_DIR** environment variables.  
 The environment **CSDK_HOME** points to the **Informix Client SDK**.   
 The environment **MY_PY_DIR** points to the Python source code installation.  
@@ -73,6 +73,7 @@ SET MY_PY_DIR=C:\Dev\Anaconda
 
 ### Starting the build 
 ```bash
+# common for Python 2.7 and 3.x
 cd C:\work\IfxPy\IfxPy
 python setup.py build > out.txt 2>&1
 ```
@@ -121,14 +122,65 @@ COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
 COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6\IfxPy.cp36-win_amd64.pyd
 ```
 
-Try a sample
+### Get a sample application to try it out
 ```bash
 cd C:\work\IfxPy\try
+######### copy sample application source ####################
+copy C:\work\IfxPy\Examples\Sample1.py  Sample.py
+```
+
+### Copy the Driver
+
+#### 2) Copy the Advanced native extension module
+---
+#### If Python 2.7 then
+```bash
+# Python Database API Specification v2.0 API extension module
+# it is common for bot 2.7 and 3.x
+copy C:\work\IfxPy\IfxPy\IfxPyDbi.py
+
+############ Advanced native extension module ############
+# from local build
+# if you have already done a build then only
 copy  C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
-copy Sample1.py Sample.py
+
+# or from prebuilt
+# A prebuilt binary of the driver Advanced native extension module is available
+# it can be unzip to get it going.
+copy C:\work\IfxPy\prebuilt\27x\Win64\IfxPy.zip
+# unzip it
+```
+
+---
+#### If Python 3.x then
+For Python 3.x there are two types of prebuilt driver binaries available
+* Created a zip of the driver binaries that you can unzip it. 
+* A Python wheel package that can be installed. 
+
+#### if you have local build and copying the binary then
+```bash
+COPY  C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6\IfxPy.cp36-win_amd64.pyd
+copy C:\work\IfxPy\IfxPy\IfxPyDbi.py
+```
+
+#### prebuilt binary zip
+```bash
+COPY  C:\work\IfxPy\prebuilt\3x\Win64\IfxPy.zip
+# then unzip it
+```
+
+#### prebuilt wheel package
+```bash
+pip install C:\work\IfxPy\prebuilt\3x\Win64\IfxPy-3.0.1-cp36-cp36m-win_amd64.whl
+```
+
+---
+### Running the sample application
+```bash
 set PATH=C:\Informix\bin;%PATH%
 
 # Edit Sample.py connection information, and then run
 python Sample.py
 ```
+
 

@@ -112,6 +112,32 @@ ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 # on armv7 with Python 3.x
 # ls -l ls ./build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so
 ```
+#### Other Build Options
+-------------------------
+* [pip](https://pip.pypa.io/en/stable/reference/)
+* [Pip Wheel](https://pip.pypa.io/en/stable/reference/pip_wheel/)
+
+```bash
+# Make sure you have installed wheel before doing the build
+pip install wheel
+
+cd /work/t1/IfxPy/IfxPy
+python setup.py bdist_wheel
+
+# On successful build, it would have created the whl file under dist folder. 
+# For example : 
+# /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
+
+# Python 3.x wheel build to the prebuilt location for ARM v7
+# cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl /work/t1/IfxPy/prebuilt/3x/ARM/.
+# md5sum /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
+
+# YOu may use pip intall to install the driver from the whl file
+# For example:
+# pip install  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.wh
+# pip uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.wh
+```
+
 
 ##### Copy the dirver native lib
 The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **IfxPyDbi.py**

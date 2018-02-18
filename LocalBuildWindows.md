@@ -24,7 +24,7 @@ Set **CSDK_HOME** and **MY_PY_DIR** environment variables.
 The environment **CSDK_HOME** points to the **Informix Client SDK**.   
 The environment **MY_PY_DIR** points to the Python source code installation.  
 
-#### [Python 2.7 build shell environment]()
+#### [Python 2.7 build shell environment](#)
 ```bat
 # Open VS2008 (or latest) command windows
 # set VS90COMNTOOLS if you are using latest vs, for eg, vs2015 then

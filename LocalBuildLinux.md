@@ -121,6 +121,7 @@ ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 ```bash
 # Make sure you have installed wheel before doing the build
 pip install wheel
+#pip3 install wheel
 
 cd /work/t1/IfxPy/IfxPy
 python setup.py bdist_wheel

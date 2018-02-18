@@ -60,7 +60,7 @@ SET VS90COMNTOOLS=%VS140COMNTOOLS%
 SET VS90COMNTOOLS=%VS150COMNTOOLS%
 ```
 
-#### [Python 3.x build shell environment]()
+#### [Python 3.x build shell environment](#)
 The **Python 3.x** build uses Visual Studio 2015 or above then, if you are building with python 3.x then make your you have VS2015 or above available on your system.
 ```bat
 # Open VS2015 (or latest) command windows

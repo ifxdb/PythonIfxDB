@@ -70,7 +70,7 @@ SET MY_PY_DIR=C:\Dev\Anaconda
 
 ```
 
-### [Starting the build]() 
+### [Starting the build](#) 
 ```bash
 # common for Python 2.7 and 3.x
 cd C:\work\IfxPy\IfxPy
@@ -133,7 +133,7 @@ copy C:\work\IfxPy\Examples\Sample1.py  Sample.py
 
 #### Copy the Advanced native extension module
 ---
-#### [If Python 2.7 then]()
+#### [If Python 2.7 then](#)
 ```bash
 # Python Database API Specification v2.0 API extension module
 # it is common for bot 2.7 and 3.x
@@ -152,7 +152,7 @@ copy C:\work\IfxPy\prebuilt\27x\Win64\IfxPy.zip
 ```
 
 ---
-#### [If Python 3.x then]()
+#### [If Python 3.x then](#)
 For Python 3.x there are two types of prebuilt driver binaries available
 * Created a zip of the driver binaries that you can unzip it. 
 * A Python wheel package that can be installed. 

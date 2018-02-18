@@ -66,7 +66,7 @@ The **Python 3.x** build uses Visual Studio 2015 or above then, if you are build
 # Open VS2015 (or latest) command windows
 
 SET CSDK_HOME=c:\informix
-SET MY_PY_DIR=C:\Dev\Anaconda3
+SET MY_PY_DIR=C:\Dev\Anaconda
 
 ```
 

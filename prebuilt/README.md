@@ -8,16 +8,18 @@ FYI: When you download the prebuilt, clone or zip the repository and then take t
 | **Platform** | **Py Version** |     **Location**          | **MD5 hash**
 |:-------------|:---------------|:--------------------------|:--------------------------------
 | `ARM`        |   2.7.13       |  27x/ARM/IfxPy.so.tar     | 74e2e45e9b9052ad373d0b9ea4a6410a
-| `Win64`      |                |  27x/Win64/IfxPy.zip      | 29fd9fdb62986a48a6d1e8416aab7c2d
 | `Linux64`    |                | 27x/Linux64/IfxPy.so.tar  | 1f2885bf2f86fd1677e0a0286d8ef4c6
+| `Win64`      |                |  27x/Win64/IfxPy.zip      | 29fd9fdb62986a48a6d1e8416aab7c2d
 
 
 #### Python 3.x 
 | **Platform** | **Py Version** |     **Location**          | **MD5 hash**
 |:-------------|:---------------|:--------------------------|:--------------------------------
 | `Arm`        |  3.6.2         |  35x/ARM/IfxPy.so.tar     | a3d0fe5ff019b3de46ba0355272e29e7
-| `Win64`      |                |  Coming soon              |
 | `Linux64`    |  3.5.2         |  35x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar          | a3df1448f43b7576dadd89336f407e82
+| `Win64`      | 3.6.4 Anaconda |  35x/Win64/IfxPy.zip      | e606f3d4bba22483d2291e2401406330
+| `Win64`      | 3.6.4 Anaconda |  35x/Win64/IfxPy-3.0.1-cp36-cp36m-win_amd64.whl  | f85ee178fffbe8bf16ebb9f88040a895
+
 
 
 

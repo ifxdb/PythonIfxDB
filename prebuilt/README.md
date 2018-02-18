@@ -13,14 +13,13 @@ FYI: When you download the prebuilt, clone or zip the repository and then take t
 
 
 #### Python 3.x 
-| **Platform** | **Py Version** |     **Location**          | **MD5 hash**
-|:-------------|:---------------|:--------------------------|:--------------------------------
-| `Arm`        |  3.6.2         |  3x/ARM/IfxPy.so.tar     | a3d0fe5ff019b3de46ba0355272e29e7
-| `Arm`        |  3.6.2         |  3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl     | d30a1d37a1adf475e3973b502ff84143
-
-| `Linux64`    |  3.5.2         |  3x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar          | a3df1448f43b7576dadd89336f407e82
-| `Win64`      | 3.6.4 Anaconda |  3x/Win64/IfxPy.zip      | e606f3d4bba22483d2291e2401406330
-| `Win64`      | 3.6.4 Anaconda |  3x/Win64/IfxPy-3.0.1-cp36-cp36m-win_amd64.whl  | f85ee178fffbe8bf16ebb9f88040a895
+| **Platform** | **Py Version** |     **Location**                                        | **MD5 hash**
+|:-------------|:---------------|:--------------------------------------------------------|:---------------------
+| `Arm`        |  3.6.2         |  3x/ARM/IfxPy.so.tar                                    | a3d0fe5ff019b3de46ba0355272e29e7
+| `Arm`        |  3.6.2         |  3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl         | 07415084844664562c84a23b5538e874
+| `Linux64`    |  3.5.2         |  3x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar   | a3df1448f43b7576dadd89336f407e82
+| `Win64`      | 3.6.4 Anaconda |  3x/Win64/IfxPy.zip                                     | e606f3d4bba22483d2291e2401406330
+| `Win64`      | 3.6.4 Anaconda |  3x/Win64/IfxPy-3.0.1-cp36-cp36m-win_amd64.whl          | f85ee178fffbe8bf16ebb9f88040a895
 
 
 
@@ -69,19 +68,21 @@ pip install wheel
 
 cd /work/t1/IfxPy/IfxPy
 python setup.py bdist_wheel
+#python3 setup.py bdist_wheel
 
 # On successful build, it would have created the whl file under dist folder. 
 # For example : 
 # /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
+# /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 
 # Python 3.x wheel build to the prebuilt location for ARM v7
-# cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl /work/t1/IfxPy/prebuilt/3x/ARM/.
-# md5sum /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
+# cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl /work/t1/IfxPy/prebuilt/3x/ARM/.
+# md5sum /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 
 # YOu may use pip intall to install the driver from the whl file
 # For example:
-# pip install  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.wh
-# pip uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.wh
+# pip3 install  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
+# pip3 uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 ```
 
 ### Windows Built in tools for checking Hash value

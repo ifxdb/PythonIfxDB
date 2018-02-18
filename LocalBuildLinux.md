@@ -83,6 +83,7 @@ git clone https://github.com/OpenInformix/IfxPy.git
 # Assuming 'CSDK' is installed at /work/informix
 export CSDK_HOME=/work/informix
 export MY_PY_DIR=/work/dev/Python
+export PATH=/work/dev/Python:$PATH
 ```
 
 #### Fire the driver build
@@ -123,19 +124,21 @@ pip install wheel
 
 cd /work/t1/IfxPy/IfxPy
 python setup.py bdist_wheel
+#python3 setup.py bdist_wheel
 
 # On successful build, it would have created the whl file under dist folder. 
 # For example : 
 # /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
+# /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 
 # Python 3.x wheel build to the prebuilt location for ARM v7
-# cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl /work/t1/IfxPy/prebuilt/3x/ARM/.
-# md5sum /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
+# cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl /work/t1/IfxPy/prebuilt/3x/ARM/.
+# md5sum /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 
 # YOu may use pip intall to install the driver from the whl file
 # For example:
-# pip install  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.wh
-# pip uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.wh
+# pip3 install  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
+# pip3 uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 ```
 
 
@@ -183,7 +186,8 @@ cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 ```bash
 export INFORMIXDIR=/work/informix
 export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
-export PATH=$INFORMIXDIR/bin:$PATH
+# Set the INFORMIXSQLHOSTS too, say 
+# export INFORMIXSQLHOSTS=/work/dev/srv/ids0/sqlhosts
 ```
 
 #### Run the sample

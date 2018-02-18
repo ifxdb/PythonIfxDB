@@ -70,16 +70,16 @@ SET MY_PY_DIR=C:\Dev\Anaconda
 
 ```
 
-
 ### Starting the build 
 ```bash
 # common for Python 2.7 and 3.x
 cd C:\work\IfxPy\IfxPy
 python setup.py build > out.txt 2>&1
+
+# On successful build Advanced native extension module (**IfxPy.pyd**) should have built, and it is
+# C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7\IfxPy.pyd
+# C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6\IfxPy.cp36-win_amd64.pyd
 ```
-On successful build the Informix native driver module (**IfxPy.pyd**) should have built at  
-C:\work\IfxPy\IfxPy\build\lib.win-amd64-2.7  (if Python 2.7 on Win64 then)   
-C:\work\IfxPy\IfxPy\build\lib.win-amd64-3.6  (if Python 3.6 on Win64 then)   
 
 
 #### Other Build Options

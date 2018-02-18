@@ -24,7 +24,7 @@ Set **CSDK_HOME** and **MY_PY_DIR** environment variables.
 The environment **CSDK_HOME** points to the **Informix Client SDK**.   
 The environment **MY_PY_DIR** points to the Python source code installation.  
 
-#### Python 2.7 build shell environment 
+#### [Python 2.7 build shell environment]()
 ```bat
 # Open VS2008 (or latest) command windows
 # set VS90COMNTOOLS if you are using latest vs, for eg, vs2015 then
@@ -60,7 +60,7 @@ SET VS90COMNTOOLS=%VS140COMNTOOLS%
 SET VS90COMNTOOLS=%VS150COMNTOOLS%
 ```
 
-#### Python 3.x build shell environment 
+#### [Python 3.x build shell environment]()
 The **Python 3.x** build uses Visual Studio 2015 or above then, if you are building with python 3.x then make your you have VS2015 or above available on your system.
 ```bat
 # Open VS2015 (or latest) command windows
@@ -70,7 +70,7 @@ SET MY_PY_DIR=C:\Dev\Anaconda
 
 ```
 
-### Starting the build 
+### [Starting the build]() 
 ```bash
 # common for Python 2.7 and 3.x
 cd C:\work\IfxPy\IfxPy
@@ -131,9 +131,9 @@ copy C:\work\IfxPy\Examples\Sample1.py  Sample.py
 
 ### Copy the Driver
 
-#### 2) Copy the Advanced native extension module
+#### Copy the Advanced native extension module
 ---
-#### If Python 2.7 then
+#### [If Python 2.7 then]()
 ```bash
 # Python Database API Specification v2.0 API extension module
 # it is common for bot 2.7 and 3.x
@@ -152,7 +152,7 @@ copy C:\work\IfxPy\prebuilt\27x\Win64\IfxPy.zip
 ```
 
 ---
-#### If Python 3.x then
+#### [If Python 3.x then]()
 For Python 3.x there are two types of prebuilt driver binaries available
 * Created a zip of the driver binaries that you can unzip it. 
 * A Python wheel package that can be installed. 

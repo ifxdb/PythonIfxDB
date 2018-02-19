@@ -18,14 +18,13 @@ If the OS default for Unicode is UTF32 then the OpenInformix driver will work if
 
 ###### To check which Unicode encoding your python interpreter is using.
 ```Python
-# When built with --enable-unicode=ucs4:
 >>> import sys
 >>> print sys.maxunicode
+### output
+# if it is built with --enable-unicode=ucs4: then you will see
 1114111
 
-# When built with --enable-unicode=ucs2:
->>> import sys
->>> print sys.maxunicode
+# if it is built with --enable-unicode=ucs2: then you will see
 65535
 ```
 
@@ -64,7 +63,7 @@ $ sudo make
 
 # /work/dev/Python to be added to the path
 # install is not needed for driver build thouhg
-# $ sudo altinstall
+# sudo altinstall
 ```
 #### Build Informix Python driver
 ---------------------------------
@@ -129,6 +128,15 @@ python setup.py bdist_wheel
 
 # On successful build, it would have created the whl file under dist folder. 
 # For example : 
+########### Python 3.x build on Linux x86 64 
+ls /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
+# Copy the binary to prebuild (if you are refreshing the prebuild binary)
+cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl /work/t1/IfxPy/prebuilt/3x/Linux64/.
+# FYI: to install
+# pip3 install /work/t1/IfxPy/prebuilt/3x/Linux64/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
+
+
+######### ARM v7
 # /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp27-cp27mu-linux_armv7l.whl
 # /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 
@@ -188,7 +196,7 @@ cp /work/t1/IfxPy/IfxPy/build/lib.linux-x86_64-2.7/IfxPy.so .
 export INFORMIXDIR=/work/informix
 export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
 # Set the INFORMIXSQLHOSTS too, say 
-# export INFORMIXSQLHOSTS=/work/dev/srv/ids0/sqlhosts
+export INFORMIXSQLHOSTS=/work/dev/srv/ids0/sqlhosts
 ```
 
 #### Run the sample
@@ -197,6 +205,7 @@ export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}
 # $ which python
 # /work/dev/Python/python
 
+cd /work/try/
 vi Sample.py
 # Edit Sample.py connection information, and then run
 python Sample.py

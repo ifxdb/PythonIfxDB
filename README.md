@@ -10,7 +10,7 @@ The driver has support for both Python 2.7 and Python 3x. It has been certified 
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 ### [Driver install by using prebuilt binary](https://github.com/OpenInformix/IfxPy/tree/master/prebuilt)  
-**FYI**: Soon the driver package module will be ready with package manager; meanwhile you may download the driver binary from **IfxPy/prebuilt/** folder. **FYI**: When you download the prebuilt, clone (or zip) the repository and then take the prebuilt binary. The usage of **wget**, **curl** etc may not get the right binary content from github.
+**FYI**: Soon the driver package module will be ready with package manager; meanwhile you may download the driver binary from **IfxPy/prebuilt/...** folder. **FYI**: When you download the prebuilt, clone (or zip) the repository and then take the prebuilt binary. The usage of **wget**, **curl** etc may not get the right binary content from github.
 
 ### Python 2.7 then
 The prebuilt Informix Python 2.7.x driver binaries are available as **ZIP** (tar file on Linux and zip on Windows).
@@ -19,9 +19,9 @@ git clone https://github.com/OpenInformix/IfxPy.git
 
 IfxPy/prebuilt/27x/ARM/IfxPy.so.tar
 IfxPy/prebuilt/27x/Linux64/IfxPy.so.tar
-IfxPy/prebuilt/27x/Win64/IfxPy.zip
+IfxPy\prebuilt\27x\Win64\IfxPy.zip
 ```
-#### Python 3.x then
+### Python 3.x then
 The prebuilt Informix Python 3.x driver binaries are available as **ZIP** as well as **Wheel Package**.
 ```bash
 git clone https://github.com/OpenInformix/IfxPy.git

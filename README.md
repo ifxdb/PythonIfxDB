@@ -3,36 +3,68 @@
 
 ## [IfxPy](https://openinformix.github.io/IfxPy/)
 -------------------------------------------------
-Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database. The **Advanced native extension module** is the heart piece of driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with Python code by focusing on application API level compatibility.  
+Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database. The **Advanced native extension module** is the heart piece of driver which is completely written in **C language** for better efficiency and performance. The **Python Database API Specification v2.0 API** has been created on top of this native layer with Python code by focusing on application API level compatibility.
 
-The driver has been well tested across all major platforms such as **ARM**, **Linux**, and **Windows**; and it has been certified to work with **Raspberry Pi** too.  
-
+The driver has support for both Python 2.7 and Python 3x. It has been certified across all major development platforms such as ARM64 running Raspbian OS, Linux, and Windows; and no surprise, it works well on the Raspberry Pi3.
+ 
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
-**FYI**: Soon we will be getting to **pip install**, for the time being you may download prebuilt native driver binary from prebuilt folder. You may build the drive from its source code on your environment to pick latest changes.  
-* [prebuilt](https://github.com/OpenInformix/IfxPy/tree/master/prebuilt)  
-FYI: When you download the prebuilt, clone or zip the repository and then take the prebuilt binary. The usage of wget, curl etc may not get right binary content from github.
+### [Driver install by using prebuilt binary](https://github.com/OpenInformix/IfxPy/tree/master/prebuilt)  
+**FYI**: Soon the driver package module will be ready with package manager; meanwhile you may download the driver binary from **IfxPy/prebuilt/** folder. **FYI**: When you download the prebuilt, clone (or zip) the repository and then take the prebuilt binary. The usage of **wget**, **curl** etc may not get the right binary content from github.
+
+### Python 2.7 then
+The prebuilt Informix Python 2.7.x driver binaries are available as **ZIP** (tar file on Linux and zip on Windows).
+```bash
+git clone https://github.com/OpenInformix/IfxPy.git
+
+IfxPy/prebuilt/27x/ARM/IfxPy.so.tar
+IfxPy/prebuilt/27x/Linux64/IfxPy.so.tar
+IfxPy/prebuilt/27x/Win64/IfxPy.zip
+```
+#### Python 3.x then
+The prebuilt Informix Python 3.x driver binaries are available as **ZIP** as well as **Wheel Package**.
+```bash
+git clone https://github.com/OpenInformix/IfxPy.git
+
+### ZIP
+IfxPy/prebuilt/3x/ARM/IfxPy.so.tar
+IfxPy/prebuilt/3x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar
+IfxPy\prebuilt\3x/Win64\IfxPy.zip
+
+### Wheel Package
+IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
+IfxPy/prebuilt/3x/Linux64/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
+IfxPy\prebuilt\3x/Win64\IfxPy-3.0.1-cp36-cp36m-win_amd64.whl
+```
+
+#### Installing the drive from Wheel Package.
+```bash
+git clone https://github.com/OpenInformix/IfxPy.git
+
+# if ARM v7
+pip3 install IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
+# if Linux_x86_64
+pip3 install IfxPy/prebuilt/3x/Linux64/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
+# if Win64
+pip3 install IfxPy\prebuilt\3x\Win64\IfxPy-3.0.1-cp36-cp36m-win_amd64.whl
+```
 
 #### [IfxPy: (Advanced Native Extension Module)](https://github.com/OpenInformix/IfxPy/wiki)
 The Advanced Native Extension Module is the heart of the driver which is completely written in C language for better efficiency and performance while maintaining cross platform support.  
-Please see the **[IfxPy Wiki](https://github.com/OpenInformix/IfxPy/wiki)** for the documentation. 
+Please see the **[IfxPy Wiki](https://github.com/OpenInformix/IfxPy/wiki)** (work in progress) for the documentation 
 
 #### [IfxPyDbi: Python Database API Specification v2.0 support](http://www.python.org/dev/peps/pep-0249/)
 Support for the Python DB API have been created on top of the native layer by focusing on application layer compatibility; then the application source code is generally more portable across databases.
 
 
-### Project status: Beta 
-The driver runtime is mostly functional; we are in the process of adding documentation, examples and pip install. We will get to RC soon.  
+### Project status: Getting ready for first release.
+The driver has been well tested across all major platforms such as ARM, Linux, and Windows. The Python 3.x driver has **pip install** option from a local wheel package; soon these wheel package will be available with package manager.  Then we will be working for enhancing the documentation. 
 
 **Known Problems**: Large Object Support, Stored Procedures.
-
-##### Coming soon
-* PyPI (pit install)
  
 ##### Future Roadmap
 * Django
 * SQLAlchemy
-
 
 ## Build the driver from its source code
 ------------------

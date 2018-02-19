@@ -58,10 +58,12 @@ Support for the Python DB API have been created on top of the native layer by fo
 
 
 ### Project status: Getting ready for first release.
-The driver has been well tested across all major platforms such as ARM, Linux, and Windows. The Python 3.x driver has **pip install** option from a local wheel package; soon these wheel package will be available with package manager.  Then we will be working for enhancing the documentation. 
+The driver has been well tested across all major platforms such as ARM, Linux, and Windows. The Python 3.x driver has **pip install** option from a local wheel package; soon wheel package will be available with the package manager. 
 
-**Known Problems**: Large Object Support, Stored Procedures.
- 
+##### Known Limitation
+* Large Object Support
+* Stored Procedures
+
 ##### Future Roadmap
 * Django
 * SQLAlchemy
@@ -86,7 +88,7 @@ export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}
 
 ##### Windows
 ```bat
-# c:\informix
+#SET INFORMIXDIR=c:\informix
 SET PATH=%INFORMIXDIR%\bin;%PATH%
 ```
 

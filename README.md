@@ -22,16 +22,21 @@ IfxPy/prebuilt/27x/Linux64/IfxPy.so.tar
 IfxPy\prebuilt\27x\Win64\IfxPy.zip
 ```
 ### Python 3.x then
-The prebuilt Informix Python 3.x driver binaries are available as **ZIP** as well as **Wheel Package**.
+The prebuilt Informix Python 3.x driver binaries are available as **ZIP/tar** as well as **Wheel Package**.
 ```bash
 git clone https://github.com/OpenInformix/IfxPy.git
 
-### ZIP
+### ZIP/tar
 IfxPy/prebuilt/3x/ARM/IfxPy.so.tar
-IfxPy/prebuilt/3x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar
 IfxPy\prebuilt\3x/Win64\IfxPy.zip
+# If you are using older python 3x then you may have to rename SO file to IfxPy.so
+IfxPy/prebuilt/3x/Linux64/IfxPy.cpython-35m-x86_64-linux-gnu.so.tar
 
 ### Wheel Package
+# The wheel package is created by using Python 3.6, 
+# and it is compatible with Python Enhancement Proposals (PEPs). 
+# Then PIP installation is expected to go smooth. 
+# If you are still on older python then you may copy the zip/tar module.
 IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 IfxPy/prebuilt/3x/Linux64/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
 IfxPy\prebuilt\3x/Win64\IfxPy-3.0.1-cp36-cp36m-win_amd64.whl

@@ -1420,10 +1420,6 @@ static PyObject *_python_IfxPy_connect_helper(PyObject *self, PyObject *args, in
         rc = SQLSetConnectAttr((SQLHDBC)conn_res->hdbc, SQL_ATTR_AUTOCOMMIT,
             (SQLPOINTER)((SQLLEN)(conn_res->auto_commit)), SQL_NTS);
 
-		// LO_AUTO
-		rc = SQLSetConnectAttr((SQLHDBC)conn_res->hdbc, SQL_INFX_ATTR_LO_AUTOMATIC,	
-			(SQLPOINTER)SQL_TRUE, SQL_IS_UINTEGER);
-
         conn_res->c_bin_mode = IFX_G(bin_mode);
         conn_res->c_case_mode = CASE_NATURAL;
         conn_res->c_use_wchar = WCHAR_YES;
@@ -1518,7 +1514,10 @@ static PyObject *_python_IfxPy_connect_helper(PyObject *self, PyObject *args, in
                 SQLFreeHandle(SQL_HANDLE_ENV, conn_res->henv);
                 break;
             }
-
+            // LO_AUTO
+            rc = SQLSetConnectAttr((SQLHDBC)conn_res->hdbc, SQL_INFX_ATTR_LO_AUTOMATIC,	
+                                   (SQLPOINTER)SQL_TRUE, SQL_IS_UINTEGER);
+		
             // Get the server name
             memset(server, 0, sizeof(server));
 
@@ -5440,8 +5439,10 @@ static int _python_IfxPy_bind_data(stmt_handle *stmt_res, param_node *curr, PyOb
     case PYTHON_UNICODE:
         {
             int isNewBuffer;
-            if (PyObject_CheckBuffer(bind_data) && ( //curr->data_type == SQL_BLOB || 
-                curr->data_type == SQL_BINARY || curr->data_type == SQL_VARBINARY))
+            if (PyObject_CheckBuffer(bind_data) && ( 
+                curr->data_type == SQL_BINARY
+		|| curr->data_type == SQL_VARBINARY
+		|| curr->data_type == SQL_LONGVARBINARY))
             {
 #if  PY_MAJOR_VERSION >= 3
                 Py_buffer tmp_buffer;
@@ -5568,9 +5569,10 @@ static int _python_IfxPy_bind_data(stmt_handle *stmt_res, param_node *curr, PyOb
     case PYTHON_STRING:
         {
             char* tmp;
-            if (PyObject_CheckBuffer(bind_data) && ( //curr->data_type == SQL_BLOB || 
+            if (PyObject_CheckBuffer(bind_data) && (
                 curr->data_type == SQL_BINARY
-                || curr->data_type == SQL_VARBINARY))
+                || curr->data_type == SQL_VARBINARY)
+                || curr->data_type == SQL_LONGVARBINARY))
             {
 #if  PY_MAJOR_VERSION >= 3
                 Py_buffer tmp_buffer;

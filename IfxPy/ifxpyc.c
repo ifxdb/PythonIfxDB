@@ -5571,7 +5571,7 @@ static int _python_IfxPy_bind_data(stmt_handle *stmt_res, param_node *curr, PyOb
             char* tmp;
             if (PyObject_CheckBuffer(bind_data) && (
                 curr->data_type == SQL_BINARY
-                || curr->data_type == SQL_VARBINARY)
+                || curr->data_type == SQL_VARBINARY
                 || curr->data_type == SQL_LONGVARBINARY))
             {
 #if  PY_MAJOR_VERSION >= 3

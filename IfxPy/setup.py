@@ -14,6 +14,12 @@ VERSION2X = '2.7.1'
 LICENSE   = 'Apache License 2.0'
 IfxPyLongDescription='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
 
+# Python 3.4 and up and not commit to Python 4 support yet 
+PYTHON_REQ = '~=3.4'
+
+PYTHON_REQ_2X = '>=2.7, <3'
+
+
 # Specifying the files to distribute
 # https://docs.python.org/3.4/distutils/sourcedist.html#manifest
 # IfxPy_modules = ['config', 'IfxPyDbi', 'testfunctions', 'tests']
@@ -64,7 +70,8 @@ extra = {}
 if sys.version_info >= (3, ):
     extra['use_2to3'] = True
 else:
-    VERSION = VERSION2X
+    VERSION    = VERSION2X
+    PYTHON_REQ = PYTHON_REQ_2X
 
 setup (name    = PACKAGE, 
        version = VERSION,
@@ -73,7 +80,15 @@ setup (name    = PACKAGE,
        long_description = IfxPyLongDescription,
        
        # The project's main homepage.
-       #url='https://github.com/OpenInformix/IfxPy',
+       #url='https://openinformix.github.io/IfxPy/',
+       project_urls={
+           'Documentation': 'https://github.com/OpenInformix/IfxPy/wiki',
+           'Funding': 'https://openinformix.github.io/IfxPy/',
+           'Say Thanks!': 'https://openinformix.github.io/IfxPy/',
+           'Source': 'https://github.com/OpenInformix/IfxPy',
+           'Tracker': 'https://openinformix.github.io/IfxPy/',
+       },
+       python_requires = PYTHON_REQ,
 
        author           = 'Informix Application Development Team',
        #author_email='xyz@hcl.com',
@@ -99,6 +114,7 @@ setup (name    = PACKAGE,
            'Programming Language :: Python :: 3.4',
            'Programming Language :: Python :: 3.5',
            'Programming Language :: Python :: 3.6',
+           'Programming Language :: Python :: 3.7',         
        ],
        long_description_content_type='text/markdown',
 

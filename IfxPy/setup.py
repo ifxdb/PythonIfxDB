@@ -85,7 +85,7 @@ setup (name    = PACKAGE,
            'Development Status :: 4 - Beta',
 
            # Indicate who your project is intended for
-           'Intended Audience :: Informix Python Applicatin Developers',
+           'Intended Audience :: Developers',
            'Topic :: Software Development',
 
            # Pick your license as you wish (should match "license" above)

@@ -6,6 +6,15 @@
 * Set environment variable **CSDK_HOME** and **MY_PY_DIR**
 * If Python 2.7 then Visual Studio 2008 or above
 * If Python 3.x then Visual Studio 2015 or above
+* setuptools
+* pip
+* wheel
+* twine
+
+You may need pip version version 10.0.1 or higher, if not upgrade
+```bash
+python -m pip install --upgrade pip
+```
 
 ### Clone the source code
 -------------------------
@@ -184,3 +193,9 @@ python Sample.py
 ```
 
 
+### PyPi upload
+```bash
+# After successful wheel build, then 
+# cd C:\work\IfxPy\IfxPy
+twine upload dist/*
+```

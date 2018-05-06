@@ -7,6 +7,15 @@
 * Informix client SDK 410xC2 or above
 * Set environment variable CSDK_HOME and MY_PY_DIR
 * Operating System Unicode encoding should match with your python interpreter encoding. 
+* setuptools
+* pip
+* wheel
+* twine
+
+You may need pip version version 10.0.1 or higher, if not upgrade
+```bash
+python -m pip install --upgrade pip
+```
 
 **MY_PY_DIR** points to the Python installation directory. During the driver build it need python header files, if the current Python installation doesn’t have the header file then you may need to get Python source code.
 

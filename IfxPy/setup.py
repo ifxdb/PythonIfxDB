@@ -8,9 +8,10 @@ from distutils.core import Extension
 # https://docs.python.org/3.4/distutils/setupscript.html#distutils-installing-scripts
 
 
-PACKAGE = 'IfxPy'
-VERSION = '3.0.1'
-LICENSE = 'Apache License 2.0'
+PACKAGE   = 'IfxPy'
+VERSION   = '3.0.1'
+VERSION2X = '2.7.1'
+LICENSE   = 'Apache License 2.0'
 IfxPyLongDescription='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
 
 # Specifying the files to distribute
@@ -62,7 +63,8 @@ else:
 extra = {}
 if sys.version_info >= (3, ):
     extra['use_2to3'] = True
-
+else:
+    VERSION = VERSION2X
 
 setup (name    = PACKAGE, 
        version = VERSION,

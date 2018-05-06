@@ -89,7 +89,7 @@ setup (name    = PACKAGE,
            'Topic :: Software Development',
 
            # Pick your license as you wish (should match "license" above)
-           'License :: Apache Version 2.0 License',
+           'License :: OSI Approved :: Apache Software License',
 
            # Specify the Python versions you support here. In particular, ensure
            # that you indicate whether you support Python 2, Python 3 or both.

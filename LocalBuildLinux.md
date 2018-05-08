@@ -14,7 +14,8 @@
 
 You may need pip version version 10.0.1 or higher, if not upgrade
 ```bash
-python -m pip install --upgrade pip
+# pip3 install --upgrade pip
+pip install --upgrade pip
 ```
 
 **MY_PY_DIR** points to the Python installation directory. During the driver build it need python header files, if the current Python installation doesn’t have the header file then you may need to get Python source code.
@@ -159,6 +160,19 @@ cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl /work/t1/If
 # pip3 uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 ```
 
+#### Wheel build to upload to PyPi
+```bash
+cd /work/t1/IfxPy/IfxPy
+python setup.py bdist_wheel  --plat-name manylinux1_x86_64
+#python3 setup.py bdist_wheel  --plat-name manylinux1_x86_64
+
+# for Py3
+#ls dist
+#IfxPy-3.0.1-cp35-cp35m-manylinux1_x86_64.whl
+
+#up load the build to PyPi
+twine upload dist/*
+```
 
 ##### Copy the dirver native lib
 The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **IfxPyDbi.py**

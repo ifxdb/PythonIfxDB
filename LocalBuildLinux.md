@@ -163,12 +163,16 @@ cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl /work/t1/If
 #### Wheel build to upload to PyPi
 ```bash
 cd /work/t1/IfxPy/IfxPy
+
+# make sure pip and wheel are upgradedfs
+# pip2.7 install --upgrade --user travis pip setuptools wheel
+
 python setup.py bdist_wheel  --plat-name manylinux1_x86_64
 #python3 setup.py bdist_wheel  --plat-name manylinux1_x86_64
 
-# for Py3
 #ls dist
-#IfxPy-3.0.1-cp35-cp35m-manylinux1_x86_64.whl
+# Py3x:   IfxPy-3.0.1-cp35-cp35m-manylinux1_x86_64.whl
+# Py27:   IfxPy-2.7.1-cp27-cp27mu-manylinux1_x86_64.whl
 
 #up load the build to PyPi
 twine upload dist/*

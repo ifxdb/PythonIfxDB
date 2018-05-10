@@ -9,17 +9,13 @@ The driver has support for both Python 2.7 and Python 3x. It has been certified 
  
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
-
+-------------------------
 ### Installing the driver
 ```bash
 pip install ifxpy
 ```
-The pip install support for Raspberry Pi yet to be integrated, until then you may install the driver with the instruction give from   
-[TmpInstallFromPrebuiltBinary.md](./TmpInstallFromPrebuiltBinary.md)
-
 
 ### Runtime Environment
------------------------
 The Informix Python driver has dependency on **Informix Client SDK version 4.10 xC2 or above**. Make sure to set Informix Client SDK runtime environment before running the Python applications.  
 
 Say **INFORMIXDIR** is the location where you have installed Informix Client SDK.
@@ -31,6 +27,8 @@ export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}
 ```bat
 SET PATH=%INFORMIXDIR%\bin;%PATH%
 ```
+
+-------------------------
 
 #### [IfxPy: (Advanced Native Extension Module)](https://github.com/OpenInformix/IfxPy/wiki)
 The Advanced Native Extension Module is the heart of the driver which is completely written in C language for better efficiency and performance while maintaining cross platform support.  

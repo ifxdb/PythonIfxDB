@@ -1,5 +1,4 @@
 
-##### Licensed under the Apache License, Version 2.0
 
 ## [IfxPy](https://openinformix.github.io/IfxPy/)
 -------------------------------------------------
@@ -10,12 +9,14 @@ The driver has support for both Python 2.7 and Python 3x. It has been certified 
 The development activities of the driver are powered by passion, dedication and independent thinking. You may send pull request, together we grow as an open community; relevant discussion and queries are answered by community through stackoverflow. [http://stackoverflow.com/questions/tagged/informix](http://stackoverflow.com/questions/tagged/informix)  
 
 -------------------------
-### Installing the driver
+### [Installing the driver](#)
 ```bash
 pip install ifxpy
 ```
+The **pip install support** is available for **Windows 64, Linux x86_64, Arm7** for both **Python 2.7 and Python 3.4 and up**. For all other platform you may perform a local build. The driver source code is platform neutral and it is expected to build on any platform.
 
-### Runtime Environment
+
+#### Runtime Environment
 The Informix Python driver has dependency on **Informix Client SDK version 4.10 xC2 or above**. Make sure to set Informix Client SDK runtime environment before running the Python applications.  
 
 Say **INFORMIXDIR** is the location where you have installed Informix Client SDK.
@@ -38,12 +39,8 @@ Please see the **[IfxPy Wiki](https://github.com/OpenInformix/IfxPy/wiki)** (wor
 Support for the Python DB API have been created on top of the native layer by focusing on application layer compatibility; then the application source code is generally more portable across databases.
 
 
-### Project status: Getting ready for first release.
-The driver has been well tested across all major platforms such as ARM, Linux, and Windows. The Python 3.x driver has **pip install** option from a local wheel package; soon wheel package will be available with the package manager. 
-
 ##### Known Limitation
 * Large Object Support
-* Stored Procedures
 
 ##### Future Roadmap
 * Django
@@ -57,25 +54,11 @@ The driver source code is platform neutral; you may build the driver on any plat
 * [Linux Build](./LocalBuildLinux.md)
 * [Run tests after the build](RunTests.md)
 
-## Runtime Environment
-----------------------
-The Informix Python driver has dependency on **Informix Client SDK version 4.10 xC2 or above**. Make sure to set Informix Client SDK runtime environment before running the applications.  
 
-Say **INFORMIXDIR** is the location where you have installed Informix Client SDK.
-##### Linux
-```bash
-export LD_LIBRARY_PATH=${INFORMIXDIR}/lib:${INFORMIXDIR}/lib/esql:${INFORMIXDIR}/lib/cli
-```
-
-##### Windows
-```bat
-#SET INFORMIXDIR=c:\informix
-SET PATH=%INFORMIXDIR%\bin;%PATH%
-```
-
+-----------
 
 ## Examples
------------
+Make sure to set Informix CSDK runtime environment before running the examples. 
 
 #### Connection to the database
 The basic connectivity to Informix database.

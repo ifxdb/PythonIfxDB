@@ -1,13 +1,13 @@
 
 ### Solaris Build
 
-This note contain information about the driver build on Solaris. It is an un edited note that we received from Indika and team about the build.
+This note contain information about the driver build on Solaris. It is a note that we received from Indika and team about the build.
 
 ```bash
-From: Indika [mailto:indika@cybersoft.lk] 
+From: Indika [mailto:indika@c*****t] 
 Sent: Thursday, July 5, 2018 6:14 AM
-To: Sathyanesh Krishnan <msatyan@hcl.com>; Migara Medagama <migara@cybersoft.lk>; notifications@github.com
-Cc: 'Author' <author@noreply.github.com>; govind@cybersoft.lk; pushpa@cybersoft.lk; Sheshnarayan Agrawal <sheshnarayan.a@hcl.com>; Javier Sagrera <javier.sagrera@hcl.com>; PRADEEP NATARAJAN <pradeep@hcl.com>
+To: Sathyanesh Krishnan <msatyan@h*****l.com>; Migara Medagama <migara@c*****t>; notifications@github.com
+Cc: 'Author' <author@noreply.github.com>; govind@c*****t; pushpa@c*****t; Sheshnarayan Agrawal <sheshnarayan.a@h*****l.com>; Javier Sagrera <javier.sagrera@h*****l.com>; PRADEEP NATARAJAN <pradeep@h*****l.com>
 Subject: Re: [OpenInformix/IfxPy] OpenInformix Ifxpy driver building on Solaris (#1)
 
 
@@ -132,9 +132,9 @@ Indika
 
 ```
 ________________________________________
-From: Sathyanesh Krishnan <msatyan@hcl.com>
-To: Indika <indika@cybersoft.lk>; Migara Medagama <migara@cybersoft.lk>; "notifications@github.com" <notifications@github.com> 
-Cc: 'Author' <author@noreply.github.com>; "govind@cybersoft.lk" <govind@cybersoft.lk>; "pushpa@cybersoft.lk" <pushpa@cybersoft.lk>; Sheshnarayan Agrawal <sheshnarayan.a@hcl.com>; Javier Sagrera <javier.sagrera@hcl.com>; PRADEEP NATARAJAN <pradeep@hcl.com>
+From: Sathyanesh Krishnan <msatyan@h*****l.com>
+To: Indika <indika@c*****t>; Migara Medagama <migara@c*****t>; "notifications@github.com" <notifications@github.com> 
+Cc: 'Author' <author@noreply.github.com>; "govind@c*****t" <govind@c*****t>; "pushpa@c*****t" <pushpa@c*****t>; Sheshnarayan Agrawal <sheshnarayan.a@h*****l.com>; Javier Sagrera <javier.sagrera@h*****l.com>; PRADEEP NATARAJAN <pradeep@h*****l.com>
 Sent: Tuesday, July 3, 2018 8:34 PM
 Subject: RE: [OpenInformix/IfxPy] OpenInformix Ifxpy driver building on Solaris (#1)
 

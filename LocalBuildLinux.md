@@ -86,7 +86,7 @@ cd /work/t1
 git clone https://github.com/OpenInformix/IfxPy.git
 ```
 
-##### Set Env for driver build 
+##### Set Env for driver build
 ```bash
 # sudo ln -s /home/informix/1210UC9 /work/informix
 # Assuming 'CSDK' is installed at /work/informix
@@ -96,6 +96,12 @@ export PATH=/work/dev/Python:$PATH
 ```
 
 #### Fire the driver build
+You may choose one of the two build instructions to do the driver build. We recommend Wheel build.
+- The legacy build
+- Wheel build
+
+
+#### 1) The legacy build
 ```bash
 cd /work/t1/IfxPy/IfxPy
 rm -rf build
@@ -113,7 +119,7 @@ python setup.py build > out.txt 2>&1
 # if Linux x86_64bit with Python 2.7 build then
 ls -l ./build/lib.linux-x86_64-2.7/IfxPy.so
 
-# if ARM v7 with Python 2.7 then 
+# if ARM v7 with Python 2.7 then
 ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 
 # if Linux x86_64bit with Python 3.x build then
@@ -122,10 +128,37 @@ ls -l build/lib.linux-armv7l-2.7/IfxPy.so
 # on armv7 with Python 3.x
 # ls -l ls ./build/lib.linux-armv7l-3.5/IfxPy.cpython-35m-arm-linux-gnueabihf.so
 ```
-#### Other Build Options
+
 -------------------------
+
+#### 2) Wheel build
 * [pip](https://pip.pypa.io/en/stable/reference/)
 * [Pip Wheel](https://pip.pypa.io/en/stable/reference/pip_wheel/)
+* [Compatibility Tags for Built Distributions](https://www.python.org/dev/peps/pep-0425/)
+* [Python Package Index](https://pypi.org/)
+
+The wheel built package format includes these tags in its filenames, of the form  
+{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl.  
+Other package formats may have their own conventions.
+
+##### Python Tag
+The Python tag indicates the implementation and version required by a distribution. Major implementations have abbreviated codes, initially:
+- py: Generic Python (does not require implementation-specific features)
+- cp: CPython
+- ip: IronPython
+- pp: PyPy
+- jy: Jython
+
+##### ABI Tag
+The ABI tag indicates which Python ABI is required by any included extension modules. For implementation-specific ABIs, the implementation is abbreviated in the same way as the Python Tag, e.g. cp33d would be the CPython 3.3 ABI with debugging.
+
+##### Platform Tag
+The platform tag is simply distutils.util.get_platform() with all hyphens - and periods . replaced with underscore
+- win32
+- linux_i386
+- linux_x86_64
+- manylinux1_x86_64
+
 
 ```bash
 # Make sure you have installed wheel before doing the build
@@ -136,9 +169,13 @@ cd /work/t1/IfxPy/IfxPy
 python setup.py bdist_wheel
 #python3 setup.py bdist_wheel
 
-# On successful build, it would have created the whl file under dist folder. 
-# For example : 
-########### Python 3.x build on Linux x86 64 
+# If Linux x86_64 then
+python setup.py bdist_wheel  --plat-name manylinux1_x86_64
+#python3 setup.py bdist_wheel  --plat-name manylinux1_x86_64
+
+# On successful build, it would have created the whl file under dist folder.
+# For example :
+########### Python 3.x build on Linux x86 64
 ls /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
 # Copy the binary to prebuild (if you are refreshing the prebuild binary)
 cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl /work/t1/IfxPy/prebuilt/3x/Linux64/.
@@ -154,13 +191,31 @@ cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl /work/t1/If
 # cp /work/t1/IfxPy/IfxPy/dist/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl /work/t1/IfxPy/prebuilt/3x/ARM/.
 # md5sum /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 
-# YOu may use pip intall to install the driver from the whl file
+# You may use pip install to install the driver from the whl file
 # For example:
 # pip3 install  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 # pip3 uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
 ```
 
-#### Wheel build to upload to PyPi
+
+#### Install from the Wheel build
+You may use pip install to install the driver build
+```bash
+# Example:
+pip3 install   /work/t1/IfxPy/prebuilt/3x/Linux64/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
+
+pip3 uninstall /work/t1/IfxPy/prebuilt/3x/Linux64/IfxPy-3.0.1-cp35-cp35m-linux_x86_64.whl
+
+# if ARM v7
+# pip3 install    /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
+
+# pip3 uninstall  /work/t1/IfxPy/prebuilt/3x/ARM/IfxPy-3.0.1-cp35-cp35m-linux_armv7l.whl
+```
+
+
+#### upload the driver binaries to [PyPi](https://pypi.org/)
+We have been using Wheel build to upload the binary.
+FYI: You need to have PiPy account and permission to upload the build binary
 ```bash
 cd /work/t1/IfxPy/IfxPy
 
@@ -174,11 +229,11 @@ python setup.py bdist_wheel  --plat-name manylinux1_x86_64
 # Py3x:   IfxPy-3.0.1-cp35-cp35m-manylinux1_x86_64.whl
 # Py27:   IfxPy-2.7.1-cp27-cp27mu-manylinux1_x86_64.whl
 
-#up load the build to PyPi
+#FYI: Upload the build to PyPi
 twine upload dist/*
 ```
 
-##### Copy the dirver native lib
+##### ad hoc testing: Copy the dirver native lib
 The native lib is good enough to get advance features working. The **Python Database API Specification v2.0** features are wrapper on top of the advance features that can be obtained by copying **IfxPyDbi.py**
 
 ```bash

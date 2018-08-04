@@ -105,6 +105,7 @@
 #define PYTHON_DATE      10
 #define PYTHON_TIME      11
 #define PYTHON_TIMESTAMP 12
+#define PYTHON_TIMEDELTA 13
 
 
 

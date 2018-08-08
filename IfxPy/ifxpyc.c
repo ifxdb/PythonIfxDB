@@ -118,6 +118,7 @@ typedef struct _param_cache_node
     DATE_STRUCT     *date_value;            // Temp storage value 
     TIME_STRUCT     *time_value;            // Temp storage value 
     TIMESTAMP_STRUCT *ts_value;             // Temp storage value 
+    SQL_INTERVAL_STRUCT *interval_value;    // Temp storage value
     struct _param_cache_node *next;         // Pointer to next node 
 } param_node;
 
@@ -192,6 +193,7 @@ typedef union
     TIMESTAMP_STRUCT    *ts_val;
     DATE_STRUCT         *date_val;
     TIME_STRUCT         *time_val;
+    SQL_INTERVAL_STRUCT *interval_val;
 } IfxPy_row_data_type;
 
 
@@ -422,6 +424,7 @@ static void _python_IfxPy_clear_param_cache(stmt_handle *stmt_res)
         PyMem_Free(curr_ptr->date_value);
         PyMem_Free(curr_ptr->time_value);
         PyMem_Free(curr_ptr->ts_value);
+        PyMem_Free(curr_ptr->interval_value);
 
         temp_ptr = curr_ptr;
         curr_ptr = curr_ptr->next;
@@ -487,6 +490,23 @@ static void _python_IfxPy_free_result_struct(stmt_handle* handle)
                     {
                         PyMem_Del(handle->row_data [i].data.time_val);
                         handle->row_data [i].data.time_val = NULL;
+                    }
+                    break;
+
+                case SQL_INTERVAL_DAY:
+                case SQL_INTERVAL_HOUR:
+                case SQL_INTERVAL_MINUTE:
+                case SQL_INTERVAL_SECOND:
+                case SQL_INTERVAL_DAY_TO_HOUR:
+                case SQL_INTERVAL_DAY_TO_MINUTE:
+                case SQL_INTERVAL_DAY_TO_SECOND:
+                case SQL_INTERVAL_HOUR_TO_MINUTE:
+                case SQL_INTERVAL_HOUR_TO_SECOND:
+                case SQL_INTERVAL_MINUTE_TO_SECOND:
+                    if (handle->row_data [i].data.interval_val != NULL)
+                    {
+                        PyMem_Del(handle->row_data [i].data.interval_val);
+                        handle->row_data [i].data.interval_val = NULL;
                     }
                     break;
                 }
@@ -1167,6 +1187,37 @@ static int _python_IfxPy_bind_column_helper(stmt_handle *stmt_res)
             Py_BEGIN_ALLOW_THREADS;
             rc = SQLBindCol((SQLHSTMT)stmt_res->hstmt, (SQLUSMALLINT)(i + 1),
                             SQL_C_TYPE_TIMESTAMP, row_data->time_val, sizeof(TIMESTAMP_STRUCT),
+                            (SQLLEN *)(&stmt_res->row_data [i].out_length));
+            Py_END_ALLOW_THREADS;
+
+            if (rc == SQL_ERROR)
+            {
+                _python_IfxPy_check_sql_errors((SQLHSTMT)stmt_res->hstmt,
+                                                SQL_HANDLE_STMT, rc, 1, NULL, -1, 1);
+                return -1;
+            }
+            break;
+
+        case SQL_INTERVAL_DAY:
+        case SQL_INTERVAL_HOUR:
+        case SQL_INTERVAL_MINUTE:
+        case SQL_INTERVAL_SECOND:
+        case SQL_INTERVAL_DAY_TO_HOUR:
+        case SQL_INTERVAL_DAY_TO_MINUTE:
+        case SQL_INTERVAL_DAY_TO_SECOND:
+        case SQL_INTERVAL_HOUR_TO_MINUTE:
+        case SQL_INTERVAL_HOUR_TO_SECOND:
+        case SQL_INTERVAL_MINUTE_TO_SECOND:
+            row_data->interval_val = ALLOC(SQL_INTERVAL_STRUCT);
+            if (row_data->interval_val == NULL)
+            {
+                PyErr_SetString(PyExc_Exception, "Failed to Allocate Memory");
+                return -1;
+            }
+
+            Py_BEGIN_ALLOW_THREADS;
+            rc = SQLBindCol((SQLHSTMT)stmt_res->hstmt, (SQLUSMALLINT)(i + 1),
+                            column_type, row_data->time_val, sizeof(SQL_INTERVAL_STRUCT),
                             (SQLLEN *)(&stmt_res->row_data [i].out_length));
             Py_END_ALLOW_THREADS;
 
@@ -5765,6 +5816,25 @@ static int _python_IfxPy_bind_data(stmt_handle *stmt_res, param_node *curr, PyOb
         Py_END_ALLOW_THREADS;
         break;
 
+    case PYTHON_TIMEDELTA:
+        curr->interval_value = ALLOC(SQL_INTERVAL_STRUCT);
+        curr->interval_value->interval_type = SQL_IS_DAY_TO_SECOND;
+        curr->interval_value->interval_sign = 1;
+        curr->interval_value->intval.day_second.day = (((PyDateTime_Delta*)bind_data)->days);
+        curr->interval_value->intval.day_second.second = (((PyDateTime_Delta*)bind_data)->seconds);
+        curr->interval_value->intval.day_second.hour = curr->interval_value->intval.day_second.second / 3600;
+        curr->interval_value->intval.day_second.second -= curr->interval_value->intval.day_second.hour * 3600;
+        curr->interval_value->intval.day_second.minute = curr->interval_value->intval.day_second.second / 60;
+        curr->interval_value->intval.day_second.second -= curr->interval_value->intval.day_second.minute * 60;
+        curr->interval_value->intval.day_second.fraction = 0;
+
+        Py_BEGIN_ALLOW_THREADS;
+        rc = SQLBindParameter(stmt_res->hstmt, curr->param_num,
+                              curr->param_type, SQL_C_INTERVAL_DAY_TO_SECOND, curr->data_type, curr->param_size,
+                              curr->scale, curr->interval_value, curr->ivalue, &(curr->bind_indicator));
+        Py_END_ALLOW_THREADS;
+        break;
+
     case PYTHON_NIL:
         curr->ivalue = SQL_NULL_DATA;
 
@@ -7537,6 +7607,18 @@ static PyObject *IfxPy_field_type(PyObject *self, PyObject *args)
     case SQL_TYPE_TIMESTAMP:
         str_val = "timestamp";
         break;
+    case SQL_INTERVAL_DAY:
+    case SQL_INTERVAL_HOUR:
+    case SQL_INTERVAL_MINUTE:
+    case SQL_INTERVAL_SECOND:
+    case SQL_INTERVAL_DAY_TO_HOUR:
+    case SQL_INTERVAL_DAY_TO_MINUTE:
+    case SQL_INTERVAL_DAY_TO_SECOND:
+    case SQL_INTERVAL_HOUR_TO_MINUTE:
+    case SQL_INTERVAL_HOUR_TO_SECOND:
+    case SQL_INTERVAL_MINUTE_TO_SECOND:
+        str_val = "interval";
+        break;
     default:
         str_val = "string";
         break;
@@ -7860,6 +7942,7 @@ static PyObject *IfxPy_result(PyObject *self, PyObject *args)
     DATE_STRUCT *date_ptr;
     TIME_STRUCT *time_ptr;
     TIMESTAMP_STRUCT *ts_ptr;
+    SQL_INTERVAL_STRUCT *interval_ptr;
     char error [DB_MAX_ERR_MSG_LEN];
     SQLULEN in_length;
     SQLLEN out_length = 0;
@@ -8097,6 +8180,55 @@ static PyObject *IfxPy_result(PyObject *self, PyObject *args)
                 return_value = PyDateTime_FromDateAndTime(ts_ptr->year, ts_ptr->month, ts_ptr->day, ts_ptr->hour, ts_ptr->minute, ts_ptr->second, ts_ptr->fraction / 1000);
                 PyMem_Del(ts_ptr);
                 ts_ptr = NULL;
+                return return_value;
+            }
+            break;
+
+        case SQL_INTERVAL_DAY:
+        case SQL_INTERVAL_HOUR:
+        case SQL_INTERVAL_MINUTE:
+        case SQL_INTERVAL_SECOND:
+        case SQL_INTERVAL_DAY_TO_HOUR:
+        case SQL_INTERVAL_DAY_TO_MINUTE:
+        case SQL_INTERVAL_DAY_TO_SECOND:
+        case SQL_INTERVAL_HOUR_TO_MINUTE:
+        case SQL_INTERVAL_HOUR_TO_SECOND:
+        case SQL_INTERVAL_MINUTE_TO_SECOND:
+            interval_ptr = ALLOC(SQL_INTERVAL_STRUCT);
+            if (interval_ptr == NULL)
+            {
+                PyErr_SetString(PyExc_Exception, "Failed to Allocate Memory");
+                return NULL;
+            }
+
+            rc = _python_IfxPy_get_data(stmt_res, col_num + 1, column_type,
+                                         interval_ptr, sizeof(SQL_INTERVAL_STRUCT), &out_length);
+
+            if (rc == SQL_ERROR)
+            {
+                if (interval_ptr != NULL)
+                {
+                    PyMem_Del(interval_ptr);
+                    time_ptr = NULL;
+                }
+                PyErr_Clear();
+                Py_RETURN_FALSE;
+            }
+
+            if (out_length == SQL_NULL_DATA)
+            {
+                PyMem_Del(interval_ptr);
+                interval_ptr = NULL;
+                Py_RETURN_NONE;
+            }
+            else
+            {
+                return_value = PyDelta_FromDSU(interval_ptr->intval.day_second.day,
+                                               ((interval_ptr->intval.day_second.hour * 3600) +
+                                                (interval_ptr->intval.day_second.minute * 60) +
+                                                 interval_ptr->intval.day_second.second), 0);
+                PyMem_Del(interval_ptr);
+                interval_ptr = NULL;
                 return return_value;
             }
             break;
@@ -8473,6 +8605,22 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
                 value = PyDateTime_FromDateAndTime(row_data->ts_val->year, row_data->ts_val->month, row_data->ts_val->day,
                                                    row_data->ts_val->hour, row_data->ts_val->minute, row_data->ts_val->second,
                                                    row_data->ts_val->fraction / 1000);
+                break;
+
+            case SQL_INTERVAL_DAY:
+            case SQL_INTERVAL_HOUR:
+            case SQL_INTERVAL_MINUTE:
+            case SQL_INTERVAL_SECOND:
+            case SQL_INTERVAL_DAY_TO_HOUR:
+            case SQL_INTERVAL_DAY_TO_MINUTE:
+            case SQL_INTERVAL_DAY_TO_SECOND:
+            case SQL_INTERVAL_HOUR_TO_MINUTE:
+            case SQL_INTERVAL_HOUR_TO_SECOND:
+            case SQL_INTERVAL_MINUTE_TO_SECOND:
+                value = PyDelta_FromDSU(row_data->interval_val->intval.day_second.day,
+                                        ((row_data->interval_val->intval.day_second.hour * 3600) +
+                                         (row_data->interval_val->intval.day_second.minute * 60) +
+                                          row_data->interval_val->intval.day_second.second), 0);
                 break;
 
             case SQL_BIGINT:
@@ -10668,6 +10816,9 @@ static PyObject* IfxPy_execute_many(PyObject *self, PyObject *args)
                         case PYTHON_TIMESTAMP:
                             valueType = SQL_C_TYPE_TIMESTAMP;
                             break;
+                        case PYTHON_TIMEDELTA:
+                            valueType = SQL_C_INTERVAL_DAY_TO_SECOND;
+                            break;
                         case PYTHON_DECIMAL:
                             valueType = SQL_C_CHAR;
                             break;
@@ -11260,6 +11411,10 @@ static int _python_get_variable_type(PyObject *variable_value)
     else if (PyDateTime_Check(variable_value))
     {
         return PYTHON_TIMESTAMP;
+    }
+    else if (PyDelta_Check(variable_value))
+    {
+        return PYTHON_TIMEDELTA;
     }
     else if (PyTime_Check(variable_value))
     {

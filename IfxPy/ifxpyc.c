@@ -5819,9 +5819,15 @@ static int _python_IfxPy_bind_data(stmt_handle *stmt_res, param_node *curr, PyOb
     case PYTHON_TIMEDELTA:
         curr->interval_value = ALLOC(SQL_INTERVAL_STRUCT);
         curr->interval_value->interval_type = SQL_IS_DAY_TO_SECOND;
-        curr->interval_value->interval_sign = 1;
-        curr->interval_value->intval.day_second.day = (((PyDateTime_Delta*)bind_data)->days);
-        curr->interval_value->intval.day_second.second = (((PyDateTime_Delta*)bind_data)->seconds);
+        if (((PyDateTime_Delta*)bind_data)->days < 0) {
+          curr->interval_value->interval_sign = 0;
+          curr->interval_value->intval.day_second.day = (((PyDateTime_Delta*)bind_data)->days * -1) - 1;
+          curr->interval_value->intval.day_second.second = 86400 - (((PyDateTime_Delta*)bind_data)->seconds);
+        } else {
+          curr->interval_value->interval_sign = 1;
+          curr->interval_value->intval.day_second.day = ((PyDateTime_Delta*)bind_data)->days;
+          curr->interval_value->intval.day_second.second = (((PyDateTime_Delta*)bind_data)->seconds);
+        }
         curr->interval_value->intval.day_second.hour = curr->interval_value->intval.day_second.second / 3600;
         curr->interval_value->intval.day_second.second -= curr->interval_value->intval.day_second.hour * 3600;
         curr->interval_value->intval.day_second.minute = curr->interval_value->intval.day_second.second / 60;
@@ -8223,10 +8229,18 @@ static PyObject *IfxPy_result(PyObject *self, PyObject *args)
             }
             else
             {
-                return_value = PyDelta_FromDSU(interval_ptr->intval.day_second.day,
-                                               ((interval_ptr->intval.day_second.hour * 3600) +
-                                                (interval_ptr->intval.day_second.minute * 60) +
-                                                 interval_ptr->intval.day_second.second), 0);
+                if (interval_ptr->interval_sign == 0) {
+                  return_value = PyDelta_FromDSU((interval_ptr->intval.day_second.day * -1) -1,
+                                                 (86400 -
+                                                  (interval_ptr->intval.day_second.hour * 3600) +
+                                                  (interval_ptr->intval.day_second.minute * 60) +
+                                                  interval_ptr->intval.day_second.second), 0);
+                } else {
+                  return_value = PyDelta_FromDSU(interval_ptr->intval.day_second.day,
+                                                 ((interval_ptr->intval.day_second.hour * 3600) +
+                                                  (interval_ptr->intval.day_second.minute * 60) +
+                                                  interval_ptr->intval.day_second.second), 0);
+                }
                 PyMem_Del(interval_ptr);
                 interval_ptr = NULL;
                 return return_value;
@@ -8617,10 +8631,18 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
             case SQL_INTERVAL_HOUR_TO_MINUTE:
             case SQL_INTERVAL_HOUR_TO_SECOND:
             case SQL_INTERVAL_MINUTE_TO_SECOND:
-                value = PyDelta_FromDSU(row_data->interval_val->intval.day_second.day,
-                                        ((row_data->interval_val->intval.day_second.hour * 3600) +
-                                         (row_data->interval_val->intval.day_second.minute * 60) +
-                                          row_data->interval_val->intval.day_second.second), 0);
+                if (row_data->interval_val->interval_sign == 0) {
+                  value = PyDelta_FromDSU((row_data->interval_val->intval.day_second.day * -1) -1,
+                                                 (86400 -
+                                                  (row_data->interval_val->intval.day_second.hour * 3600) +
+                                                  (row_data->interval_val->intval.day_second.minute * 60) +
+                                                  row_data->interval_val->intval.day_second.second), 0);
+                } else {
+                  value = PyDelta_FromDSU(row_data->interval_val->intval.day_second.day,
+                                                 ((row_data->interval_val->intval.day_second.hour * 3600) +
+                                                  (row_data->interval_val->intval.day_second.minute * 60) +
+                                                  row_data->interval_val->intval.day_second.second), 0);
+                }
                 break;
 
             case SQL_BIGINT:

@@ -2467,12 +2467,6 @@ static PyObject *IfxPy_close(PyObject *self, PyObject *args)
             {
                 rc = SQLEndTran(SQL_HANDLE_DBC, (SQLHDBC)conn_res->hdbc,
                                 SQL_ROLLBACK);
-                if (rc == SQL_ERROR)
-                {
-                    _python_IfxPy_check_sql_errors(conn_res->hdbc, SQL_HANDLE_DBC,
-                                                    rc, 1, NULL, -1, 1);
-                    return NULL;
-                }
             }
             rc = SQLDisconnect((SQLHDBC)conn_res->hdbc);
             if (rc == SQL_SUCCESS_WITH_INFO || rc == SQL_ERROR)

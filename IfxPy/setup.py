@@ -99,7 +99,7 @@ setup (name    = PACKAGE,
            #   3 - Alpha
            #   4 - Beta
            #   5 - Production/Stable
-           'Development Status :: 4 - Beta',
+           'Development Status :: 5 - Production/Stable',
 
            # Indicate who your project is intended for
            'Intended Audience :: Developers',

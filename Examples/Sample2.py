@@ -1,6 +1,7 @@
 
 import IfxPy
 
+
 def my_Sample():
     ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxxx;"
 
@@ -12,16 +13,6 @@ def my_Sample():
         print ( e )
         quit()
 
-    SetupSqlSet = [
-        "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;",
-        "insert into t1 values( 1, 'Sunday', 101, 201 );",
-        "insert into t1 values( 2, 'Monday', 102, 202 );",
-        "insert into t1 values( 3, 'Tuesday', 103, 203 );",
-        "insert into t1 values( 4, 'Wednesday', 104, 204 );",
-        "insert into t1 values( 5, 'Thursday', 105, 2005 );",
-        "insert into t1 values( 6, 'Friday', 106, 206 );",
-        "insert into t1 values( 7, 'Saturday', 107, 207 );"
-    ]
 
     try:
         sql = "drop table t1;"
@@ -29,10 +20,31 @@ def my_Sample():
         stmt = IfxPy.exec_immediate(conn, sql)
     except:
         print ('FYI: drop table failed')
-        
-    for sql in SetupSqlSet:
-        print (sql)
-        stmt = IfxPy.exec_immediate(conn, sql)
+
+    sql = "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;"
+    stmt = IfxPy.exec_immediate(conn, sql)
+
+
+    sql = "INSERT INTO t1 (c1, c2, c3, c4) VALUES ( ?, ?, ?, ? )"
+    stmt = IfxPy.prepare(conn, sql)
+
+    c1 = None
+    c2 = None
+    c3 = None
+    c4 = None
+    IfxPy.bind_param(stmt, 1, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
+    IfxPy.bind_param(stmt, 2, c2, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_CHAR)
+    IfxPy.bind_param(stmt, 3, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
+    IfxPy.bind_param(stmt, 4, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
+
+    i = 1
+    while i < 10:
+        c1 = 100 + i
+        c2 = "Testing {0}".format(i)
+        c3 = 20000 + i
+        c4 = 50000 + i
+        IfxPy.execute(stmt, (c1, c2, c3, c4) )
+        i += 1
 
 
     sql = "SELECT * FROM t1"

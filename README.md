@@ -12,7 +12,11 @@ The development activities of the driver are powered by passion, dedication and 
 ### [Installing the driver](#)
 ```bash
 pip install ifxpy
+or  # if Python 3.x then
+pip3 install ifxpy
 ```
+
+
 The **pip install support** is available for **Windows 64, Linux x86_64, Arm7** for both **Python 2.7 and Python 3.4 and up**. For all other platform you may perform a local build. The driver source code is platform neutral and it is expected to build on any platform.
 
 
@@ -99,54 +103,140 @@ Sets the result set pointer to the next row or requested row. Use this function 
 
 import IfxPy
 
-ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxxx;"
+def my_Sample():
+    ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxxx;"
 
-# netstat -a | findstr  9088
-conn = IfxPy.connect( ConStr, "", "")
+    try:
+        # netstat -a | findstr  9088
+        conn = IfxPy.connect( ConStr, "", "")
+    except Exception as e:
+        print ('ERROR: Connect failed')
+        print ( e )
+        quit()
 
-SetupSqlSet = [
-    "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;", 
-    "insert into t1 values( 1, 'Sunday', 101, 201 );",
-    "insert into t1 values( 2, 'Monday', 102, 202 );",
-    "insert into t1 values( 3, 'Tuesday', 103, 203 );",
-    "insert into t1 values( 4, 'Wednesday', 104, 204 );",
-    "insert into t1 values( 5, 'Thursday', 105, 2005 );",
-    "insert into t1 values( 6, 'Friday', 106, 206 );",
-    "insert into t1 values( 7, 'Saturday', 107, 207 );"
-]
+    SetupSqlSet = [
+        "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;",
+        "insert into t1 values( 1, 'Sunday', 101, 201 );",
+        "insert into t1 values( 2, 'Monday', 102, 202 );",
+        "insert into t1 values( 3, 'Tuesday', 103, 203 );",
+        "insert into t1 values( 4, 'Wednesday', 104, 204 );",
+        "insert into t1 values( 5, 'Thursday', 105, 2005 );",
+        "insert into t1 values( 6, 'Friday', 106, 206 );",
+        "insert into t1 values( 7, 'Saturday', 107, 207 );"
+    ]
 
-try:
-    sql = "drop table t1;"
-    print ( sql )
+    try:
+        sql = "drop table t1;"
+        print ( sql )
+        stmt = IfxPy.exec_immediate(conn, sql)
+    except:
+        print ('FYI: drop table failed')
+
+    for sql in SetupSqlSet:
+        print (sql)
+        stmt = IfxPy.exec_immediate(conn, sql)
+
+
+    sql = "SELECT * FROM t1"
     stmt = IfxPy.exec_immediate(conn, sql)
-except:
-    print ('FYI: drop table failed')
-	
-for sql in SetupSqlSet:
-    print (sql)
-    stmt = IfxPy.exec_immediate(conn, sql)
-
-
-sql = "SELECT * FROM t1"
-stmt = IfxPy.exec_immediate(conn, sql)
-dictionary = IfxPy.fetch_both(stmt)
-
-rc = 0
-while dictionary != False:
-    rc = rc + 1
-    print ("--  Record {0} --".format(rc))
-    print ("c1 is : ",  dictionary[0])
-    print ("c2 is : ", dictionary[1])
-    print ("c3 is : ", dictionary["c3"])
-    print ("c4 is : ", dictionary[3])
-    print (" ")
     dictionary = IfxPy.fetch_both(stmt)
 
-IfxPy.close(conn)
+    rc = 0
+    while dictionary != False:
+        rc = rc + 1
+        print ("--  Record {0} --".format(rc))
+        print ("c1 is : ",  dictionary[0])
+        print ("c2 is : ", dictionary[1])
+        print ("c3 is : ", dictionary["c3"])
+        print ("c4 is : ", dictionary[3])
+        print (" ")
+        dictionary = IfxPy.fetch_both(stmt)
 
-print ("Done")
+    IfxPy.close(conn)
+
+    print ("Done")
+
+####### Run the sample function ######
+my_Sample()
+```
+
+---
+#### Param Binding
+```python
+
+import IfxPy
+
+
+def my_Sample():
+    ConStr = "SERVER=ids0;DATABASE=db1;HOST=127.0.0.1;SERVICE=9088;UID=informix;PWD=xxxxx;"
+
+    try:
+        # netstat -a | findstr  9088
+        conn = IfxPy.connect( ConStr, "", "")
+    except Exception as e:
+        print ('ERROR: Connect failed')
+        print ( e )
+        quit()
+
+
+    try:
+        sql = "drop table t1;"
+        print ( sql )
+        stmt = IfxPy.exec_immediate(conn, sql)
+    except:
+        print ('FYI: drop table failed')
+
+    sql = "create table t1 ( c1 int, c2 char(20), c3 int, c4 int ) ;"
+    stmt = IfxPy.exec_immediate(conn, sql)
+
+
+    sql = "INSERT INTO t1 (c1, c2, c3, c4) VALUES ( ?, ?, ?, ? )"
+    stmt = IfxPy.prepare(conn, sql)
+
+    c1 = None
+    c2 = None
+    c3 = None
+    c4 = None
+    IfxPy.bind_param(stmt, 1, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
+    IfxPy.bind_param(stmt, 2, c2, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_CHAR)
+    IfxPy.bind_param(stmt, 3, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
+    IfxPy.bind_param(stmt, 4, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
+
+    i = 1
+    while i < 10:
+        c1 = 100 + i
+        c2 = "Testing {0}".format(i)
+        c3 = 20000 + i
+        c4 = 50000 + i
+        IfxPy.execute(stmt, (c1, c2, c3, c4) )
+        i += 1
+
+
+    sql = "SELECT * FROM t1"
+    stmt = IfxPy.exec_immediate(conn, sql)
+    dictionary = IfxPy.fetch_both(stmt)
+
+    rc = 0
+    while dictionary != False:
+        rc = rc + 1
+        print ("--  Record {0} --".format(rc))
+        print ("c1 is : ",  dictionary[0])
+        print ("c2 is : ", dictionary[1])
+        print ("c3 is : ", dictionary["c3"])
+        print ("c4 is : ", dictionary[3])
+        print (" ")
+        dictionary = IfxPy.fetch_both(stmt)
+
+    IfxPy.close(conn)
+
+    print ("Done")
+
+####### Run the sample function ######
+my_Sample()
 
 ```
+
+
 
 ### [Python Database API Specification v2.0](http://www.python.org/dev/peps/pep-0249/)
 -------------------------------------

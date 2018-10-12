@@ -161,5 +161,8 @@ IfxPy/config.py
 /IfxPy/pic1.jpg
 /IfxPy/spook.png
 try/**
+0.*
+1.*
+tmp.*
 
 

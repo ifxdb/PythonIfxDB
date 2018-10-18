@@ -21,7 +21,8 @@ The **pip install support** is available for **Windows 64, Linux x86_64, Arm7** 
 
 
 #### Runtime Environment
-The Informix Python driver has dependency on **Informix Client SDK version 4.10 xC2 or above**. Make sure to set Informix Client SDK runtime environment before running the Python applications.  
+FYI: **[Informix Client SDK](http://www-01.ibm.com/support/docview.wss?uid=swg27016673) 4.10 xC2 or above** is needed for the driver to make connection to the database. Make sure Informix Client SDK is installed and its environments are set prior to running application.  
+- [Download Informix Client SDK](http://www-01.ibm.com/support/docview.wss?uid=swg27016673)
 
 Say **INFORMIXDIR** is the location where you have installed Informix Client SDK.
 ##### Linux

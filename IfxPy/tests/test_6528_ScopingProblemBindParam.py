@@ -15,16 +15,16 @@ class IfxPyTestCase(unittest.TestCase):
     obj = IfxPyTestFunctions()
     obj.assert_expect(self.run_test_6528)
 
-  def checked_db2_execute(self, stmt):
+  def checked_ids_execute(self, stmt):
     IfxPy.execute(stmt)
     row = IfxPy.fetch_tuple(stmt)
     for i in row:
       print i
-     
+
   def run_test_6528(self):
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     server = IfxPy.server_info( conn )
-    
+
     if conn:
       if (server.DBMS_NAME[0:3] == 'Inf'):
         sql = "SELECT TRIM(TRAILING FROM name) FROM animals WHERE breed = ?"
@@ -33,7 +33,7 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.prepare(conn, sql)
       var = "cat"
       IfxPy.bind_param(stmt, 1, var, IfxPy.SQL_PARAM_INPUT)
-      self.checked_db2_execute(stmt)
+      self.checked_ids_execute(stmt)
       IfxPy.close(conn)
     else:
       print "Connection failed."

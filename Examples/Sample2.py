@@ -1,4 +1,4 @@
-
+# Sample2.py
 import IfxPy
 
 
@@ -32,36 +32,44 @@ def my_Sample():
     c2 = None
     c3 = None
     c4 = None
+    # Create bindings for the parameter
     IfxPy.bind_param(stmt, 1, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
     IfxPy.bind_param(stmt, 2, c2, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_CHAR)
     IfxPy.bind_param(stmt, 3, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
     IfxPy.bind_param(stmt, 4, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
 
-    i = 1
+    print("Inserting Recors ......")
+    i = 0
     while i < 10:
+        i += 1
         c1 = 100 + i
         c2 = "Testing {0}".format(i)
         c3 = 20000 + i
         c4 = 50000 + i
+        # supply new values as a tuple
         IfxPy.execute(stmt, (c1, c2, c3, c4) )
-        i += 1
 
 
+    # Try select those rows we have just inserted
+    print("Selecting Recors ......")
     sql = "SELECT * FROM t1"
     stmt = IfxPy.exec_immediate(conn, sql)
-    dictionary = IfxPy.fetch_both(stmt)
-
+    tu = IfxPy.fetch_tuple(stmt)
     rc = 0
-    while dictionary != False:
-        rc = rc + 1
-        print ("--  Record {0} --".format(rc))
-        print ("c1 is : ",  dictionary[0])
-        print ("c2 is : ", dictionary[1])
-        print ("c3 is : ", dictionary["c3"])
-        print ("c4 is : ", dictionary[3])
-        print (" ")
-        dictionary = IfxPy.fetch_both(stmt)
+    while tu != False:
+        rc += 1
+        print( tu )
+        tu = IfxPy.fetch_tuple(stmt)
 
+    print()
+    print( "Total Record Inserted {}".format(i) )
+    print( "Total Record Selected {}".format(rc) )
+
+    # Free up memory used by result and then stmt too
+    IfxPy.free_result(stmt)
+    IfxPy.free_stmt (stmt)
+
+    # close the connection
     IfxPy.close(conn)
 
     print ("Done")

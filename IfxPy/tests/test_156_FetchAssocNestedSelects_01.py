@@ -5,7 +5,6 @@
 #
 
 # This test will use a lot of the heap size allocated
-# for DB2.  If is is failing on your system, please 
 # increase the application heap size.
 
 import unittest, sys

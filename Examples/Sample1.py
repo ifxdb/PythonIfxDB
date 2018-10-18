@@ -1,4 +1,5 @@
 
+# Sample1.py
 import IfxPy
 
 def my_Sample():
@@ -29,19 +30,24 @@ def my_Sample():
         stmt = IfxPy.exec_immediate(conn, sql)
     except:
         print ('FYI: drop table failed')
-        
+
+    i = 0
     for sql in SetupSqlSet:
+        i += 1
         print (sql)
         stmt = IfxPy.exec_immediate(conn, sql)
 
+    # The first record executed is for create table
+    i -= 1
 
+    # Select records
     sql = "SELECT * FROM t1"
     stmt = IfxPy.exec_immediate(conn, sql)
     dictionary = IfxPy.fetch_both(stmt)
 
     rc = 0
     while dictionary != False:
-        rc = rc + 1
+        rc += 1
         print ("--  Record {0} --".format(rc))
         print ("c1 is : ",  dictionary[0])
         print ("c2 is : ", dictionary[1])
@@ -49,6 +55,14 @@ def my_Sample():
         print ("c4 is : ", dictionary[3])
         print (" ")
         dictionary = IfxPy.fetch_both(stmt)
+
+    print()
+    print( "Total Record Inserted {}".format(i) )
+    print( "Total Record Selected {}".format(rc) )
+
+    # Free up memory used by result and then stmt too
+    IfxPy.free_result(stmt)
+    IfxPy.free_stmt (stmt)
 
     IfxPy.close(conn)
 

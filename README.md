@@ -84,7 +84,7 @@ IfxPy.close(conn)
 
 
 #### Simple Query 
-The driver APIs used in this example are from the set of **Advanced native extension module APIs**  
+The driver APIs used in this example are from the set of **Advanced native extension module APIs**   
 
 ##### FYI: IfxPy fetch functions
 * IfxPy.fetch_tuple()  
@@ -99,9 +99,15 @@ Returns a dictionary, indexed by both column name and position, representing a r
 * IfxPy.fetch_row()  
 Sets the result set pointer to the next row or requested row. Use this function to iterate through a result set.  
 
+* free_result()  
+Frees resources associated with a result set  
+
+* free_stmt()  
+Frees resources associated with the indicated statement resource  
+
 
 ```python
-
+# Sample1.py
 import IfxPy
 
 def my_Sample():
@@ -133,18 +139,23 @@ def my_Sample():
     except:
         print ('FYI: drop table failed')
 
+    i = 0
     for sql in SetupSqlSet:
+        i += 1
         print (sql)
         stmt = IfxPy.exec_immediate(conn, sql)
 
+    # The first record executed is for create table
+    i -= 1
 
+    # Select records
     sql = "SELECT * FROM t1"
     stmt = IfxPy.exec_immediate(conn, sql)
     dictionary = IfxPy.fetch_both(stmt)
 
     rc = 0
     while dictionary != False:
-        rc = rc + 1
+        rc += 1
         print ("--  Record {0} --".format(rc))
         print ("c1 is : ",  dictionary[0])
         print ("c2 is : ", dictionary[1])
@@ -153,18 +164,28 @@ def my_Sample():
         print (" ")
         dictionary = IfxPy.fetch_both(stmt)
 
+    print()
+    print( "Total Record Inserted {}".format(i) )
+    print( "Total Record Selected {}".format(rc) )
+
+    # Free up memory used by result and then stmt too
+    IfxPy.free_result(stmt)
+    IfxPy.free_stmt (stmt)
+
     IfxPy.close(conn)
 
     print ("Done")
 
 ####### Run the sample function ######
 my_Sample()
+
 ```
 
 ---
 #### Param Binding
-```python
 
+```python
+# Sample2.py
 import IfxPy
 
 
@@ -198,42 +219,51 @@ def my_Sample():
     c2 = None
     c3 = None
     c4 = None
+    # Create bindings for the parameter
     IfxPy.bind_param(stmt, 1, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
     IfxPy.bind_param(stmt, 2, c2, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_CHAR)
     IfxPy.bind_param(stmt, 3, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
     IfxPy.bind_param(stmt, 4, c1, IfxPy.SQL_PARAM_INPUT, IfxPy.SQL_INTEGER)
 
-    i = 1
+    print("Inserting Recors ......")
+    i = 0
     while i < 10:
+        i += 1
         c1 = 100 + i
         c2 = "Testing {0}".format(i)
         c3 = 20000 + i
         c4 = 50000 + i
+        # supply new values as a tuple
         IfxPy.execute(stmt, (c1, c2, c3, c4) )
-        i += 1
 
 
+    # Try select those rows we have just inserted
+    print("Selecting Recors ......")
     sql = "SELECT * FROM t1"
     stmt = IfxPy.exec_immediate(conn, sql)
-    dictionary = IfxPy.fetch_both(stmt)
-
+    tu = IfxPy.fetch_tuple(stmt)
     rc = 0
-    while dictionary != False:
-        rc = rc + 1
-        print ("--  Record {0} --".format(rc))
-        print ("c1 is : ",  dictionary[0])
-        print ("c2 is : ", dictionary[1])
-        print ("c3 is : ", dictionary["c3"])
-        print ("c4 is : ", dictionary[3])
-        print (" ")
-        dictionary = IfxPy.fetch_both(stmt)
+    while tu != False:
+        rc += 1
+        print( tu )
+        tu = IfxPy.fetch_tuple(stmt)
 
+    print()
+    print( "Total Record Inserted {}".format(i) )
+    print( "Total Record Selected {}".format(rc) )
+
+    # Free up memory used by result and then stmt too
+    IfxPy.free_result(stmt)
+    IfxPy.free_stmt (stmt)
+
+    # close the connection
     IfxPy.close(conn)
 
     print ("Done")
 
 ####### Run the sample function ######
 my_Sample()
+
 
 ```
 

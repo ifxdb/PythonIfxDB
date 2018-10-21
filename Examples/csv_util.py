@@ -12,6 +12,14 @@ import pandas as pd
 # d = {"a":1, "b":2}
 # Sets are made using the set() builtin function
 
+# Python List vs. Tuples (Key points to remember)
+# The literal syntax of tuples is shown by parentheses ()
+# whereas the literal syntax of lists is shown by square brackets []
+# Lists has variable length, tuple has fixed length.
+# List has mutable nature, tuple has immutable nature.
+# List has more functionality than the tuple.
+
+
 # Basics of creating Pandas DataFrames from Lists and Dictionaries
 # http://pbpython.com/pandas-list-dict.html
 # https://www.datacamp.com/community/tutorials/pandas-read-csv

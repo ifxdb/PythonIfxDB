@@ -11455,6 +11455,60 @@ static int _python_get_variable_type(PyObject *variable_value)
     else return 0;
 }
 
+//////////////////////////////////////////////////////////////
+// We can use this for SPEED TEST between Py and C
+// Find the number of prime numbers between X and Y
+static PyObject *SpeedTestWithCPrimeCount(PyObject *self, PyObject *args)
+{
+	int i = 0;
+	int j = 0;
+	int x = 0;
+	int y = 0;
+	int VRange = 0;
+	int isPrime = 0;
+	int PrimeCount = 0;
+
+	//printf("\n");
+	if (!PyArg_ParseTuple(args, "ii", &x, &y))
+	{
+		return NULL;
+	}
+
+	if (x < 2)
+		x = 2;
+
+	++y;
+	for ( i=x; i<y; i++)
+	{
+		isPrime = 1;
+
+		VRange = i / 2; //This Validation Range is good enough
+		++VRange;
+		for (j=2; j<VRange; j++)
+		{
+			// Check whether it is  divisible by any number other than 1
+			if ( !(i%j) )
+			{
+				isPrime = 0;
+				break;
+			}
+		}
+
+		if (isPrime)
+		{
+			//printf(" [%d] ", i);
+			++PrimeCount;
+		}
+	}
+
+	PyObject *ret = Py_BuildValue("i", PrimeCount);
+	return ret;
+}
+
+
+//////////////////////////////////////////////////////////////
+
+
 /* Listing of IfxPy module functions: */
 static PyMethodDef IfxPy_Methods[] = {
     /* name, function, argument type, docstring */
@@ -11512,6 +11566,7 @@ static PyMethodDef IfxPy_Methods[] = {
     { "table_privileges", (PyCFunction)IfxPy_table_privileges, METH_VARARGS, "Returns a result set listing the tables and associated privileges in a database" },
     { "tables", (PyCFunction)IfxPy_tables, METH_VARARGS, "Returns a result set listing the tables and associated metadata in a database" },
     { "get_last_serial_value", (PyCFunction)IfxPy_get_last_serial_value, METH_VARARGS, "Returns last serial value inserted for identity column" },
+    { "SpeedTestWithCPrimeCount", (PyCFunction)SpeedTestWithCPrimeCount, METH_VARARGS, "Used for Speed Test C & Python function by counting number of prime numbers between X and Y" },
 
     // An end-of-listing sentinel:
     { NULL, NULL, 0, NULL }

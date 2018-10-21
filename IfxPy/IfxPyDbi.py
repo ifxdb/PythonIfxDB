@@ -1413,3 +1413,41 @@ class Cursor(object):
             return row
         else:
             return tuple(row_list)
+
+
+#################################################
+# We can use this for SPEED TEST between Py and C
+# Find the number of prime numbers between X and Y
+# The equivalent C function is SpeedTestWithCPrimeCount
+def SpeedTestWithPyPrimeCount(x, y):
+    i = 0
+    j = 0
+    VRange = 0.0
+    isPrime = 0
+    PrimeCount = 0
+
+    if x < 2:
+        x = 2
+
+    y += 1
+    i = x
+    while ( i < y):
+        isPrime = 1
+        VRange = i / 2 # This Validation Range is good enough
+
+        j = 2
+        VRange += 1
+        while ( j < VRange ):
+            if ( i%j == 0):
+                j += 1
+                isPrime = 0
+                break
+            j += 1
+
+        if (isPrime):
+            #print( ' [{:d}] '.format(i))
+            PrimeCount += 1
+
+        i += 1
+
+    return PrimeCount

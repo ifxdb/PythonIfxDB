@@ -9,7 +9,7 @@ from distutils.core import Extension
 
 
 PACKAGE   = 'IfxPy'
-VERSION   = '3.0.1'
+VERSION   = '3.0.2'
 VERSION2X = '2.7.1'
 LICENSE   = 'Apache License 2.0'
 IfxPyLongDescription='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
@@ -115,7 +115,7 @@ setup (name    = PACKAGE,
            'Programming Language :: Python :: 3.5',
            'Programming Language :: Python :: 3.6',
            'Programming Language :: Python :: 3.7',
-           #'Operating System :: Microsoft :: Windows',
+           'Operating System :: Microsoft :: Windows',
            'Operating System :: POSIX',
            'Programming Language :: Python :: Implementation :: CPython',
        ],

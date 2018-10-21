@@ -14,7 +14,7 @@ VERSION2X = '2.7.1'
 LICENSE   = 'Apache License 2.0'
 IfxPyLongDescription='Informix native Python driver is a high performing data access interface suitable for highly scalable enterprise and IoT solutions to works with Informix database.'
 
-# Python 3.4 and up and not commit to Python 4 support yet 
+# Python 3.4 and up and not commit to Python 4 support yet
 PYTHON_REQ = '~=3.4'
 
 PYTHON_REQ_2X = '>=2.7, <3'
@@ -73,12 +73,12 @@ else:
     VERSION    = VERSION2X
     PYTHON_REQ = PYTHON_REQ_2X
 
-setup (name    = PACKAGE, 
+setup (name    = PACKAGE,
        version = VERSION,
        license = LICENSE,
        description      = 'Informix native Python driver',
        long_description = IfxPyLongDescription,
-       
+
        # The project's main homepage.
        #url='https://openinformix.github.io/IfxPy/',
        project_urls={

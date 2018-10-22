@@ -1,5 +1,5 @@
 #//////////////////////////////////////////////////////////////////////////
-# Copyright 2017 OpenInformix 
+# Copyright 2017 OpenInformix
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ if sys.version_info < (3, ):
    exception = exceptions.StandardError
 else:
    exception = Exception
-   
+
 import IfxPy
 __version__ = IfxPy.__version__
 
@@ -74,7 +74,7 @@ class Error(exception):
     """This is the base class of all other exception thrown by this
     module.  It can be use to catch all exceptions with a single except
     statement.
-    
+
     """
     def __init__(self, message):
         """This is the constructor which take one string argument."""
@@ -86,7 +86,7 @@ class Error(exception):
 
 
 class Warning(exception):
-    """This exception is used to inform the user about important 
+    """This exception is used to inform the user about important
     warnings such as data truncations.
 
     """
@@ -125,7 +125,7 @@ class OperationalError(DatabaseError):
     not under the programmer control occur, such as unexpected
     disconnect.
 
-    """ 
+    """
     pass
 
 
@@ -224,7 +224,7 @@ class DBAPITypeObject(frozenset):
     """
     def __new__(cls, col_types):
         return frozenset.__new__(cls, col_types)
-        
+
     def __init__(self, col_types):
         """Constructor for DBAPITypeObject.  It takes a tuple of 
         database column type as an argument.
@@ -245,21 +245,21 @@ class DBAPITypeObject(frozenset):
                 return -1
         else:
             return 1
-            
+
     def __eq__(self, cmp):
         """This method checks if the string compared with is in the 
         tuple provided to the constructor of this object.  It takes 
         string as an argument. 
         """
         return cmp in self.col_types
-           
+
     def __ne__(self, cmp):
         """This method checks if the string compared with is not in the 
         tuple provided to the constructor of this object.  It takes 
         string as an argument. 
         """
         return cmp not in self.col_types
-        
+
     def __hash__(self):
         return id(self)
 
@@ -291,13 +291,13 @@ DATETIME = DBAPITypeObject(("TIMESTAMP",))
 
 ROWID = DBAPITypeObject(())
 
-# This method is used to determine the type of error that was 
-# generated.  It takes an exception instance as an argument, and 
+# This method is used to determine the type of error that was
+# generated.  It takes an exception instance as an argument, and
 # returns exception object of the appropriate type.
 def _get_exception(inst):
     # These tuple are used to determine the type of exceptions that are
     # thrown by the database.  They store the SQLSTATE code and the
-    # SQLSTATE class code(the 2 digit prefix of the SQLSTATE code)  
+    # SQLSTATE class code(the 2 digit prefix of the SQLSTATE code)
     warning_error_tuple = ('01', )
     data_error_tuple = ('02', '22', '10601', '10603', '10605', '10901', '10902', 
                                                                '38552', '54')
@@ -359,11 +359,11 @@ def _get_exception(inst):
                                      "Failed to Allocate Memory for XML Data",
                                      "Failed to Allocate Memory for LOB Data")
 
-    # First check if the exception is from the database.  If it is 
-    # determine the SQLSTATE code which is used further to determine 
-    # the exception type.  If not check if the exception is thrown by 
-    # by the driver and return the appropriate exception type.  If it 
-    # is not possible to determine the type of exception generated 
+    # First check if the exception is from the database.  If it is
+    # determine the SQLSTATE code which is used further to determine
+    # the exception type.  If not check if the exception is thrown by
+    # by the driver and return the appropriate exception type.  If it
+    # is not possible to determine the type of exception generated
     # return the generic Error exception.
     if inst is not None:
         message = repr(inst)
@@ -387,7 +387,7 @@ def _get_exception(inst):
                     return OperationalError(message)
             for key in database_exceptions:
                 if message.find(key) != -1:
-                    return DatabaseError(message)  
+                    return DatabaseError(message)
             for key in statement_exceptions:
                 if message.find(key) != -1:
                     return DatabaseError(message)
@@ -397,7 +397,7 @@ def _get_exception(inst):
 
     # First check if the SQLSTATE is in the tuples, if not check
     # if the SQLSTATE class code is in the tuples to determine the
-    # exception type. 
+    # exception type.
     if ( error_code in warning_error_tuple or 
          prefix_code in warning_error_tuple ):
         return Warning(message)
@@ -424,16 +424,13 @@ def _get_exception(inst):
 def _server_connect(ConStr, user='', password='', host=''):
     """This method create connection with server
     """
-    
+
     if ConStr is None:
         raise InterfaceError("ConStr value should not be None")
-    
-    if (not isinstance(ConStr, str)) | \
-       (not isinstance(user, str)) | \
-       (not isinstance(password, str)) | \
-       (not isinstance(host, str)):
+
+    if (not isinstance(ConStr, str)) | (not isinstance(user, str)) | (not isinstance(password, str)) | (not isinstance(host, str)):
         raise InterfaceError("Arguments should be of type string or unicode")
-    
+
     # If the ConStr does not contain port and protocal adding database
     # and hostname is no good.  Add these when required, that is,
     # if there is a '=' in the ConStr.  Else the ConStr string is taken to be
@@ -451,27 +448,23 @@ def _server_connect(ConStr, user='', password='', host=''):
         ConStr = ConStr + "UID=" + user + ";"
     if password != '' and ConStr.find('PWD=') == -1:
         ConStr = ConStr + "PWD=" + password + ";"
-    try:    
+    try:
         conn = IfxPy.connect(ConStr, '', '')
     except Exception as inst:
         raise _get_exception(inst)
-    
+
     return conn
-    
-  
+
+
 def connect(ConStr, user='', password='', host='', database='', conn_options=None):
     """This method creates a non persistent connection to the database. It returns
         a ifx_pydb.Connection object.
     """
-    
+
     if ConStr is None:
         raise InterfaceError("connect expects a not None ConStr value") 
-    
-    if (not isinstance(ConStr, str)) | \
-       (not isinstance(user, str)) | \
-       (not isinstance(password, str)) | \
-       (not isinstance(host, str)) | \
-       (not isinstance(database, str)):
+
+    if (not isinstance(ConStr, str)) | (not isinstance(user, str)) | (not isinstance(password, str)) | (not isinstance(host, str)) | (not isinstance(database, str)):
         raise InterfaceError("connect expects the first five arguments to"
                                                       " be of type string or unicode")
     if conn_options is not None:
@@ -499,7 +492,7 @@ def connect(ConStr, user='', password='', host='', database='', conn_options=Non
         ConStr = ConStr + "UID=" + user + ";"
     if password != '' and ConStr.find('PWD=') == -1:
         ConStr = ConStr + "PWD=" + password + ";"
-    try:    
+    try:
         conn = IfxPy.connect(ConStr, '', '', conn_options)
         #IfxPy.set_option(conn, {SQL_ATTR_CURRENT_SCHEMA : user}, 1)
     except Exception as inst:
@@ -676,7 +669,7 @@ class Connection(object):
         except Exception as inst:
           raise _get_exception(inst)
         return tuple(server_info)
-    
+
     def set_case(self, str_value):
         return str_value.lower()
 
@@ -685,20 +678,20 @@ class Connection(object):
         """Input: connection - IfxPy.IFXConnection object
            Return: sequence of table metadata dicts for the specified schema
         """
-            
+
         result = []
         if schema_name is not None:
             schema_name = self.set_case(schema_name)
         if table_name is not None:
             table_name = self.set_case(table_name)
 
-        try:      
+        try:
           stmt = IfxPy.tables(self.conn_handler, None, schema_name, table_name)
           row = IfxPy.fetch_assoc(stmt)
           i = 0
           while (row):
               result.append( row )
-              i += 1    
+              i += 1
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
         except Exception as inst:
@@ -736,13 +729,13 @@ class Connection(object):
           while (row):
               if row['TYPE'] == SQL_INDEX_OTHER:
                   result.append( row )
-              i += 1    
+              i += 1
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
         except Exception as inst:
           raise _get_exception(inst)
 
-        return result        
+        return result
 
     # Retrieves metadata pertaining to primary keys for specified schema (and/or table name)
     def primary_keys(self, unique=True, schema_name=None, table_name=None):
@@ -770,13 +763,13 @@ class Connection(object):
           i = 0
           while (row):
               result.append( row )
-              i += 1    
+              i += 1
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
         except Exception as inst:
           raise _get_exception(inst)
 
-        return result        
+        return result
 
     # Retrieves metadata pertaining to foreign keys for specified schema (and/or table name)
     def foreign_keys(self, unique=True, schema_name=None, table_name=None):
@@ -784,7 +777,7 @@ class Connection(object):
            Return: sequence of FK metadata dicts for the specified table
         Example:
            FK metadata retrieved from 'PYTHONIC.ENGINE_EMAIL_ADDRESSES' table
-           {  
+           {
            'PKTABLE_SCHEM': 'PYTHONIC',                 'PKTABLE_CAT':    None, 
            'PKTABLE_NAME':  'ENGINE_USERS',             'FKTABLE_CAT':    None,
            'PKCOLUMN_NAME': 'USER_ID',                  'UPDATE_RULE':    3,
@@ -808,14 +801,14 @@ class Connection(object):
           i = 0
           while (row):
               result.append( row )
-              i += 1    
+              i += 1
               row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
         except Exception as inst:
           raise _get_exception(inst)
 
-        return result        
-    
+        return result
+
     # Retrieves the columns for a specified schema (and/or table name and column name)
     def columns(self, schema_name=None, table_name=None, column_names=None):
         """Input: connection - IfxPy.IFXConnection object
@@ -847,7 +840,7 @@ class Connection(object):
           i = 0
           while (row):
             result.append( row )
-            i += 1    
+            i += 1
             row = IfxPy.fetch_assoc(stmt)
           IfxPy.free_result(stmt)
 
@@ -873,7 +866,7 @@ class Cursor(object):
     """This class represents a cursor of the connection.  It can be
     used to process an SQL statement.
     """
-    
+
     # This method is used to get the description attribute.
     def __get_description(self):
         """ If this method has already been called, after executing a select statement,
@@ -885,7 +878,7 @@ class Cursor(object):
         if self.stmt_handler is None:
             return None
         self.__description = []
-        
+
         try:
             num_columns = IfxPy.num_fields(self.stmt_handler)
             """ If the execute statement did not produce a result set return None.
@@ -910,9 +903,9 @@ class Cursor(object):
                 elif NUMBER == type:
                     column_desc.append(NUMBER)
                 elif BIGINT == type:
-                    column_desc.append(BIGINT) 
+                    column_desc.append(BIGINT)
                 elif FLOAT == type:
-                    column_desc.append(FLOAT)                
+                    column_desc.append(FLOAT)
                 elif DECIMAL == type:
                     column_desc.append(DECIMAL)
                 elif DATE == type:
@@ -929,16 +922,16 @@ class Cursor(object):
 
                 column_desc.append(IfxPy.field_display_size(
                                              self.stmt_handler, column_index))
-                
+
                 column_desc.append(IfxPy.field_precision(
                                              self.stmt_handler, column_index))
 
                 column_desc.append(IfxPy.field_scale(self.stmt_handler,
                                                                 column_index))
-                                                                
+
                 column_desc.append(IfxPy.field_nullable(
                                              self.stmt_handler, column_index))
-                                             
+
                 self.__description.append(column_desc)
         except Exception as inst:
             self.messages.append(_get_exception(inst))
@@ -946,41 +939,41 @@ class Cursor(object):
 
         return self.__description
 
-    # This attribute provides the metadata information of the columns  
+    # This attribute provides the metadata information of the columns
     # in the result set produced by the last execute function.  It is
     # a read only attribute.
     description = property(fget = __get_description)
 
-    # This method is used to get the rowcount attribute. 
+    # This method is used to get the rowcount attribute.
     def __get_rowcount( self ):
         return self.__rowcount
 
     def __iter__( self ):
         return self
-        
+
     def next( self ):
         row = self.fetchone()
         if row == None:
             raise StopIteration
         return row
-        
+
     # This attribute specifies the number of rows the last executeXXX()
-    # produced or affected.  It is a read only attribute. 
+    # produced or affected.  It is a read only attribute.
     rowcount = property(__get_rowcount, None, None, "")
-    
+
     # This method is used to get the Connection object
     def __get_connection( self ):
         return self.__connection
-    
+
     # This attribute specifies the connection object.
-    # It is a read only attribute. 
+    # It is a read only attribute.
     connection = property(__get_connection, None, None, "")
 
     def __init__(self, conn_handler, conn_object=None):
         """Constructor for Cursor object. It takes IfxPy connection
         handler as an argument.
         """
-        
+
         # This attribute is used to determine the fetch size for fetchmany
         # operation. It is a read/write attribute
         self.arraysize = 1
@@ -1033,7 +1026,7 @@ class Cursor(object):
                     param = str(param)
                 buff.append(param)
             parameters = tuple(buff)
-            
+
             try:
                 result = IfxPy.callproc(self.conn_handler, procname,parameters)
             except Exception as inst:
@@ -1046,7 +1039,7 @@ class Cursor(object):
                 self.messages.append(_get_exception(inst))
                 raise self.messages[len(self.messages) - 1]
         return result
-       
+
 
     def callproc(self, procname, parameters=None):
         """This method can be used to execute a stored procedure.  
@@ -1074,7 +1067,7 @@ class Cursor(object):
         self._result_set_produced = True
         return return_value
 
-    # Helper for preparing an SQL statement. 
+    # Helper for preparing an SQL statement.
     def _prepare_helper(self, operation, parameters=None):
         try:
             IfxPy.free_stmt(self.stmt_handler)
@@ -1110,14 +1103,14 @@ class Cursor(object):
         if parameters is not None:
             buff = []
             CONVERT_STR = (buffer)
-            # Convert date/time and binary objects to string for 
-            # inserting into the database. 
+            # Convert date/time and binary objects to string for
+            # inserting into the database.
             for param in parameters:
                 if isinstance(param, CONVERT_STR):
                     param = str(param)
                 buff.append(param)
             parameters = tuple(buff)
-            try:                
+            try:
                 return_value = IfxPy.execute(self.stmt_handler, parameters)
                 if not return_value:
                     if IfxPy.conn_errormsg() is not None:
@@ -1144,8 +1137,7 @@ class Cursor(object):
                 raise self.messages[len(self.messages) - 1]
         return return_value
 
-    # This method is used to set the rowcount after executing an SQL 
-    # statement. 
+    # This method is used to set the rowcount after executing an SQL statement.
     def _set_rowcount(self):
         self.__rowcount = -1
         if not self._result_set_produced:
@@ -1237,7 +1229,7 @@ class Cursor(object):
         if not isinstance(seq_parameters, (types.ListType, types.TupleType)):
             self.messages.append(InterfaceError("executemany expects the second argument to be of type list or tuple of sequence."))
             raise self.messages[len(self.messages) - 1]
-        
+
         CONVERT_STR = (buffer)
         # Convert date/time and binary objects to string for
         # inserting into the database.
@@ -1269,7 +1261,7 @@ class Cursor(object):
                     raise self.messages[len(self.messages) - 1]
                 if IfxPy.stmt_errormsg() is not None:
                     self.messages.append(Error(str(IfxPy.stmt_errormsg())))
-                    raise self.messages[len(self.messages) - 1]   
+                    raise self.messages[len(self.messages) - 1]
         except Exception as inst:
             self._set_rowcount()
             self.messages.append(Error(inst))
@@ -1278,7 +1270,7 @@ class Cursor(object):
 
     def _fetch_helper(self, fetch_size=-1):
         """
-        This method is a helper function for fetching fetch_size number of 
+        This method is a helper function for fetching fetch_size number of
         rows, after executing an SQL statement which produces a result set.
         It takes the number of rows to fetch as an argument.
         If this is not provided it fetches all the remaining rows.
@@ -1291,20 +1283,19 @@ class Cursor(object):
             raise  self.messages[len(self.messages) - 1]
         row_list = []
         rows_fetched = 0
-        while (fetch_size == -1) or \
-              (fetch_size != -1 and rows_fetched < fetch_size):
+        while (fetch_size == -1) or (fetch_size != -1 and rows_fetched < fetch_size):
             try:
                 row = IfxPy.fetch_tuple(self.stmt_handler)
             except Exception as inst:
                 if IfxPy.stmt_errormsg() is not None:
                     self.messages.append(Error(str(IfxPy.stmt_errormsg())))
-                else:    
+                else:
                     self.messages.append(_get_exception(inst))
                 if len(row_list) == 0:
                     raise self.messages[len(self.messages) - 1]
                 else:
                     return row_list
-            
+
             if row != False:
                 if self.FIX_RETURN_TYPE == 1:
                     row_list.append(self._fix_return_data_type(row))
@@ -1318,7 +1309,7 @@ class Cursor(object):
     def fetchone(self):
         """This method fetches one row from the database, after 
         executing an SQL statement which produces a result set.
-        
+
         """
         row_list = self._fetch_helper(1)
         if len(row_list) == 0:
@@ -1361,9 +1352,9 @@ class Cursor(object):
             self.messages.append(ProgrammingError("The last call to execute did not produce any result set."))
             raise self.messages[len(self.messages) - 1]
         try:
-            # Store all the stmt handler that were created.  The 
-            # handler was the one created by the execute method.  It 
-            # should be used to get next result set. 
+            # Store all the stmt handler that were created.
+            # The handler was the one created by the execute method.
+            # It should be used to get next result set.
             self.__description = None
             self._all_stmt_handlers.append(self.stmt_handler)
             self.stmt_handler = IfxPy.next_result(self._all_stmt_handlers[0])
@@ -1374,7 +1365,7 @@ class Cursor(object):
         if self.stmt_handler == False:
             self.stmt_handler = None
         if self.stmt_handler == None:
-            return None 
+            return None
         return True
 
     def setinputsizes(self, sizes):
@@ -1385,8 +1376,8 @@ class Cursor(object):
         """This method currently does nothing."""
         pass
 
-    # This method is used to convert a string representing decimal 
-    # and binary data in a row tuple fetched from the database 
+    # This method is used to convert a string representing decimal
+    # and binary data in a row tuple fetched from the database
     # to decimal and binary objects, for returning it to the user.
     def _fix_return_data_type(self, row):
         row_list = None
@@ -1404,7 +1395,7 @@ class Cursor(object):
                     elif type == 'DECIMAL':
                         if row_list is None:
                             row_list = list(row)
-                        row_list[index] = decimal.Decimal(str(row[index]).replace(",", "."))    
+                        row_list[index] = decimal.Decimal(str(row[index]).replace(",", "."))
 
                 except Exception as inst:
                     self.messages.append(DataError("Data type format error: "+ str(inst)))

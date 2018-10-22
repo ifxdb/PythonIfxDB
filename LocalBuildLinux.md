@@ -74,6 +74,8 @@ $ cd /work/dev/Python
 $ sudo ./configure --enable-unicode=ucs4
 $ sudo make
 
+$ sudo make install
+
 # /work/dev/Python to be added to the path
 # install is not needed for driver build thouhg
 # sudo altinstall

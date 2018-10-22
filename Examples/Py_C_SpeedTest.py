@@ -63,7 +63,8 @@ def Main( x, y ):
 
     rc3 = dbapi2.SpeedTestWithPyPrimeCount( x, y)
 
-    # Try enhancing Python function to improve the result, then you may use 'MySpeedTestWithPyPrimeCount()'
+    # Try enhancing Python function to improve the result,
+    # then you may use 'MySpeedTestWithPyPrimeCount()'
     # rc3 = MySpeedTestWithPyPrimeCount( x, y)
 
     e = datetime.datetime.now()
@@ -72,11 +73,11 @@ def Main( x, y ):
     if rc3 == rc3_c:
         print(' ')
         print('Time taken by :')
-        print('     Natice function = {};'.format(delta_c))
+        print('     Native function = {};'.format(delta_c))
         print('     Python function = {};'.format(delta_py))
         print(' ')
         r = delta_py / delta_c
-        print( "The Natice C function appeared to be {0:.2f} times faster".format( r ))
+        print( "The Native C function appeared to be {0:.2f} times faster".format( r ))
     else:
         print( "Error: Prime Count not matching C={} Py={}".format(rc3_c, rc3))
 

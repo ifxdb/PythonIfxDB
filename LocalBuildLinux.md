@@ -52,15 +52,18 @@ cd /work/dev
 rm ./Python
 sudo rm -rf ./Python-2.7.13
 # sudo rm -rf ./Python-3.6.4
+sudo rm -rf ./Python-3.7.1
 
 wget https://www.python.org/ftp/python/2.7.14/Python-2.7.13.tgz
-# wget https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tgz
+# If Python 3.x
+# wget https://www.python.org/ftp/python/3.7.1/Python-3.7.1.tgz
+wget https://www.python.org/ftp/python/3.7.1/Python-3.7.1.tgz
 
 tar zxvf Python-2.7.13.tgz
-# tar zxvf Python-3.6.4.tgz
+# tar zxvf Python-3.7.1.tgz
 
 ln -s  ./Python-2.7.13  ./Python
-# ln -s  ./Python-3.6.4  ./Python
+# ln -s  ./Python-3.7.1  ./Python
 
 cd /work/dev/Python
 sudo ./configure --enable-unicode=ucs4

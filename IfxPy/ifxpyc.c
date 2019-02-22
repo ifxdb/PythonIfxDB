@@ -8564,7 +8564,7 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
 
             case SQL_LONGVARCHAR:
             case SQL_WLONGVARCHAR:
-                tmp_length = stmt_res->column_info [column_number].size;
+                tmp_length = out_length;
 
                 wout_ptr = (SQLWCHAR *)ALLOC_N(SQLWCHAR, tmp_length + 1);
                 if (wout_ptr == NULL)

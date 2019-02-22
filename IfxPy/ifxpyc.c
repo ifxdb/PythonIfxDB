@@ -1049,6 +1049,9 @@ static int _python_IfxPy_bind_column_helper(stmt_handle *stmt_res)
         case SQL_WCHAR:
         case SQL_WVARCHAR:
             in_length = stmt_res->column_info [i].size + 1;
+            if ( in_length > INT_MAX )
+                        /* this is a LO, force SQLFetch truncation to get len */
+                        in_length = 0;
             row_data->w_val = (SQLWCHAR *)ALLOC_N(SQLWCHAR, in_length);
             rc = SQLBindCol((SQLHSTMT)stmt_res->hstmt, (SQLUSMALLINT)(i + 1),
                             SQL_C_WCHAR, row_data->w_val, in_length * sizeof(SQLWCHAR),
@@ -1090,6 +1093,9 @@ static int _python_IfxPy_bind_column_helper(stmt_handle *stmt_res)
             else
             {
                 in_length = stmt_res->column_info [i].size + 1;
+                if ( in_length > INT_MAX )
+                        /* this is a LO, force SQLFetch truncation to get len */
+                        in_length = 0;		    
                 row_data->str_val = (SQLCHAR *)ALLOC_N(char, in_length);
                 if (row_data->str_val == NULL)
                 {
@@ -8672,10 +8678,43 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
                 }
                 else
                 {
-                    value = PyBytes_FromStringAndSize((char *)row_data->str_val, out_length);
+                    if ( stmt_res->column_info [column_number].size < INT_MAX )
+                    {
+                              value = PyBytes_FromStringAndSize((char *)row_data->str_val, out_length);
+                    }
+                    else 
+                    {
+                              tmp_length = out_length;
+                              wout_ptr = (SQLPOINTER)ALLOC_N(char, tmp_length + 1);
+                              if (wout_ptr == NULL)
+                              {
+                                  PyErr_SetString(PyExc_Exception, "Failed to Allocate Memory");
+                                  return NULL;
+                              }
+          
+                              rc = _python_IfxPy_get_data(stmt_res, column_number + 1, SQL_C_BINARY, wout_ptr,
+                                  (tmp_length * sizeof(char) ), &out_length);
+                              if (rc == SQL_ERROR)
+                              {   
+                                  return NULL;
+                              }
+                              if (out_length == SQL_NULL_DATA)
+                              {
+                                  Py_INCREF(Py_None);
+                                  value = Py_None;
+                              }
+                              else
+                              {
+                                  value = PyBytes_FromStringAndSize(wout_ptr, out_length);
+                              }
+                              if (wout_ptr != NULL)
+                              {
+                                  PyMem_Del(wout_ptr);
+                                  wout_ptr = NULL;
+                              }
+                    }                 
                 }
                 break;
-
 
             default:
                 Py_INCREF(Py_None);

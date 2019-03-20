@@ -1235,6 +1235,7 @@ static int _python_IfxPy_bind_column_helper(stmt_handle *stmt_res)
             }
             break;
 
+        case SQL_BIT:
         case SQL_SMALLINT:
 
             Py_BEGIN_ALLOW_THREADS;
@@ -8247,6 +8248,7 @@ static PyObject *IfxPy_result(PyObject *self, PyObject *args)
             }
             break;
 
+        case SQL_BIT:
         case SQL_SMALLINT:
         case SQL_INTEGER:
             rc = _python_IfxPy_get_data(stmt_res, col_num + 1, SQL_C_LONG,
@@ -8649,6 +8651,7 @@ static PyObject *_python_IfxPy_bind_fetch_helper(PyObject *args, int op)
                 value = PyLong_FromString((char *)row_data->str_val, NULL, 10);
                 break;
 
+            case SQL_BIT:
             case SQL_SMALLINT:
                 value = PyInt_FromLong(row_data->s_val);
                 break;

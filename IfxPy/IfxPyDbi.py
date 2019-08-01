@@ -82,7 +82,7 @@ class Error(exception):
         super(Error, self).__init__(message)
     def __str__(self):
         """Converts the message to a string."""
-        return 'ifx_pydb::'+str(self.__class__.__name__)+': '+str(self._message)
+        return 'IfxPyDbi::'+str(self.__class__.__name__)+': '+str(self._message)
 
 
 class Warning(exception):
@@ -96,7 +96,7 @@ class Warning(exception):
         super(Warning,self).__init__(message)
     def __str__(self):
         """Converts the message to a string."""
-        return 'ifx_pydb::'+str(self.__class__.__name__)+': '+str(self._message)
+        return 'IfxPyDbi::'+str(self.__class__.__name__)+': '+str(self._message)
 
 
 class InterfaceError(Error):
@@ -438,8 +438,8 @@ def _server_connect(ConStr, user='', password='', host=''):
     if ConStr.find('=') != -1:
         if ConStr[len(ConStr) - 1] != ';':
             ConStr = ConStr + ";"
-        if host != '' and ConStr.find('HOSTNAME=') == -1:
-            ConStr = ConStr + "HOSTNAME=" + host + ";"
+        if host != '' and ConStr.find('HOST=') == -1:
+            ConStr = ConStr + "HOST=" + host + ";"
 
     # attach = true is not valid against IDS. And attach is not needed for connect currently.
     #if ConStr.find('attach=') == -1:
@@ -458,7 +458,7 @@ def _server_connect(ConStr, user='', password='', host=''):
 
 def connect(ConStr, user='', password='', host='', database='', conn_options=None):
     """This method creates a non persistent connection to the database. It returns
-        a ifx_pydb.Connection object.
+        a IfxPyDbi.Connection object.
     """
 
     if ConStr is None:
@@ -485,15 +485,16 @@ def connect(ConStr, user='', password='', host='', database='', conn_options=Non
             ConStr = ConStr + ";"
         if database != '' and ConStr.find('DATABASE=') == -1:
             ConStr = ConStr + "DATABASE=" + database + ";"
-        if host != '' and ConStr.find('HOSTNAME=') == -1:
-            ConStr = ConStr + "HOSTNAME=" + host + ";"
+        if host != '' and ConStr.find('HOST=') == -1:
+            ConStr = ConStr + "HOST=" + host + ";"
 
     if user != '' and ConStr.find('UID=') == -1:
         ConStr = ConStr + "UID=" + user + ";"
     if password != '' and ConStr.find('PWD=') == -1:
         ConStr = ConStr + "PWD=" + password + ";"
     try:
-        conn = IfxPy.connect(ConStr, '', '', conn_options)
+        # conn = IfxPy.connect(ConStr, '', '', conn_options)
+        conn = IfxPy.connect(ConStr, '', '')
         #IfxPy.set_option(conn, {SQL_ATTR_CURRENT_SCHEMA : user}, 1)
     except Exception as inst:
         raise _get_exception(inst)

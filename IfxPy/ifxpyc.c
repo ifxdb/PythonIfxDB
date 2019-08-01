@@ -1806,7 +1806,7 @@ static void _python_IfxPy_clear_conn_err_cache(void)
 *
 * For an uncataloged connection to a database, database represents a complete
 * connection string in the following format:
-* DRIVER={IBM DB2 ODBC DRIVER};DATABASE=database;HOSTNAME=hostname;PORT=port;
+* DRIVER=DATABASE=database;HOST=hostname;PORT=port;
 * PROTOCOL=TCPIP;UID=username;PWD=password;
 *      where the parameters represent the following values:
 *        hostname

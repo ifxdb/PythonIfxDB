@@ -635,28 +635,30 @@ class Connection(object):
         return is_set
 
     # # Sets connection attribute values
-    # def set_current_schema(self, schema_name):
-    #     """Input: connection attribute dictionary
-    #        Return: True on success or False on failure
-    #     """
-    #     self.current_schema = schema_name
-    #     try:
-    #       is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_CURRENT_SCHEMA : schema_name}, 1)
-    #     except Exception as inst:
-    #       raise _get_exception(inst)
-    #     return is_set
+    def set_current_schema(self, schema_name):
+        """Input: connection attribute dictionary
+           Return: True on success or False on failure
+        """
+        self.current_schema = schema_name
+        try:
+          # is_set = IfxPy.set_option(self.conn_handler, {SQL_ATTR_CURRENT_SCHEMA : schema_name}, 1)
+          is_set = 'dummy'
+        except Exception as inst:
+          raise _get_exception(inst)
+        return is_set
 
     # # Retrieves connection attributes values
-    # def get_current_schema(self):
-    #     """Return: current setting of the schema attribute
-    #     """
-    #     try:
-    #       conn_schema = IfxPy.get_option(self.conn_handler, SQL_ATTR_CURRENT_SCHEMA, 1)
-    #       if conn_schema is not None and conn_schema != '':
-    #         self.current_schema = conn_schema
-    #     except Exception as inst:
-    #       raise _get_exception(inst)
-    #     return self.current_schema
+    def get_current_schema(self):
+        """Return: current setting of the schema attribute
+        """
+        try:
+          # conn_schema = IfxPy.get_option(self.conn_handler, SQL_ATTR_CURRENT_SCHEMA, 1)
+          conn_schema = 'dummy'
+          if conn_schema is not None and conn_schema != '':
+            self.current_schema = conn_schema
+        except Exception as inst:
+          raise _get_exception(inst)
+        return self.current_schema
 
 
     # Retrieves the IBM Data Server version for a given Connection object

@@ -27,13 +27,13 @@ class IfxPyTestCase(unittest.TestCase):
       row = IfxPy.fetch_both(result)
       while ( row ):
         if ( (row['COLUMN_NAME'] != 'emp_rowid') and (i < 3) ):
-          print "%s,%s,%s,%s\n" % (row['TABLE_SCHEM'], 
-          row['TABLE_NAME'], row['COLUMN_NAME'], row['IS_NULLABLE'])
+          print("%s,%s,%s,%s\n" % (row['TABLE_SCHEM'], 
+          row['TABLE_NAME'], row['COLUMN_NAME'], row['IS_NULLABLE']))
         i = i + 1
         row = IfxPy.fetch_both(result)
-      print "done!"
+      print("done!")
     else:
-      print "no connection: ", IfxPy.conn_errormsg()    
+      print("no connection: ", IfxPy.conn_errormsg())    
 
 #__END__
 #__IDS_EXPECTED__

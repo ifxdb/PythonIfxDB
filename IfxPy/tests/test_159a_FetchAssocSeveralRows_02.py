@@ -29,7 +29,7 @@ class IfxPyTestCase(unittest.TestCase):
     row = IfxPy.fetch_assoc(result)
     while ( row ):
       #printf("%3d %10s %10s\n",i, row['PRSTDATE'], row['PRENDATE'])
-      print "%3d %10s %10s" % (i, row['PRSTDATE'], row['PRENDATE'])
+      print("%3d %10s %10s" % (i, row['PRSTDATE'], row['PRENDATE']))
       i += 1
       row = IfxPy.fetch_assoc(result)
 

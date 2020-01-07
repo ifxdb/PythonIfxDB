@@ -24,14 +24,14 @@ class IfxPyTestCase(unittest.TestCase):
       second_name = "Rickety Ride"
       weight = 0
     
-      print "Values of bound parameters _before_ CALL:"
-      print "  1: %s 2: %s 3: %d\n" % (name, second_name, weight)
+      print("Values of bound parameters _before_ CALL:")
+      print("  1: %s 2: %s 3: %d\n" % (name, second_name, weight))
      	
       stmt, name, second_name, weight = IfxPy.callproc(conn, 'match_animal', (name, second_name, weight))
     
       if stmt is not None:
-        print "Values of bound parameters _after_ CALL:"
-        print "  1: %s 2: %s 3: %d\n" % (name, second_name, weight)
+        print("Values of bound parameters _after_ CALL:")
+        print("  1: %s 2: %s 3: %d\n" % (name, second_name, weight))
 
 #__END__
 #__IDS_EXPECTED__

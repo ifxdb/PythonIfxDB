@@ -27,20 +27,20 @@ class IfxPyTestCase(unittest.TestCase):
       if (serverinfo.DBMS_NAME[0:3] == 'Inf'):
         if (row['midinit'] == None):
           row['midinit'] = ''
-        print "%6s %12s %s %-15s%3s %4s %10s %-8s%4d %s%10s %12s %12s %12s" % \
+        print("%6s %12s %s %-15s%3s %4s %10s %-8s%4d %s%10s %12s %12s %12s" % \
           (row['empno'], row['firstnme'], row['midinit'], row['lastname'], row['workdept'], \
           row['phoneno'], row['hiredate'], row['job'], row['edlevel'], row['sex'], \
-          row['birthdate'], row['salary'], row['bonus'], row['comm'])
+          row['birthdate'], row['salary'], row['bonus'], row['comm']))
         row = IfxPy.fetch_assoc(result)
       else:
         if (row['MIDINIT'] == None):
           row['MIDINIT'] = ''
-        print "%6s %12s %s %-15s%3s %4s %10s %-8s%4d %s%10s %12s %12s %12s" % \
+        print("%6s %12s %s %-15s%3s %4s %10s %-8s%4d %s%10s %12s %12s %12s" % \
           (row['EMPNO'], row['FIRSTNME'], row['MIDINIT'], row['LASTNAME'], row['WORKDEPT'], \
           row['PHONENO'], row['HIREDATE'], row['JOB'], row['EDLEVEL'], row['SEX'], \
-          row['BIRTHDATE'], row['SALARY'], row['BONUS'], row['COMM'])
+          row['BIRTHDATE'], row['SALARY'], row['BONUS'], row['COMM']))
         row = IfxPy.fetch_assoc(result)
-    print "%d record(s) selected." % i
+    print("%d record(s) selected." % i)
 
 #__END__
 #__LUW_EXPECTED__

@@ -28,7 +28,7 @@ class IfxPyTestCase(unittest.TestCase):
     row = IfxPy.fetch_assoc(result)
     while ( row ):
       #printf("%3d %10s %10s\n",i, row['NAME'], row['JOB'])
-      print "%3d %10s %10s" % (i, row['NAME'], row['JOB'])
+      print("%3d %10s %10s" % (i, row['NAME'], row['JOB']))
       i += 1
       row = IfxPy.fetch_assoc(result)
 

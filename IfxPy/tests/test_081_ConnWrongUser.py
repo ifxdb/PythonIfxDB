@@ -18,9 +18,9 @@ class IfxPyTestCase(unittest.TestCase):
   def run_test_081(self):
     try:
       conn = IfxPy.connect(config.ConnStr, "y", config.password)
-      print "??? No way."
+      print("??? No way.")
     except:
-      print IfxPy.conn_error()
+      print(IfxPy.conn_error())
 
     #if conn:
     #  print "??? No way."

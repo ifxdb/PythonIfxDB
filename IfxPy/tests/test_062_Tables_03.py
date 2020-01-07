@@ -57,7 +57,7 @@ class IfxPyTestCase(unittest.TestCase):
       while ( row ):
         str = row[1] + "/" + row[2] + "/" + row[3]
         if (i < 4):
-          print str
+          print(str)
         i = i + 1
         row = IfxPy.fetch_both(result)
 
@@ -66,9 +66,9 @@ class IfxPyTestCase(unittest.TestCase):
       IfxPy.exec_immediate(conn, 'DROP TABLE t.t3')
       IfxPy.exec_immediate(conn, 'DROP TABLE t.t4')
 
-      print "done!"
+      print("done!")
     else:
-      print "no connection: #{IfxPy.conn_errormsg}";    
+      print("no connection: #{IfxPy.conn_errormsg}");    
 
 #__END__
 #__LUW_EXPECTED__

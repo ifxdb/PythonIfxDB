@@ -60,7 +60,7 @@ class IfxPyTestCase(unittest.TestCase):
 			except:
 				excp = sys.exc_info()
 				# slot 1 contains error message
-				print excp[1]
+				print(excp[1])
 			
 			# Select the result from the table and
 			query = 'SELECT * FROM STOCKSHARE ORDER BY id'
@@ -71,18 +71,18 @@ class IfxPyTestCase(unittest.TestCase):
 			IfxPy.execute(stmt)
 			data = IfxPy.fetch_both( stmt )
 			while ( data ):
-				print "%s : %s : %s\n" % (data[0], data[1], data[2])
+				print("%s : %s : %s\n" % (data[0], data[1], data[2]))
 				data = IfxPy.fetch_both( stmt )
 			try:
 				stmt = IfxPy.prepare(conn, query, {IfxPy.SQL_ATTR_CURSOR_TYPE:  IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
 				IfxPy.execute(stmt)
 				rc = IfxPy.fetch_row(stmt, -1)
-				print "Fetch Row -1:%s " %str(rc)
+				print("Fetch Row -1:%s " %str(rc))
 			except:
-				print "Requested row number must be a positive value"
+				print("Requested row number must be a positive value")
 			IfxPy.close(conn)
 		else:
-			print "Connection failed."
+			print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

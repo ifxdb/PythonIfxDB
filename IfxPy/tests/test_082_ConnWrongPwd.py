@@ -18,10 +18,10 @@ class IfxPyTestCase(unittest.TestCase):
   def run_test_082(self):
     try:
       conn = IfxPy.connect(config.ConnStr, config.user, "z")
-      print "??? No way."
+      print("??? No way.")
     except:
       err = IfxPy.conn_error()
-      print err
+      print(err)
 
 #__END__
 #__IDS_EXPECTED__

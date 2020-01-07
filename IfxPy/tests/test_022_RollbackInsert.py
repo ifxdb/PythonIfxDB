@@ -22,12 +22,12 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
       res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
-      print rows
+      print(rows)
         
       IfxPy.autocommit(conn, 0)
       ac = IfxPy.autocommit(conn)
       if ac != 0:
-        print "Cannot set IfxPy.AUTOCOMMIT_OFF\nCannot run test"
+        print("Cannot set IfxPy.AUTOCOMMIT_OFF\nCannot run test")
         #continue
         
       IfxPy.exec_immediate(conn, "INSERT INTO animals values (7,'bug','Brain Bug',10000.1)")
@@ -35,17 +35,17 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
       res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
-      print rows
+      print(rows)
         
       IfxPy.rollback(conn)
       
       stmt = IfxPy.exec_immediate(conn, "SELECT count(*) FROM animals")
       res = IfxPy.fetch_tuple(stmt)
       rows = res[0]
-      print rows
+      print(rows)
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

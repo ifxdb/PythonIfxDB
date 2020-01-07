@@ -20,13 +20,13 @@ class IfxPyTestCase(unittest.TestCase):
     
     if conn:
       if (type(conn) == IfxPy.IFXConnection):
-        print "Resource is a Ifx Connection"
+        print("Resource is a Ifx Connection")
       
       rc = IfxPy.close(conn)
       
-      print rc
+      print(rc)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__IDS_EXPECTED__

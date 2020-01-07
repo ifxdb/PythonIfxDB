@@ -23,7 +23,7 @@ class IfxPyTestCase(unittest.TestCase):
     
     for i in range(0, cols):
       size = IfxPy.field_display_size(result,i)
-      print "col:%d and size: %d" % (i, size)
+      print("col:%d and size: %d" % (i, size))
     
     IfxPy.close(conn)
 

@@ -21,7 +21,7 @@ class IfxPyTestCase(unittest.TestCase):
     result = IfxPy.tables(conn, None, "SYSIBM", "", "VIEW")
     
     if (type(result) == IfxPy.IFXStatement):
-      print "Resource is a IFX Statement"
+      print("Resource is a IFX Statement")
       
     IfxPy.free_result(result)
 

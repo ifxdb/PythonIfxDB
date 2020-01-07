@@ -79,14 +79,14 @@ class IfxPyTestCase(unittest.TestCase):
     insert = 'INSERT INTO animal_pics (name, picture) VALUES (?, ?)'
     stmt = IfxPy.prepare(conn, insert)
     if (not stmt):
-      print "Attempt to prepare statement failed."
+      print("Attempt to prepare statement failed.")
       return 0
     for animal in animals:
       name = animal[0]
       fileHandle = open(os.path.dirname(os.path.abspath(__file__)) + '/' + animal[1], 'rb')
       picture = fileHandle.read()
       if (not picture):
-        print "Could not retrieve picture '%s'." % animal[1]
+        print("Could not retrieve picture '%s'." % animal[1])
         return 0
       IfxPy.bind_param(stmt, 1, name, IfxPy.SQL_PARAM_INPUT)
       IfxPy.bind_param(stmt, 2, picture, IfxPy.SQL_PARAM_INPUT)
@@ -542,7 +542,7 @@ class IfxPyTestCase(unittest.TestCase):
       pass
     result = IfxPy.exec_immediate(conn, 'CREATE TABLE t_string(a INTEGER, b DOUBLE PRECISION, c VARCHAR(100))')
 
-    print "Preperation complete"
+    print("Preperation complete")
 
 #__END__
 #__LUW_EXPECTED__

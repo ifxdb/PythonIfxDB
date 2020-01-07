@@ -45,19 +45,19 @@ class IfxPyTestCase(unittest.TestCase):
         num7 = IfxPy.field_num(stmt, 1)
         num8 = IfxPy.field_num(stmt, "weight")
   
-      print "%s" % num1
-      print "int(%d)" % num2
-      print "int(%d)" % num3
-      print "%s" % num4
+      print("%s" % num1)
+      print("int(%d)" % num2)
+      print("int(%d)" % num3)
+      print("%s" % num4)
       
-      print "%s" % num5
-      print "%s" % num6
-      print "int(%d)" % num7
-      print "%s" % num8
+      print("%s" % num5)
+      print("%s" % num6)
+      print("int(%d)" % num7)
+      print("%s" % num8)
 
       IfxPy.rollback(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__IDS_EXPECTED__

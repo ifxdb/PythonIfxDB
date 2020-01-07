@@ -19,32 +19,32 @@ class IfxPyTestCase(unittest.TestCase):
     conn = None
     is_alive = IfxPy.active(conn)
     if is_alive:
-      print "Is active"
+      print("Is active")
     else:
-      print "Is not active"
+      print("Is not active")
 
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     is_alive = IfxPy.active(conn)
     if is_alive:
-      print "Is active"
+      print("Is active")
     else:
-      print "Is not active"
+      print("Is not active")
 
     IfxPy.close(conn)
     is_alive = IfxPy.active(conn)
     if is_alive:
-      print "Is active"
+      print("Is active")
     else:
-      print "Is not active"
+      print("Is not active")
 
     # Executing active method multiple times to reproduce a customer reported defect
-    print IfxPy.active(conn)
-    print IfxPy.active(conn)
-    print IfxPy.active(conn)
+    print(IfxPy.active(conn))
+    print(IfxPy.active(conn))
+    print(IfxPy.active(conn))
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
-    print IfxPy.active(conn)
-    print IfxPy.active(conn)
-    print IfxPy.active(conn)
+    print(IfxPy.active(conn))
+    print(IfxPy.active(conn))
+    print(IfxPy.active(conn))
 
 #__END__
 #__LUW_EXPECTED__

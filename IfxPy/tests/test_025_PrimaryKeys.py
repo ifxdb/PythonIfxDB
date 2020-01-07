@@ -45,13 +45,13 @@ class IfxPyTestCase(unittest.TestCase):
       else:
         stmt = IfxPy.primary_keys(conn, None, None, 'TEST_PRIMARY_KEYS')
       row = IfxPy.fetch_tuple(stmt)
-      print row[2]
-      print row[3]
-      print row[4]
+      print(row[2])
+      print(row[3])
+      print(row[4])
       IfxPy.close(conn)
     else:
-      print IfxPy.conn_errormsg()
-      print "Connection failed\n"
+      print(IfxPy.conn_errormsg())
+      print("Connection failed\n")
 
 #__END__
 #__LUW_EXPECTED__

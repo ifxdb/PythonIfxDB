@@ -25,18 +25,18 @@ class IfxPyTestCase(unittest.TestCase):
     value2 = None
     value3 = None
     value4 = None
-    if (row.has_key('TABLE_NAME')):
+    if ('TABLE_NAME' in row):
       value1 = row['TABLE_NAME']
-    if (row.has_key('COLUMN_NAME')):
+    if ('COLUMN_NAME' in row):
       value2 = row['COLUMN_NAME']
-    if (row.has_key('table_name')):
+    if ('table_name' in row):
       value3 = row['table_name']
-    if (row.has_key('column_name')):
+    if ('column_name' in row):
       value4 = row['column_name']
-    print value1
-    print value2
-    print value3
-    print value4
+    print(value1)
+    print(value2)
+    print(value3)
+    print(value4)
 
     op = {IfxPy.ATTR_CASE: IfxPy.CASE_UPPER}
     IfxPy.set_option(conn, op, 1)
@@ -46,18 +46,18 @@ class IfxPyTestCase(unittest.TestCase):
     value2 = None
     value3 = None
     value4 = None
-    if (row.has_key('TABLE_NAME')):
+    if ('TABLE_NAME' in row):
       value1 = row['TABLE_NAME']
-    if (row.has_key('COLUMN_NAME')):
+    if ('COLUMN_NAME' in row):
       value2 = row['COLUMN_NAME']
-    if (row.has_key('table_name')):
+    if ('table_name' in row):
       value3 = row['table_name']
-    if (row.has_key('column_name')):
+    if ('column_name' in row):
       value4 = row['column_name']
-    print value1
-    print value2
-    print value3
-    print value4
+    print(value1)
+    print(value2)
+    print(value3)
+    print(value4)
     
     op = {IfxPy.ATTR_CASE: IfxPy.CASE_LOWER}
     IfxPy.set_option(conn, op, 1)
@@ -67,18 +67,18 @@ class IfxPyTestCase(unittest.TestCase):
     value2 = None
     value3 = None
     value4 = None
-    if (row.has_key('TABLE_NAME')):
+    if ('TABLE_NAME' in row):
       value1 = row['TABLE_NAME']
-    if (row.has_key('COLUMN_NAME')):
+    if ('COLUMN_NAME' in row):
       value2 = row['COLUMN_NAME']
-    if (row.has_key('table_name')):
+    if ('table_name' in row):
       value3 = row['table_name']
-    if (row.has_key('column_name')):
+    if ('column_name' in row):
       value4 = row['column_name']
-    print value1
-    print value2
-    print value3
-    print value4
+    print(value1)
+    print(value2)
+    print(value3)
+    print(value4)
 
 #__END__
 #__IDS_EXPECTED__

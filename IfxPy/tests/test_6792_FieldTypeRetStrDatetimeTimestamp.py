@@ -44,7 +44,7 @@ class IfxPyTestCase(unittest.TestCase):
       result = IfxPy.exec_immediate(conn, statement)
       
       for i in range(0, IfxPy.num_fields(result)):
-        print str(i) + ":" + IfxPy.field_type(result,i)
+        print(str(i) + ":" + IfxPy.field_type(result,i))
 
       statement = "SELECT * FROM table_6792"
       stmt = IfxPy.prepare(conn, statement)
@@ -55,15 +55,15 @@ class IfxPyTestCase(unittest.TestCase):
         row1 = IfxPy.result(stmt, 1)
         row2 = IfxPy.result(stmt, 2)
         row3 = IfxPy.result(stmt, 3)
-        print row0
-        print row1
-        print row2
-        print row3
+        print(row0)
+        print(row1)
+        print(row2)
+        print(row3)
         result = IfxPy.fetch_row(stmt)
       
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

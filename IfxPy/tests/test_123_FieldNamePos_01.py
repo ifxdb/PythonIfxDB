@@ -67,13 +67,13 @@ class IfxPyTestCase(unittest.TestCase):
         for i in range(0, cols):
           #print "#{IfxPy.field_name(result,i)}:" % (IfxPy.field_name(result, i), row[IfxPy.field_name(result, i)])
           #puts row[IfxPy.field_name(result,i)]
-          print "%s:%s" % (IfxPy.field_name(result, i), row[IfxPy.field_name(result, i)])
-        print "---------";    
+          print("%s:%s" % (IfxPy.field_name(result, i), row[IfxPy.field_name(result, i)]))
+        print("---------");    
         j += 1
         row = IfxPy.fetch_both(result)
       IfxPy.close(conn)
     else:
-      print IfxPy.conn_errormsg()
+      print(IfxPy.conn_errormsg())
 
 #__END__
 #__LUW_EXPECTED__

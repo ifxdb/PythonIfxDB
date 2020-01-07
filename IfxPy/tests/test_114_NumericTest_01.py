@@ -42,11 +42,11 @@ class IfxPyTestCase(unittest.TestCase):
       while ( result ):
         row0 = IfxPy.result(stmt, 0)
         row1 = IfxPy.result(stmt, 1)
-        print row0
-        print row1
+        print(row0)
+        print(row1)
         result = IfxPy.fetch_row( stmt )
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

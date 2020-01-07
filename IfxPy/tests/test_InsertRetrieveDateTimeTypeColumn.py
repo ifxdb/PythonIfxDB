@@ -42,7 +42,7 @@ class IfxPyTestCase(unittest.TestCase):
       result = IfxPy.exec_immediate(conn, statement)
       
       for i in range(0, IfxPy.num_fields(result)):
-        print str(i) + ":" + IfxPy.field_type(result,i)
+        print(str(i) + ":" + IfxPy.field_type(result,i))
 
       statement = "SELECT * FROM tab_datetime"
       stmt = IfxPy.prepare(conn, statement)
@@ -52,14 +52,14 @@ class IfxPyTestCase(unittest.TestCase):
         row0 = IfxPy.result(stmt, 0)
         row1 = IfxPy.result(stmt, 1)
         row2 = IfxPy.result(stmt, 2)
-        print type(row0), row0
-        print type(row1), row1
-        print type(row2), row2
+        print(type(row0), row0)
+        print(type(row1), row1)
+        print(type(row2), row2)
         result = IfxPy.fetch_row(stmt)
       
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

@@ -30,18 +30,18 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.column_privileges(conn, None, config.user, 'animals')
       row = IfxPy.fetch_tuple(stmt)
       if row:
-        print row[0]
-        print row[1]
-        print row[2]
-        print row[3]
-        print row[4]
-        print row[5]
-        print row[6]
-        print row[7]
+        print(row[0])
+        print(row[1])
+        print(row[2])
+        print(row[3])
+        print(row[4])
+        print(row[5])
+        print(row[6])
+        print(row[7])
       IfxPy.close(conn)
     else:
-      print IfxPy.conn_errormsg()
-      print "Connection failed\n\n"
+      print(IfxPy.conn_errormsg())
+      print("Connection failed\n\n")
 
 #__END__
 #__IDS_EXPECTED__

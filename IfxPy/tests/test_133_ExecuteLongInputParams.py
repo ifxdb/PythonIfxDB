@@ -19,12 +19,12 @@ class IfxPyTestCase(unittest.TestCase):
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
 
     if (not conn):
-      print "Connection failed."
+      print("Connection failed.")
       return 0
 
     IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
 
-    print "Starting test ..."
+    print("Starting test ...")
     res = ''
     sql =  "INSERT INTO animals (id, breed, name, weight) VALUES (?, ?, ?, ?)"
     try:
@@ -36,13 +36,13 @@ class IfxPyTestCase(unittest.TestCase):
       row = IfxPy.fetch_assoc(stmt)
       
       for i in row:
-	         print i
+	         print(i)
 
       IfxPy.rollback(conn)
-      print "Done"
+      print("Done")
     except:
-      print "SQLSTATE: %s" % IfxPy.stmt_error(stmt)
-      print "Message: %s" % IfxPy.stmt_errormsg(stmt)
+      print("SQLSTATE: %s" % IfxPy.stmt_error(stmt))
+      print("Message: %s" % IfxPy.stmt_errormsg(stmt))
 
     try:
         stmt = IfxPy.prepare(conn, "SELECT breed, name FROM animals WHERE id = ?")
@@ -50,17 +50,17 @@ class IfxPyTestCase(unittest.TestCase):
         row = IfxPy.fetch_assoc(stmt)
         if (row):
             for i in row:
-                print i
-        print res
-        print "SQLSTATE: %s" % IfxPy.stmt_error(stmt)
-        print "Message: %s" % IfxPy.stmt_errormsg(stmt)
+                print(i)
+        print(res)
+        print("SQLSTATE: %s" % IfxPy.stmt_error(stmt))
+        print("Message: %s" % IfxPy.stmt_errormsg(stmt))
     except:
-        print "An Exception is not expected"
-        print "SQLSTATE: %s" % IfxPy.stmt_error(stmt)
-        print "Message: %s" % IfxPy.stmt_errormsg(stmt)
+        print("An Exception is not expected")
+        print("SQLSTATE: %s" % IfxPy.stmt_error(stmt))
+        print("Message: %s" % IfxPy.stmt_errormsg(stmt))
 
     IfxPy.rollback(conn)
-    print "Done"
+    print("Done")
 
 #__END__
 #__IDS_EXPECTED__

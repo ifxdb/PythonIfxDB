@@ -23,12 +23,12 @@ class IfxPyTestCase(unittest.TestCase):
     result3 = IfxPy.exec_immediate(conn, "select * from emp_photo")
     
     for i in range(0, IfxPy.num_fields(result)):
-      print str(IfxPy.field_width(result,i))
+      print(str(IfxPy.field_width(result,i)))
     
-    print "\n-----"
+    print("\n-----")
     
     for i in range(0, IfxPy.num_fields(result2)):
-      print str(IfxPy.field_width(result2,IfxPy.field_name(result2,i)))
+      print(str(IfxPy.field_width(result2,IfxPy.field_name(result2,i))))
 
 #__END__
 #__LUW_EXPECTED__

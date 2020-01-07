@@ -19,7 +19,7 @@ class IfxPyTestCase(unittest.TestCase):
     IfxPy.execute(stmt)
     row = IfxPy.fetch_tuple(stmt)
     for i in row:
-      print i
+      print(i)
 
   def run_test_6528(self):
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
@@ -36,7 +36,7 @@ class IfxPyTestCase(unittest.TestCase):
       self.checked_ids_execute(stmt)
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

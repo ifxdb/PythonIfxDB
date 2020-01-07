@@ -29,11 +29,11 @@ class IfxPyTestCase(unittest.TestCase):
       row = IfxPy.fetch_tuple(result)
       while ( row ):
         str = row[1] + "/" + row[3]
-        print str
+        print(str)
         row = IfxPy.fetch_tuple(result)
-      print "done!"
+      print("done!")
     else:
-      print "no connection:", IfxPy.conn_errormsg()
+      print("no connection:", IfxPy.conn_errormsg())
 
 #__END__
 #__LUW_EXPECTED__

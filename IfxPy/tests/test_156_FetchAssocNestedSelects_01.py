@@ -35,7 +35,7 @@ class IfxPyTestCase(unittest.TestCase):
             row['YEARS'] = ''
         if (row['COMM'] == None):
             row['COMM'] = ''
-        print row['ID'],row['NAME'],row['JOB'],row['YEARS'], row['SALARY'], row['COMM']
+        print(row['ID'],row['NAME'],row['JOB'],row['YEARS'], row['SALARY'], row['COMM'])
         row = IfxPy.fetch_assoc(result)
   
     result2 = IfxPy.exec_immediate(conn,"select * from department where substr(deptno,1,1) in ('A','B','C','D','E')")
@@ -43,7 +43,7 @@ class IfxPyTestCase(unittest.TestCase):
     while ( row2 ):    
         if (row2['MGRNO'] == None):
             row2['MGRNO'] = ''
-        print row2['DEPTNO'], row2['DEPTNAME'], row2['MGRNO'], row2['ADMRDEPT'], row2['LOCATION']
+        print(row2['DEPTNO'], row2['DEPTNAME'], row2['MGRNO'], row2['ADMRDEPT'], row2['LOCATION'])
         row2 = IfxPy.fetch_assoc(result2)
 
 #__END__

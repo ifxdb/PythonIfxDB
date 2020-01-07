@@ -21,10 +21,10 @@ class IfxPyTestCase(unittest.TestCase):
     dsn = "DATABASE=" + config.ConnStr + ";UID=" + baduser + ";PWD=" + badpass + ";"
     try:
       conn = IfxPy.connect(dsn, "", "")
-      print "odd, IfxPy.connect succeeded with an invalid user / password"
+      print("odd, IfxPy.connect succeeded with an invalid user / password")
       IfxPy.close(conn)
     except: 
-      print "Ooops"
+      print("Ooops")
 
 #__END__
 #__LUW_EXPECTED__

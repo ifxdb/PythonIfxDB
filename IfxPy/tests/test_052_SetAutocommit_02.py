@@ -22,7 +22,7 @@ class IfxPyTestCase(unittest.TestCase):
       
     ac = IfxPy.autocommit(conn)
       
-    print ac
+    print(ac)
 
 #__END__
 #__LUW_EXPECTED__

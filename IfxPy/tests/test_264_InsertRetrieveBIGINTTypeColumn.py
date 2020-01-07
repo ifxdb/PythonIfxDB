@@ -41,19 +41,19 @@ class IfxPyTestCase(unittest.TestCase):
 
        insert = "INSERT INTO tab_bigint values (-9223372036854775807, 9223372036854775807, 0, NULL)"
        res = IfxPy.exec_immediate(conn, insert)
-       print "Number of inserted rows:", IfxPy.num_rows(res)
+       print("Number of inserted rows:", IfxPy.num_rows(res))
 
        stmt = IfxPy.prepare(conn, "SELECT * FROM tab_bigint")
        IfxPy.execute(stmt)
        data = IfxPy.fetch_both(stmt)
        while ( data ):
-         print data[0]
-         print data[1]
-         print data[2]
-         print data[3]
-         print type(data[0]) is long
-         print type(data[1]) is long 
-         print type(data[2]) is long
+         print(data[0])
+         print(data[1])
+         print(data[2])
+         print(data[3])
+         print(type(data[0]) is int)
+         print(type(data[1]) is int) 
+         print(type(data[2]) is int)
          data = IfxPy.fetch_both(stmt)
 
        # test IfxPy.result for fetch of bigint
@@ -64,7 +64,7 @@ class IfxPyTestCase(unittest.TestCase):
          row1 = IfxPy.result(stmt1, 'COL2')
        else:
          row1 = IfxPy.result(stmt1, 'col2')
-       print row1
+       print(row1)
        
        IfxPy.close(conn)
 

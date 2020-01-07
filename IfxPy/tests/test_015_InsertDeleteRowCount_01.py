@@ -22,22 +22,22 @@ class IfxPyTestCase(unittest.TestCase):
       if result:
         cols = IfxPy.num_fields(result)
         # NOTE: Removed '\n' from the following and a few more prints here (refer to ruby test_015.rb)
-        print "col:", cols
+        print("col:", cols)
         rows = IfxPy.num_rows(result)
-        print "affected row:", rows
+        print("affected row:", rows)
       else:
-        print IfxPy.stmt_errormsg()
+        print(IfxPy.stmt_errormsg())
       result = IfxPy.exec_immediate(conn,"delete from t_string where a=123")
       if result:
         cols = IfxPy.num_fields(result)
-        print "col:", cols
+        print("col:", cols)
         rows = IfxPy.num_rows(result)
-        print "affected row:", rows
+        print("affected row:", rows)
       else:
-        print IfxPy.stmt_errormsg()
+        print(IfxPy.stmt_errormsg())
       IfxPy.close(conn)
     else:
-      print "no connection:", IfxPy.conn_errormsg()
+      print("no connection:", IfxPy.conn_errormsg())
 
 #__END__
 #__LUW_EXPECTED__

@@ -21,17 +21,17 @@ class IfxPyTestCase(unittest.TestCase):
       result = IfxPy.exec_immediate(conn,"insert into t_string values(123,1.222333,'one to one')")
       if result:
         cols = IfxPy.num_fields(result)
-        print "col: %d" % cols
+        print("col: %d" % cols)
         rows = IfxPy.num_rows(result)
-        print "affected row: %d" % rows
+        print("affected row: %d" % rows)
       result = IfxPy.exec_immediate(conn,"delete from t_string where a=123")
       if result:
         cols = IfxPy.num_fields(result)
-        print "col: %d" % cols
+        print("col: %d" % cols)
         rows = IfxPy.num_rows(result)
-        print "affected row: %d" % rows
+        print("affected row: %d" % rows)
     else:
-      print "no connection";    
+      print("no connection");    
 
 #__END__
 #__LUW_EXPECTED__

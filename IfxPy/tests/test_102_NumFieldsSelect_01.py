@@ -19,7 +19,7 @@ class IfxPyTestCase(unittest.TestCase):
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     
     if (not conn):
-      print IfxPy.conn_errormsg()
+      print(IfxPy.conn_errormsg())
     
     server = IfxPy.server_info( conn )
     if ((server.DBMS_NAME[0:2] != "AS") and (server.DBMS_NAME != "DB2") and (server.DBMS_NAME[0:3] != "Inf")):
@@ -27,9 +27,9 @@ class IfxPyTestCase(unittest.TestCase):
       #throw :unsupported unless result
       if (not result):
         raise Exception('Unsupported')
-      print IfxPy.num_fields(result)
+      print(IfxPy.num_fields(result))
     else:
-      print '1'
+      print('1')
     IfxPy.close(conn)
 
 #__END__

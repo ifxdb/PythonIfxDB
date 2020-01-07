@@ -23,15 +23,15 @@ class IfxPyTestCase(unittest.TestCase):
     for i in range(0, IfxPy.num_fields(result) + 1):
       field_name = IfxPy.field_name(result,i)
       field_type = IfxPy.field_type(result, IfxPy.field_name(result,i))
-      print str(IfxPy.field_name(result, i)) + ":" + str(IfxPy.field_type(result, IfxPy.field_name(result, i)))
+      print(str(IfxPy.field_name(result, i)) + ":" + str(IfxPy.field_type(result, IfxPy.field_name(result, i))))
           
-    print "-----"
+    print("-----")
     
     t = IfxPy.field_type(result,99)
-    print t
+    print(t)
     
     t1 = IfxPy.field_type(result, "HELMUT")
-    print t1
+    print(t1)
 
 #__END__
 #__LUW_EXPECTED__

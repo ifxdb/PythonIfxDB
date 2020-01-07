@@ -32,10 +32,10 @@ class IfxPyTestCase(unittest.TestCase):
         result2 = IfxPy.prepare(conn, "SELECT * FROM animals")
       IfxPy.execute(result2)
       while (IfxPy.fetch_row(result2)):
-        print "%s : %s : %s : %s" % (IfxPy.result(result2, 0), \
+        print("%s : %s : %s : %s" % (IfxPy.result(result2, 0), \
                                      IfxPy.result(result2, 1), \
                                      IfxPy.result(result2, 2), \
-                                     IfxPy.result(result2, 3))
+                                     IfxPy.result(result2, 3)))
       row = IfxPy.fetch_row(result)
 
 #__END__

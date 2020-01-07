@@ -39,12 +39,12 @@ class IfxPyTestCase(unittest.TestCase):
       num2 = IfxPy.field_num(stmt, 'test')
       num3 = IfxPy.field_num(stmt, 'Test')
       
-      print "int(%d)" % num1
-      print "int(%d)" % num2
-      print "int(%d)" % num3
+      print("int(%d)" % num1)
+      print("int(%d)" % num2)
+      print("int(%d)" % num3)
       
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__IDS_EXPECTED__

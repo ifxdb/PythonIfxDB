@@ -35,41 +35,41 @@ class IfxPyTestCase(unittest.TestCase):
    
        insert = "INSERT INTO tab_num_literals values ('11.22', '33.44', '55.66')"
        res = IfxPy.exec_immediate(conn, insert)
-       print "Number of inserted rows:", IfxPy.num_rows(res)
+       print("Number of inserted rows:", IfxPy.num_rows(res))
 
        stmt = IfxPy.prepare(conn, "SELECT col1, col2, col3 FROM tab_num_literals WHERE col1 = '11'")
        IfxPy.execute(stmt)
        data = IfxPy.fetch_both(stmt)
        while ( data ):
-         print data[0]
-         print data[1]
-         print data[2]
+         print(data[0])
+         print(data[1])
+         print(data[2])
          data = IfxPy.fetch_both(stmt)
 
        sql = "UPDATE tab_num_literals SET col1 = 77 WHERE col2 = 33.44"
        res = IfxPy.exec_immediate(conn, sql)
-       print "Number of updated rows:", IfxPy.num_rows(res)
+       print("Number of updated rows:", IfxPy.num_rows(res))
 
        stmt = IfxPy.prepare(conn, "SELECT col1, col2, col3 FROM tab_num_literals WHERE col2 > '33'")
        IfxPy.execute(stmt)
        data = IfxPy.fetch_both(stmt)
        while ( data ):
-         print data[0]
-         print data[1]
-         print data[2]
+         print(data[0])
+         print(data[1])
+         print(data[2])
          data = IfxPy.fetch_both(stmt)
 	 
        sql = "DELETE FROM tab_num_literals WHERE col1 > '10.0'"
        res = IfxPy.exec_immediate(conn, sql)
-       print "Number of deleted rows:", IfxPy.num_rows(res)
+       print("Number of deleted rows:", IfxPy.num_rows(res))
 
        stmt = IfxPy.prepare(conn, "SELECT col1, col2, col3 FROM tab_num_literals WHERE col3 < '56'")
        IfxPy.execute(stmt)
        data = IfxPy.fetch_both(stmt)
        while ( data ):
-         print data[0]
-         print data[1]
-         print data[2]
+         print(data[0])
+         print(data[1])
+         print(data[2])
          data = IfxPy.fetch_both(stmt)
 
        IfxPy.rollback(conn)

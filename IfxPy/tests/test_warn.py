@@ -35,7 +35,7 @@ class IfxPyTestCase(unittest.TestCase):
             except:
                 pass
 				
-            print(IfxPy.stmt_warn(stmt))
+            print((IfxPy.stmt_warn(stmt)))
 			
             IfxPy.close(conn)
         else:

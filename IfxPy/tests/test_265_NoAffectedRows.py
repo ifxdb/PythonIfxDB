@@ -28,7 +28,7 @@ class IfxPyTestCase(unittest.TestCase):
         stmt = IfxPy.prepare(conn, sql)
         IfxPy.set_option(stmt, cursor_option, 0)
         IfxPy.execute(stmt)
-        print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+        print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
       except:
         pass
 
@@ -40,45 +40,45 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.prepare(conn, sql)
       IfxPy.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
 
       sql = 'select id from test'
 
       stmt = IfxPy.prepare(conn, sql)
       #IfxPy.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
 
       sql = "insert into test values( 1, 'some', 'here is a clob value', '<?xml version=\"1.0\" encoding=\"UTF-8\" ?><test attribute=\"value\"/>')"
 
       stmt = IfxPy.prepare(conn, sql)
       #IfxPy.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
 
       sql = "insert into test values(2, 'value', 'clob data', NULL)"
 
       stmt = IfxPy.prepare(conn, sql)
       #IfxPy.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
 
       sql = "insert into test values(2, 'in varchar', 'data2', NULL)"
 
       stmt = IfxPy.prepare(conn, sql)
       #IfxPy.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
 
       sql = 'select * from test'
 
       stmt = IfxPy.prepare(conn, sql)
       #IfxPy.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
       row = IfxPy.fetch_tuple(stmt)
       while ( row ):
-        print "%s, %s, %s, %s\n" %(row[0], row[1], row[2], ((row[3] is not None) and row[3].startswith(u'\ufeff')) and  row[3][1:] or  row[3])
+        print("%s, %s, %s, %s\n" %(row[0], row[1], row[2], ((row[3] is not None) and row[3].startswith('\ufeff')) and  row[3][1:] or  row[3]))
         row = IfxPy.fetch_tuple(stmt)
 
       sql = 'select id, name from test where id = ?'
@@ -86,10 +86,10 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.prepare(conn, sql)
       #fx_db.set_option(stmt, cursor_option, 0)
       IfxPy.execute(stmt, (2,))
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
       row = IfxPy.fetch_tuple(stmt)
       while ( row ):
-        print "%s, %s\n" %(row[0], row[1])
+        print("%s, %s\n" %(row[0], row[1]))
         row = IfxPy.fetch_tuple(stmt)
 
       if (server.DBMS_NAME[0:3] == 'Inf'):
@@ -101,10 +101,10 @@ class IfxPyTestCase(unittest.TestCase):
       #IfxPy.set_option(stmt, cursor_option, 0)
       #IfxPy.num_fields(stmt)
       IfxPy.execute(stmt)
-      print "Number of affected rows: %d" % IfxPy.get_num_result(stmt)
+      print("Number of affected rows: %d" % IfxPy.get_num_result(stmt))
       row = IfxPy.fetch_tuple(stmt)
       while ( row ):
-        print "%s, %s, %s, %s\n" %(row[0], row[1], row[2], ((row[3] is not None) and row[3].startswith(u'\ufeff')) and  row[3][1:] or  row[3])
+        print("%s, %s, %s, %s\n" %(row[0], row[1], row[2], ((row[3] is not None) and row[3].startswith('\ufeff')) and  row[3][1:] or  row[3]))
         row = IfxPy.fetch_tuple(stmt)
 
       IfxPy.close(conn)

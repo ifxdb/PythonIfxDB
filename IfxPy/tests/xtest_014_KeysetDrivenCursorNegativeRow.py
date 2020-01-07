@@ -28,15 +28,15 @@ class IfxPyTestCase(unittest.TestCase):
     IfxPy.execute(stmt)
     data = IfxPy.fetch_both( stmt )
     while ( data ):
-      print "%s : %s : %s : %s\n" % (data[0], data[1], data[2], data[3])
+      print("%s : %s : %s : %s\n" % (data[0], data[1], data[2], data[3]))
       data = IfxPy.fetch_both( stmt )
     try:
       stmt = IfxPy.prepare(conn, query, {IfxPy.SQL_ATTR_CURSOR_TYPE:  IfxPy.SQL_CURSOR_KEYSET_DRIVEN})
       IfxPy.execute(stmt)
       rc = IfxPy.fetch_row(stmt, -1)
-      print "Fetch row -1: %s" % str(rc)
+      print("Fetch row -1: %s" % str(rc))
     except:
-      print "Requested row number must be a positive value"
+      print("Requested row number must be a positive value")
 
     IfxPy.close(conn)
 

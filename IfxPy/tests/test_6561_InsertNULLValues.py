@@ -25,19 +25,19 @@ class IfxPyTestCase(unittest.TestCase):
       statement = "SELECT count(id) FROM animals"
       result = IfxPy.exec_immediate(conn, statement)
       if ( (not result) and IfxPy.stmt_error() ):
-        print "ERROR: %s" % (IfxPy.stmt_errormsg(), )
+        print("ERROR: %s" % (IfxPy.stmt_errormsg(), ))
 
       row = IfxPy.fetch_tuple(result)
       while ( row ):
         for i in row:
-            print i
+            print(i)
         row = IfxPy.fetch_tuple(result)
     
       IfxPy.rollback(conn)
       IfxPy.close(conn)
       
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

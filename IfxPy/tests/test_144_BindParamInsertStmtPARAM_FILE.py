@@ -39,9 +39,9 @@ class IfxPyTestCase(unittest.TestCase):
       
       num = IfxPy.num_rows(stmt)
       
-      print num
+      print(num)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

@@ -27,11 +27,11 @@ class IfxPyTestCase(unittest.TestCase):
         IfxPy.execute(stmt)
         data = IfxPy.fetch_both( stmt )
         while (data):
-          print data[0]
+          print(data[0])
           data = IfxPy.fetch_both( stmt)
         IfxPy.close(conn)
       else:
-        print "Connection failed."
+        print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

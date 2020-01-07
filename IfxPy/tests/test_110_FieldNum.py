@@ -31,17 +31,17 @@ class IfxPyTestCase(unittest.TestCase):
       num7 = IfxPy.field_num(stmt, 1)
       num8 = IfxPy.field_num(stmt, "WEIGHT")
       
-      print "int(%d)" % num1
-      print "int(%d)" % num2
-      print "int(%d)" % num3
-      print "int(%d)" % num4
+      print("int(%d)" % num1)
+      print("int(%d)" % num2)
+      print("int(%d)" % num3)
+      print("int(%d)" % num4)
       
-      print "%s" % num5
-      print "%s" % num6
-      print "int(%d)" % num7
-      print "%s" % num8
+      print("%s" % num5)
+      print("%s" % num6)
+      print("int(%d)" % num7)
+      print("%s" % num8)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__IDS_EXPECTED__

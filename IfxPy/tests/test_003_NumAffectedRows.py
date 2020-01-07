@@ -22,11 +22,11 @@ class IfxPyTestCase(unittest.TestCase):
       IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
       sql = 'UPDATE animals SET id = 9'
       res = IfxPy.exec_immediate(conn, sql)
-      print "Number of affected rows: %d" % IfxPy.num_rows(res)
+      print("Number of affected rows: %d" % IfxPy.num_rows(res))
       IfxPy.rollback(conn)
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

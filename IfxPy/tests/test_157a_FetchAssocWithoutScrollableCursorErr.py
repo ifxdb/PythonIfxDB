@@ -19,7 +19,7 @@ class IfxPyTestCase(unittest.TestCase):
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
     server = IfxPy.server_info( conn )
 
-    print "Starting..."
+    print("Starting...")
     if conn:
       sql = "SELECT id, name, breed, weight FROM animals ORDER BY breed"
       result = IfxPy.exec_immediate(conn, sql)
@@ -29,16 +29,16 @@ class IfxPyTestCase(unittest.TestCase):
           row = IfxPy.fetch_assoc(result, i)
           while ( row ):
               if (server.DBMS_NAME[0:3] == 'Inf'):
-                print "%-5d %-16s %-32s %10s" % (row['id'], row['name'], row['breed'], row['weight'])
+                print("%-5d %-16s %-32s %10s" % (row['id'], row['name'], row['breed'], row['weight']))
               else:
-                print "%-5d %-16s %-32s %10s" % (row['ID'], row['NAME'], row['BREED'], row['WEIGHT'])
+                print("%-5d %-16s %-32s %10s" % (row['ID'], row['NAME'], row['BREED'], row['WEIGHT']))
               i = i + 2
           row = IfxPy.fetch_assoc(result, i)
       except:
-          print "SQLSTATE: %s" % IfxPy.stmt_error(result)
-          print "Message: %s" % IfxPy.stmt_errormsg(result)
+          print("SQLSTATE: %s" % IfxPy.stmt_error(result))
+          print("Message: %s" % IfxPy.stmt_errormsg(result))
 	
-      print "DONE"
+      print("DONE")
 
 #__END__
 #__LUW_EXPECTED__

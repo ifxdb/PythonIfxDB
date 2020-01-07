@@ -54,45 +54,45 @@ class IfxPyTestCase(unittest.TestCase):
       stmt = IfxPy.foreign_keys(conn, None, config.user, 'test_primary_keys')
       
       row = IfxPy.fetch_tuple(stmt)
-      print row[2]
-      print row[3]
-      print row[6]
-      print row[7]
+      print(row[2])
+      print(row[3])
+      print(row[6])
+      print(row[7])
 
       stmt = IfxPy.foreign_keys(conn, None, None, None, None, config.user, 'test_keys')
       row = IfxPy.fetch_tuple(stmt)
-      print row[2]
-      print row[3]
-      print row[6]
-      print row[7]
+      print(row[2])
+      print(row[3])
+      print(row[6])
+      print(row[7])
 
       stmt = IfxPy.foreign_keys(conn, None, config.user, 'test_keys', None, None, None)
       row = IfxPy.fetch_tuple(stmt)
-      print row[2]
-      print row[3]
-      print row[6]
-      print row[7]
+      print(row[2])
+      print(row[3])
+      print(row[6])
+      print(row[7])
 
       stmt = IfxPy.foreign_keys(conn, None, config.user, 'test_keys', None, config.user, 'test_foreign_keys')
       row = IfxPy.fetch_tuple(stmt)
-      print row[2]
-      print row[3]
-      print row[6]
-      print row[7]
+      print(row[2])
+      print(row[3])
+      print(row[6])
+      print(row[7])
 
       stmt = IfxPy.foreign_keys(conn, None, config.user, 'test_keys', None, 'dummy_schema')
       row = IfxPy.fetch_tuple(stmt)
       if(not row):
-        print "No Data Found"
+        print("No Data Found")
       else:
-        print row[2]
-        print row[3]
-        print row[6]
-        print row[7]
+        print(row[2])
+        print(row[3])
+        print(row[6])
+        print(row[7])
       IfxPy.close(conn)
     else:
-      print IfxPy.conn_errormsg()
-      print "Connection failed\n"
+      print(IfxPy.conn_errormsg())
+      print("Connection failed\n")
 
 #__END__
 #__IDS_EXPECTED__

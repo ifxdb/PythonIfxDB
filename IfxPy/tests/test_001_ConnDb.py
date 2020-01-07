@@ -19,10 +19,10 @@ class IfxPyTestCase(unittest.TestCase):
     conn = IfxPy.connect(config.ConnStr, config.user, config.password)
       
     if conn:
-      print "Connection succeeded."
+      print("Connection succeeded.")
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

@@ -24,14 +24,14 @@ class IfxPyTestCase(unittest.TestCase):
         
       while (IfxPy.fetch_row(stmt)):
         weight = IfxPy.result(stmt, 3)
-        print "string(%d) \"%s\"" % (len(str(weight)), weight)
+        print("string(%d) \"%s\"" % (len(str(weight)), weight))
         breed = IfxPy.result(stmt, 1)
-        print "string(%d) \"%s\"" % (len(breed), breed)
+        print("string(%d) \"%s\"" % (len(breed), breed))
         name = IfxPy.result(stmt, "name")
-        print "string(%d) \"%s\"" % (len(name), name)
+        print("string(%d) \"%s\"" % (len(name), name))
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

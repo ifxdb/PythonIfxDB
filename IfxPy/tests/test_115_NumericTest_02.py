@@ -52,7 +52,7 @@ class IfxPyTestCase(unittest.TestCase):
         row.DATA = IfxPy.result(stmt, 'DATA')
       else:
         row.DATA = IfxPy.result(stmt, 'data')
-      print row.DATA
+      print(row.DATA)
 
       insert = "UPDATE numericliteral SET data = '@@@@@@@@@@' WHERE id = '12'"
       IfxPy.exec_immediate(conn, insert)
@@ -66,9 +66,9 @@ class IfxPyTestCase(unittest.TestCase):
         row.DATA = IfxPy.result(stmt, 'DATA')
       else:
         row.DATA = IfxPy.result(stmt, 'data')
-      print row.DATA
+      print(row.DATA)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

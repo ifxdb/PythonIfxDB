@@ -33,13 +33,13 @@ class IfxPyTestCase(unittest.TestCase):
             par1 = "2017-05-13 22:47:29.82688"
             par2 = ""
 
-            print "Values of bound parameters _before_ CALL:"
-            print "  1: %s 2: %s\n" % (par1, par2)
+            print("Values of bound parameters _before_ CALL:")
+            print("  1: %s 2: %s\n" % (par1, par2))
 
             stmt, par1, par2 = IfxPy.callproc(conn, 'proc_timestamp', (par1, par2))
             if stmt is not None:
-                print "Values of bound parameters _after_ CALL:"
-                print "  1: %s 2: %s\n" % (par1, par2)
+                print("Values of bound parameters _after_ CALL:")
+                print("  1: %s 2: %s\n" % (par1, par2))
 
             IfxPy.close(conn)
         else:

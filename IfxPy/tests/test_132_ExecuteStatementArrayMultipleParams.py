@@ -28,10 +28,10 @@ class IfxPyTestCase(unittest.TestCase):
         while ( row ):
           #row.each { |child| print child }
           for i in row:
-            print i
+            print(i)
           row = IfxPy.fetch_tuple(stmt)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

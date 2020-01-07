@@ -25,31 +25,31 @@ class IfxPyTestCase(unittest.TestCase):
     
       fields1 = IfxPy.num_fields(stmt)
       
-      print "int(%d)" % fields1
+      print("int(%d)" % fields1)
       
       stmt = IfxPy.exec_immediate(conn, "SELECT name, breed FROM animals ORDER BY breed")
       fields2 = IfxPy.num_fields(stmt)
       
-      print "int(%d)" % fields2
+      print("int(%d)" % fields2)
       
       stmt = IfxPy.exec_immediate(conn, "DELETE FROM animals")
       fields3 = IfxPy.num_fields(stmt)
       
-      print "int(%d)" % fields3
+      print("int(%d)" % fields3)
       
       stmt = IfxPy.exec_immediate(conn, "INSERT INTO animals values (0, 'cat', 'Pook', 3.2)")
       fields4 = IfxPy.num_fields(stmt)
         
-      print "int(%d)" % fields4
+      print("int(%d)" % fields4)
       
       stmt = IfxPy.exec_immediate(conn, "SELECT name, breed, 'TEST' FROM animals")
       fields5 = IfxPy.num_fields(stmt)
         
-      print "int(%d)" % fields5
+      print("int(%d)" % fields5)
 
       IfxPy.rollback(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

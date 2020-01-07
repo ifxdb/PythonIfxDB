@@ -32,21 +32,21 @@ class IfxPyTestCase(unittest.TestCase):
       IfxPy.execute(stmt)
       data = IfxPy.fetch_both(stmt)
       while ( data ):
-        print data[0]
+        print(data[0])
         data = IfxPy.fetch_both(stmt)
       
-      print ""
+      print("")
 
       stmt = IfxPy.prepare(conn, "SELECT name FROM animals WHERE weight < 10.0", options1)
       IfxPy.execute(stmt)
       data = IfxPy.fetch_both(stmt)
       while ( data ):
-        print data[0]
+        print(data[0])
         data = IfxPy.fetch_both(stmt)
     
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__IDS_EXPECTED__

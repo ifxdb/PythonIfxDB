@@ -26,10 +26,10 @@ class IfxPyTestCase(unittest.TestCase):
     else:
       i = "SALES_PERSON"
     
-    print "%s size %d" % (i, IfxPy.field_display_size(result,i))
+    print("%s size %d" % (i, IfxPy.field_display_size(result,i)))
     
     i = 2
-    print "%d size %d" % (i, IfxPy.field_display_size(result,i))
+    print("%d size %d" % (i, IfxPy.field_display_size(result,i)))
 
 #__END__
 #__LUW_EXPECTED__

@@ -37,10 +37,10 @@ class IfxPyTestCase(unittest.TestCase):
       row.table_type = data['TABLE_TYPE']
       row.remarks = data['REMARKS']
           
-      print "Schema:  %s" % row.table_schem
-      print "Name:    %s" % row.table_name
-      print "Type:    %s" % row.table_type
-      print "Remarks: %s\n" % row.remarks
+      print("Schema:  %s" % row.table_schem)
+      print("Name:    %s" % row.table_name)
+      print("Type:    %s" % row.table_type)
+      print("Remarks: %s\n" % row.remarks)
 #      row = IfxPy.fetch_object(result)
       data = IfxPy.fetch_assoc(result)
 
@@ -55,10 +55,10 @@ class IfxPyTestCase(unittest.TestCase):
       row.table_type = data['TABLE_TYPE']
       row.remarks = data['REMARKS']
         
-      print "Schema:  %s" % row.table_schem
-      print "Name:    %s" % row.table_name
-      print "Type:    %s" % row.table_type
-      print "Remarks: %s\n" % row.remarks
+      print("Schema:  %s" % row.table_schem)
+      print("Name:    %s" % row.table_name)
+      print("Type:    %s" % row.table_type)
+      print("Remarks: %s\n" % row.remarks)
       data = IfxPy.fetch_assoc(result)
       
     result = IfxPy.tables(conn, None, config.user.lower(), 'anime_cat')
@@ -72,10 +72,10 @@ class IfxPyTestCase(unittest.TestCase):
       row.table_type = data['TABLE_TYPE']
       row.remarks = data['REMARKS']
         
-      print "Schema:  %s" % row.table_schem
-      print "Name:    %s" % row.table_name
-      print "Type:    %s" % row.table_type
-      print "Remarks: %s\n" % row.remarks
+      print("Schema:  %s" % row.table_schem)
+      print("Name:    %s" % row.table_name)
+      print("Type:    %s" % row.table_type)
+      print("Remarks: %s\n" % row.remarks)
 #      row = IfxPy.fetch_object(result)
       data = IfxPy.fetch_assoc(result)
     

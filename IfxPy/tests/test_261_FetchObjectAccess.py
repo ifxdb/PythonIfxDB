@@ -47,13 +47,13 @@ class IfxPyTestCase(unittest.TestCase):
          pet = Pet()
          pet.NAME = data['NAME']
          pet.BREED = data['BREED']
-         print "Come here, %s, my little %s!" % (pet.NAME, pet.BREED)
+         print("Come here, %s, my little %s!" % (pet.NAME, pet.BREED))
          data = IfxPy.fetch_assoc(stmt)
          
       IfxPy.close(conn)
       
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

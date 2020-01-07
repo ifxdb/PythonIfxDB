@@ -26,25 +26,25 @@ class IfxPyTestCase(unittest.TestCase):
         pass
       if result:
         cols = IfxPy.num_fields(result)
-        print "col:", cols,", " 
+        print("col:", cols,", ") 
         rows = IfxPy.num_rows(result)
-        print "affected row:", rows
+        print("affected row:", rows)
       else:
-        print IfxPy.stmt_errormsg()
+        print(IfxPy.stmt_errormsg())
       try:
         result = IfxPy.exec_immediate(conn,"delete from t_string where a=123")
       except:
         pass
       if result:
         cols = IfxPy.num_fields(result)
-        print "col:", cols,", "
+        print("col:", cols,", ")
         rows = IfxPy.num_rows(result)
-        print "affected row:", rows
+        print("affected row:", rows)
       else:
-        print IfxPy.stmt_errormsg()
+        print(IfxPy.stmt_errormsg())
     
     else:
-      print "no connection"
+      print("no connection")
 
 #__END__
 #__LUW_EXPECTED__

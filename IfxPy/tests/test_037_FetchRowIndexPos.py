@@ -30,11 +30,11 @@ class IfxPyTestCase(unittest.TestCase):
       IfxPy.execute(result2)
       row2 = IfxPy.fetch_row(result2)
       while ( row2 ):
-        print "%s : %s : %s : %s : %s" % (IfxPy.result(result2, 0), \
+        print("%s : %s : %s : %s : %s" % (IfxPy.result(result2, 0), \
                                           IfxPy.result(result2, 1), \
                                           IfxPy.result(result2, 2), \
                                           IfxPy.result(result2, 3), \
-                                          IfxPy.result(result2, 5))
+                                          IfxPy.result(result2, 5)))
         row2 = IfxPy.fetch_row(result2)
       row = IfxPy.fetch_row(result)
 

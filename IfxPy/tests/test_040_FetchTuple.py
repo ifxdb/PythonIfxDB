@@ -40,7 +40,7 @@ class IfxPyTestCase(unittest.TestCase):
     onerow = IfxPy.fetch_tuple(stmt)
      
     for element in onerow:
-      print element
+      print(element)
 
     IfxPy.rollback(conn)
 

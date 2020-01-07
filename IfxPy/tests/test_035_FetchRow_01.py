@@ -23,7 +23,7 @@ class IfxPyTestCase(unittest.TestCase):
     
     row = IfxPy.fetch_row(result)
     while ( row ):
-      print "%d, " % i
+      print("%d, " % i)
       i+=1
       row = IfxPy.fetch_row(result)
     IfxPy.close(conn)

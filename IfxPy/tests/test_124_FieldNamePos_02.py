@@ -29,8 +29,8 @@ class IfxPyTestCase(unittest.TestCase):
              value = row[IfxPy.field_name(result, i)]
              if (value == None): 
                 value = ''
-             print "%s:%s" % (field, value)
-          print "---------"
+             print("%s:%s" % (field, value))
+          print("---------")
           j += 1
           if (j == 10):
             break
@@ -38,9 +38,9 @@ class IfxPyTestCase(unittest.TestCase):
           row = IfxPy.fetch_both(result)
        
        IfxPy.close(conn)
-       print "done"
+       print("done")
     else:
-       print IfxPy.conn_errormsg()
+       print(IfxPy.conn_errormsg())
 #__END__
 #__LUW_EXPECTED__
 #ID:10

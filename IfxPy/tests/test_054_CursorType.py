@@ -21,22 +21,22 @@ class IfxPyTestCase(unittest.TestCase):
 
     stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals")
     val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
-    print val
+    print(val)
 
     op = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_FORWARD_ONLY}
     stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals", op)
     val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
-    print val
+    print(val)
 
     op = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_KEYSET_DRIVEN}
     stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals", op)
     val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
-    print val
+    print(val)
 
     op = {IfxPy.SQL_ATTR_CURSOR_TYPE: IfxPy.SQL_CURSOR_STATIC}
     stmt = IfxPy.exec_immediate(conn, "SELECT * FROM animals", op)
     val = IfxPy.get_option(stmt, IfxPy.SQL_ATTR_CURSOR_TYPE, 0)
-    print val
+    print(val)
 
 #__END__
 #__IDS_EXPECTED__

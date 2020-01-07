@@ -24,7 +24,7 @@ class IfxPyTestCase(unittest.TestCase):
     
     while (i <= IfxPy.num_fields(result)):
       #printf("%d size %d\n",i, IfxPy.field_display_size(result,i) || 0)
-      print "%d size %d" % (i, IfxPy.field_display_size(result,i) or 0)
+      print("%d size %d" % (i, IfxPy.field_display_size(result,i) or 0))
       i += 1
     
     IfxPy.close(conn)

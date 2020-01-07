@@ -53,15 +53,15 @@ class IfxPyTestCase(unittest.TestCase):
     columns = IfxPy.num_fields(result)
     
     for i in range(0, columns):
-      print "%s, " % IfxPy.field_name(result, i)
-    print "\n\n"
+      print("%s, " % IfxPy.field_name(result, i))
+    print("\n\n")
    
     row = IfxPy.fetch_tuple(result) 
     while ( row ):
       final = ", " + row[1] + ", " + row[2] + ", " + row[3] + ", , ";
       row = IfxPy.fetch_tuple(result)
 
-    print final
+    print(final)
     
     IfxPy.free_result(result)
 

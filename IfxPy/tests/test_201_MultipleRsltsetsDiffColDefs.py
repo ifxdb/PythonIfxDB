@@ -47,16 +47,16 @@ class IfxPyTestCase(unittest.TestCase):
         IfxPy.exec_immediate(conn, procedure)
         stmt = IfxPy.exec_immediate(conn, 'CALL multiResults()')
     
-        print "Fetching first result set"
+        print("Fetching first result set")
         row = IfxPy.fetch_tuple(stmt)
         while ( row ):
            for i in row:
-                print str(i).strip()
+                print(str(i).strip())
            row = IfxPy.fetch_tuple(stmt)
        
         IfxPy.close(conn)
     else:
-       print "Connection failed."
+       print("Connection failed.")
 
 #__END__
 #__IDS_EXPECTED__

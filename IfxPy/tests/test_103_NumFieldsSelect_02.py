@@ -24,16 +24,16 @@ class IfxPyTestCase(unittest.TestCase):
        j = 1
        row = IfxPy.fetch_tuple(result)
        while ( row ):
-          print "%d) " % j
+          print("%d) " % j)
           for i in range(0, cols):
-             print "%s " % row[i]
+             print("%s " % row[i])
           j += 1
           if (j > 10):
              break
           row = IfxPy.fetch_tuple(result)
        IfxPy.close(conn)
     else:
-      print IfxPy.conn_errormsg()
+      print(IfxPy.conn_errormsg())
 
 #__END__
 #__IDS_EXPECTED__

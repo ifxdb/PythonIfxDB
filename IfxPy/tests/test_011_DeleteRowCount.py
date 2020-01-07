@@ -21,11 +21,11 @@ class IfxPyTestCase(unittest.TestCase):
     if conn:
       IfxPy.autocommit(conn, IfxPy.SQL_AUTOCOMMIT_OFF)
       stmt = IfxPy.exec_immediate(conn, "DELETE FROM animals WHERE weight > 10.0")
-      print "Number of affected rows: %d" % IfxPy.num_rows( stmt )
+      print("Number of affected rows: %d" % IfxPy.num_rows( stmt ))
       IfxPy.rollback(conn)
       IfxPy.close(conn)
     else:
-      print "Connection failed."
+      print("Connection failed.")
 
 #__END__
 #__LUW_EXPECTED__

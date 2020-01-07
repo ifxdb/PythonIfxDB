@@ -23,22 +23,22 @@ class IfxPyTestCase(unittest.TestCase):
     result3 = IfxPy.exec_immediate(conn, "select * from emp_photo")
     
     for i in range(0, IfxPy.num_fields(result) + 1):
-      print str(i) + ":" + str(IfxPy.field_type(result,IfxPy.field_name(result,i)))
+      print(str(i) + ":" + str(IfxPy.field_type(result,IfxPy.field_name(result,i))))
     
-    print "\n-----"
+    print("\n-----")
     
     for i in range(0, IfxPy.num_fields(result2)):
-      print str(i) + ":" + IfxPy.field_type(result2,IfxPy.field_name(result2,i))
+      print(str(i) + ":" + IfxPy.field_type(result2,IfxPy.field_name(result2,i)))
     
-    print "\n-----"
+    print("\n-----")
     
     for i in range(0, 3):
-      print str(i) + ":" + IfxPy.field_type(result3,IfxPy.field_name(result3,i))
+      print(str(i) + ":" + IfxPy.field_type(result3,IfxPy.field_name(result3,i)))
     
-    print "\n-----"
+    print("\n-----")
     
-    print "region:%s" % IfxPy.field_type(result,'region')
-    print "5:%s" % IfxPy.field_type(result2,5)
+    print("region:%s" % IfxPy.field_type(result,'region'))
+    print("5:%s" % IfxPy.field_type(result2,5))
 
 #__END__
 #__LUW_EXPECTED__

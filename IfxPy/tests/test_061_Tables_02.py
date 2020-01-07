@@ -60,7 +60,7 @@ class IfxPyTestCase(unittest.TestCase):
       while ( row ):
         str = row['TABLE_SCHEM'] + row['TABLE_NAME'] + row['TABLE_TYPE']
         if (i < 4):
-          print str
+          print(str)
         i = i + 1
         row = IfxPy.fetch_both(result)
 
@@ -69,9 +69,9 @@ class IfxPyTestCase(unittest.TestCase):
       IfxPy.exec_immediate(conn, 'DROP TABLE t.t3')
       IfxPy.exec_immediate(conn, 'DROP TABLE t.t4')
 
-      print "done!"
+      print("done!")
     else:
-      print "no connection: %s" % IfxPy.conn_errormsg()
+      print("no connection: %s" % IfxPy.conn_errormsg())
 
 #__END__
 #__IDS_EXPECTED__

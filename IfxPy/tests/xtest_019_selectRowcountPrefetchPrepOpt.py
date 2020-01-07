@@ -23,14 +23,14 @@ class IfxPyTestCase(unittest.TestCase):
       result = IfxPy.execute(stmt)
       if result:
         rows = IfxPy.num_rows(stmt)
-        print "affected row:", rows
+        print("affected row:", rows)
         IfxPy.free_result(stmt)
       else:
-        print IfxPy.stmt_errormsg()
+        print(IfxPy.stmt_errormsg())
 
       IfxPy.close(conn)
     else:
-      print "no connection:", IfxPy.conn_errormsg()
+      print("no connection:", IfxPy.conn_errormsg())
 
 #__END__
 #__LUW_EXPECTED__

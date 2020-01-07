@@ -52,16 +52,16 @@ class IfxPyTestCase(unittest.TestCase):
     result = IfxPy.tables(conn, None, 't')
     
     for i in range(0, IfxPy.num_fields(result)):
-      print "%s, " % IfxPy.field_name(result, i)
-    print
-    print
+      print("%s, " % IfxPy.field_name(result, i))
+    print()
+    print()
   
     i = 0
     row = IfxPy.fetch_tuple(result)
     while ( row ):
       IfxPy.num_fields(result)
       if (i < 4):
-        print ", " + row[1] + ", " + row[2] + ", " + row[3] + ", , \n"
+        print(", " + row[1] + ", " + row[2] + ", " + row[3] + ", , \n")
       i = i + 1
       row = IfxPy.fetch_tuple(result)
 

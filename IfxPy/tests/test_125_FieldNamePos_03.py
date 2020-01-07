@@ -23,20 +23,20 @@ class IfxPyTestCase(unittest.TestCase):
     result2 = IfxPy.exec_immediate(conn, "SELECT * FROM staff")
     
     for i in range(0, IfxPy.num_fields(result)):
-      print "%d:%s" % (i, IfxPy.field_name(result,i))
+      print("%d:%s" % (i, IfxPy.field_name(result,i)))
     
-    print "-----"
+    print("-----")
     
     for i in range(0, IfxPy.num_fields(result2)):
-      print "%d:%s" % (i, IfxPy.field_name(result2,i))
+      print("%d:%s" % (i, IfxPy.field_name(result2,i)))
     
-    print "-----"
+    print("-----")
     
     if (server.DBMS_NAME[0:3] == 'Inf'):
-      print "Region:%s" % IfxPy.field_name(result, 'region')
+      print("Region:%s" % IfxPy.field_name(result, 'region'))
     else:
-      print "Region:%s" % IfxPy.field_name(result, 'REGION')
-    print "5:%s" % IfxPy.field_name(result2, 5)
+      print("Region:%s" % IfxPy.field_name(result, 'REGION'))
+    print("5:%s" % IfxPy.field_name(result2, 5))
 
 #__END__
 #__LUW_EXPECTED__

@@ -33,7 +33,7 @@ class IfxPyTestCase(unittest.TestCase):
       #printf("%-10s",row['DIVISION'])
       #printf("%-13s ",row['LOCATION'])
       #puts ""
-      print "%4d %-14s %4d %-10s%-13s " % (row['DEPTNUMB'], row['DEPTNAME'], row['MANAGER'], row['DIVISION'], row['LOCATION'])
+      print("%4d %-14s %4d %-10s%-13s " % (row['DEPTNUMB'], row['DEPTNAME'], row['MANAGER'], row['DIVISION'], row['LOCATION']))
       row = IfxPy.fetch_assoc(result)
 
 #__END__
